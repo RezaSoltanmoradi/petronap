@@ -1,0 +1,33 @@
+.Select {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 285px;
+    height: auto;
+
+    .option {
+        height: 43px;
+        width: 100%;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .active {
+        background-color: #d9d9d980;
+        cursor: pointer;
+    }
+    .disable {
+        background-color: #d9d9d93d;
+        cursor: not-allowed;
+    }
+    .selected {
+        background-color: var(--dark-color);
+        cursor: pointer;
+        color: var(--white-color);
+        transition: all 0.2s linear;
+    }
+}

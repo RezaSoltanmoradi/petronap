@@ -1,0 +1,25 @@
+.Alert {
+    border-radius: 8px;
+    position: fixed;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.2px solid #565656;
+    background-color: var(--info-color);
+    .title {
+        font-size: 23px;
+        font-weight: 400;
+    }
+    .description {
+        text-align: center;
+        width: 234px;
+        text-align: justify;
+        margin: 10px 0;
+        line-height: 20px;
+    }
+}

@@ -1,0 +1,29 @@
+.Order {
+    width: 100%;
+    height: 100vh;
+    overflow-y: hidden;
+    position: relative;
+    .title {
+        position: absolute;
+        top: 40px;
+        right: 0px;
+        margin-right: 40px;
+        color: var(--primary-color);
+        font-size: 12px;
+    }
+    .Button {
+        // position: absolute;
+        margin-top: 50px;
+    }
+    .Form {
+        position: absolute;
+        top: 20px;
+        padding-bottom: 130px;
+        .innerIcon {
+            left: 10px;
+            z-index: 100;
+            top: 14px;
+            position: absolute;
+        }
+    }
+}

@@ -1,0 +1,88 @@
+:root {
+    .icon {
+        background: url("../src/assets/images/icons.png");
+        cursor: pointer;
+    }
+    .icon-sm {
+        width: 16px;
+        height: 16px;
+    }
+    .icon-md {
+        width: 24px;
+        height: 24px;
+    }
+    .icon-lg {
+        width: 40px;
+        height: 40px;
+    }
+    .icon-xl {
+        width: 80px;
+        height: 80px;
+    }
+    .i-user-circle {
+        background-position: -6px -6px;
+    }
+    .i-back {
+        background-position: -104px -190px;
+    }
+    .i-hours {
+        background-position: -4px -114px;
+    }
+    .i-hours-active {
+        background-position: -4px -89px;
+    }
+    .i-order {
+        background-position: -29px -114px;
+    }
+    .i-order-active {
+        background-position: -29px -89px;
+    }
+    .i-alert {
+        background-position: -54px -114px;
+    }
+    .i-alert-active {
+        background-position: -54px -89px;
+    }
+    .i-user {
+        background-position: -48px -8px;
+    }
+    .i-camera {
+        background-position: -104px -139px;
+    }
+    .i-info {
+        background-position: -78px -231px;
+    }
+    .i-eye {
+        background-position: -79px -164px;
+    }
+    .i-eye-hidden {
+        background-position: -29px -164px;
+    }
+    .i-normal {
+        background-position: -112px -231px;
+    }
+    .i-normal-active {
+        background-position: -95px -231px;
+    }
+    .i-legal {
+        background-position: -27px -214px;
+    }
+    .i-legal-active {
+        background-position: -10px -214px;
+    }
+    .i-plus {
+        background-position: -54px -139px;
+    }
+    .i-plus-active {
+        background-position: -79px -139px;
+    }
+    .i-completed {
+        background-position: -104px -164px;
+    }
+    .i-bar {
+        background-position: -79px -114px;
+    }
+    .i-bar-active {
+        background-position: -79px -89px;
+    }
+}

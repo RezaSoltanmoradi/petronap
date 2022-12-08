@@ -1,0 +1,15 @@
+.Image {
+    .badgeContaner {
+        background-color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        left: 4px;
+        bottom: 5px;
+        .badge {
+            left: 0;
+            bottom: 0;
+        }
+    }
+}

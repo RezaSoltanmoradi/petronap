@@ -1,0 +1,22 @@
+@import "../styles/_color";
+@import "../styles/_fonts";
+@import "../styles/_classes";
+body {
+    font-family: BYekan, Avenir, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    direction: rtl;
+    background-color: red;
+}
+* {
+    font-family: BYekan;
+}
+a {
+    text-decoration: none !important;
+    color: black;
+}
+ul {
+    list-style: none;
+}
+.react-datepicker-popper {
+    z-index: 120 !important;
+}

@@ -1,0 +1,66 @@
+.Switch {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    border: 0.2px solid #2916c6;
+    border-radius: 8px;
+    .toggle {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        border-radius: 8px;
+        z-index: 50;
+        background-color: var(--dark-color);
+    }
+    .startFromRight {
+        left: 50%;
+    }
+    .startFromLeft {
+        left: 0%;
+    }
+    .moveRight {
+        left: 50%;
+        animation: firstAnimate 0.2s linear;
+    }
+    .moveLeft {
+        left: 0%;
+        animation: secondAnimate 0.2s linear;
+    }
+    .title {
+        position: relative;
+        width: 50%;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 400;
+        cursor: pointer;
+        z-index: 100 !important;
+    }
+    .isActive {
+        z-index: 100;
+        color: var(--white-color) !important;
+    }
+    .isNotActive {
+        z-index: 100;
+        color: var(--dark-color) !important;
+    }
+}
+@keyframes firstAnimate {
+    0% {
+        left: 0%;
+    }
+    100% {
+        left: 50%;
+    }
+}
+@keyframes secondAnimate {
+    0% {
+        left: 50%;
+    }
+    100% {
+        left: 0;
+    }
+}

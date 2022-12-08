@@ -1,0 +1,18 @@
+.Card {
+    width: 95.38px;
+    height: 95.38px;
+    background: #d9d9d933;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 7px;
+    margin-right: 18px;
+    cursor: pointer;
+    .title {
+        font-weight: 400;
+        font-size: 11px;
+        margin: 0;
+    }
+}
