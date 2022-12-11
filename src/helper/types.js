@@ -18,3 +18,8 @@ export const TYPE_CHOICES = [
     { name: "individual person", id: "1", title: "حقیقی" },
     { name: "legal", id: "2", title: "حقوقی" },
 ];
+export const ORDERS_STATUS_CHOICES = [
+    { name: "isLoading", id: "0", title: "در انتظار" },
+    { name: "isDoing", id: "1", title: "در حال انجام" },
+    { name: "isCompleted", id: "2", title: "اتمام یافته" },
+];

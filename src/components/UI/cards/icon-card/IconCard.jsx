@@ -1,4 +1,4 @@
-import classes from "./Card.module.scss";
+import classes from "./IconCard.module.scss";
 
 const Card = ({path, icon, title }) => {
     return (

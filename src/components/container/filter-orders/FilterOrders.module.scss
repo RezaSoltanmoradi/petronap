@@ -1,0 +1,26 @@
+.FilterOrders {
+    position: fixed;
+    top: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 328px;
+    height: 45px;
+    background-color: var(--white-color);
+    z-index: 100!important;
+    .status {
+        border-radius: 8px;
+        padding: 0px 20px;
+        height: 24px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .ActiveStatus {
+        background-color: var(--dark-color);
+        color: var(--white-color);
+    }
+    .notActiveStatus {
+        border: 0.2px solid var(--dark-color);
+        background-color: var(--white-color);
+    }
+}

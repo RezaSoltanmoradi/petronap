@@ -6,6 +6,9 @@ import Freight from "./pages/freight/Freight";
 import { useSelector } from "react-redux";
 import LoginController from "./pages/login/loginController/LoginController";
 import Producer from "./pages/producer/Producer";
+import Offers from "./pages/trader/orders/offers/Offers";
+import NewOrder from "./pages/trader/orders/new-order/NewOrder";
+import Detail from "./pages/trader/orders/offers/detail/Detail";
 
 function App() {
     const { isLogin } = useSelector(state => state.user);
@@ -31,7 +34,16 @@ function App() {
             {/* {userType === "trader" && isLogin && (
                     )} */}
             <Route path="trader">
-                <Route path=":traderId" element={<Trader />} />
+                <Route path=":traderId">
+                    <Route index element={<Trader />} />
+                    <Route path=":orderId">
+                        <Route index element={<NewOrder />} />
+                        <Route path="offers">
+                            <Route index element={<Offers />} />
+                            <Route path=":offerId" element={<Detail />} />
+                        </Route>
+                    </Route>
+                </Route>
             </Route>
             {/* {userType === "freight" && isLogin && (
                     )} */}

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Button from "../../../components/UI/button/Button";
-import Card from "../../../components/UI/card/Card";
+import Card from "../../../components/UI/cards/icon-card/IconCard";
 import Layout from "../../../layouts/Layout";
 import classes from "./Profile.module.scss";
 

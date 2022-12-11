@@ -1,14 +1,13 @@
 import { useParams } from "react-router";
 import Layout from "../../layouts/Layout";
 import Profile from "./profile/Profile";
-import Order from "./order/Order";
+import Orders from "./orders/Orders";
 
 const Trader = () => {
     const { traderId } = useParams();
-
     const traderName = {
         profile: <Profile />,
-        order: <Order />,
+        orders: <Orders />,
     };
     return <Layout isLogin={true}>{traderName[traderId]}</Layout>;
 };

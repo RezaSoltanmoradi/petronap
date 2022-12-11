@@ -1,17 +1,17 @@
-import classes from "./Order.module.scss";
+import classes from "./OrderDetail.module.scss";
 import Select from "../../../components/select/Select";
 import Button from "../../../components/UI/button/Button";
 import Scroller from "../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
-import { getContractType } from "../../../store/order-slice";
+// import { getContractType } from "../../../store/order-slice";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Input from "../../../components/UI/input/Input";
 import useInput from "../../../hooks/useInput";
 import Alert from "src/components/alert/Alert";
 
-const Order = () => {
-    const { contractType } = useSelector(state => state.order);
+const OrderDetail = () => {
+    // const { contractType } = useSelector(state => state.order);
     const [hasOrderType, setHasOrderType] = useState(false);
     const [startDate, setStartDate] = useState();
     const [isCompleted, setIsCompleted] = useState(false);
@@ -74,16 +74,16 @@ const Order = () => {
     } = useInput();
 
     const dispatch = useDispatch();
-    const onChangeOrderType = value => {
-        dispatch(getContractType(value));
-    };
-    const onConfirmStepOne = () => {
-        if (!contractType) {
-            return;
-        } else if (contractType) {
-            setHasOrderType(true);
-        }
-    };
+    // const onChangeOrderType = value => {
+    //     dispatch(getContractType(value));
+    // };
+    // const onConfirmStepOne = () => {
+    //     if (!contractType) {
+    //         return;
+    //     } else if (contractType) {
+    //         setHasOrderType(true);
+    //     }
+    // };
     let formIsValid = false;
     const formValidation =
         validProduct &&
@@ -131,14 +131,14 @@ const Order = () => {
                                 { value: "FOB", id: "o3", disable: true },
                                 { value: "CFR", id: "o4", disable: true },
                             ]}
-                            selected={contractType}
-                            setSelected={onChangeOrderType}
+                            // selected={contractType}
+                            // setSelected={onChangeOrderType}
                             top="80px"
                         />
                         <div className={classes.Button}>
                             <Button
-                                disabled={!contractType}
-                                clicked={onConfirmStepOne}
+                                // disabled={!contractType}
+                                // clicked={onConfirmStepOne}
                                 btnStyle={{
                                     fontSize: "20px",
                                     padding: "15px 50px",
@@ -171,7 +171,7 @@ const Order = () => {
                                         width: "154px",
                                     }}
                                 >
-                                    {contractType}
+                                    {/* {contractType} */}
                                 </Button>
                             </div>
                         </Input>
@@ -291,7 +291,7 @@ const Order = () => {
                         </Input>
                         <div className={classes.Button}>
                             <Button
-                                disabled={!contractType}
+                                // disabled={!contractType}
                                 clicked={formSubmitionHandler}
                                 btnStyle={{
                                     fontSize: "20px",
@@ -310,4 +310,4 @@ const Order = () => {
     );
 };
 
-export default Order;
+export default OrderDetail;

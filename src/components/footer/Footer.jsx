@@ -5,7 +5,9 @@ import { useNavigate, useParams } from "react-router";
 const Footer = () => {
     const { role } = useSelector(state => state.user);
     const navigate = useNavigate();
-    const { traderId, freightId, producerId } = useParams();
+    const { orderId, traderId } = useParams();
+    console.log("orderId", orderId);
+    console.log("traderId", traderId);
     if (role.name === "producer" || role.name === "trader") {
         return (
             <footer
@@ -15,22 +17,32 @@ const Footer = () => {
             >
                 <span
                     className={classes.orderIcon}
-                    onClick={() =>
-                        navigate({ pathname: `/${role.name}/order` })
-                    }
+                    onClick={() => navigate({ pathname: `/trader/orders/new` })}
                 >
                     <span
                         className={classNames({
+                            "icon icon-md i-plus": traderId === "orders",
                             "icon icon-md i-plus-active":
-                                traderId === "order" || producerId === "order",
-                            "icon icon-md i-plus":
-                                traderId !== "order" || producerId !== "order",
+                                orderId === "new" && traderId === "orders",
                         })}
                     />
                     <p>ثبت سفارش</p>
                 </span>
-                <span className={classes.hoursIcon}>
-                    <span className="icon icon-md i-hours " />
+                <span
+                    className={classes.hoursIcon}
+                    onClick={() =>
+                        navigate({
+                            pathname: "/trader/orders",
+                        })
+                    }
+                >
+                    <span
+                        className={classNames({
+                            "icon icon-md i-hours ": traderId === "orders",
+                            "icon icon-md i-hours-active ":
+                                traderId === "orders" && !orderId,
+                        })}
+                    />
                     <p>فعالیت های اخیر</p>
                 </span>
             </footer>
@@ -50,13 +62,18 @@ const Footer = () => {
                 >
                     <span
                         className={classNames({
-                            "icon icon-md i-bar-active": freightId === "order",
-                            "icon icon-md i-bar": freightId !== "order",
+                            "icon icon-md i-bar-active": orderId === "new",
+                            "icon icon-md i-bar": orderId !== "new",
                         })}
                     />
                     <p>بارهای موجود</p>
                 </span>
-                <span className={classes.hoursIcon}>
+                <span
+                    className={classes.hoursIcon}
+                    onClick={() =>
+                        navigate({ pathname: `/${role.name}/offers` })
+                    }
+                >
                     <span className="icon icon-md i-hours " />
                     <p>فعالیت های اخیر</p>
                 </span>
