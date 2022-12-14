@@ -33,6 +33,15 @@ export const validEmail = value => {
 };
 export const validTextInput = value => value.length >= 4;
 
+export const validConfirmPassword = (password, confirmPassword) => {
+    let value;
+    if (password) {
+        value = password === confirmPassword;
+    } else {
+        value = true;
+    }
+    return value;
+};
 export const errorMessageConfig = error => {
     let message;
 

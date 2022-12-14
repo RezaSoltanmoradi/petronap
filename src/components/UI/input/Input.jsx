@@ -1,7 +1,8 @@
 import classes from "./Input.module.scss";
 import classNames from "classnames";
-import DatePicker from "react-datepicker";
-
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 const Input = ({
     inputIsValid,
     changeInput,
@@ -100,14 +101,17 @@ const Input = ({
             break;
         case "datepicker":
             inputElement = (
-                <>
+                <div className={inputClasses}>
                     <DatePicker
-                        className={inputClasses}
-                        selected={value}
+                        value={value}
                         onChange={changeInput}
-                        placeholderText={placeholder}
+                        placeholder={placeholder}
+                        calendar={persian}
+                        locale={persian_fa}
+                        format=" DD/MM/YYYY"
+                        calendarPosition="bottom-right"
                     />
-                </>
+                </div>
             );
             break;
         default:
@@ -133,7 +137,9 @@ const Input = ({
             {inputElement}
             {children}
             {errorMessage && (
-                <p className={classes.error}>{isTouched && errorMessage}</p>
+                <p className={classes.error}>
+                    {(isTouched || !inputIsValid) && errorMessage}
+                </p>
             )}
         </div>
     );

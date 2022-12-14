@@ -3,6 +3,9 @@
         background: url("../src/assets/images/icons.png");
         cursor: pointer;
     }
+    .icon-illustration {
+        background: url("../src/assets//images/Illustrationicons.png");
+    }
     .icon-sm {
         width: 16px;
         height: 16px;
@@ -16,6 +19,10 @@
         height: 40px;
     }
     .icon-xl {
+        width: 48px;
+        height: 48px;
+    }
+    .icon-xxl {
         width: 80px;
         height: 80px;
     }
@@ -99,5 +106,32 @@
     }
     .i-weight {
         background-position: -95px -214px;
+    }
+    .i-offer {
+        background-position: -61px -214px;
+    }
+    .i-payment {
+        background-position: -78px -214px;
+    }
+    .i-calender {
+        background-position: -4px -164px;
+    }
+    .i-order-online {
+        background-position: -80.14px -7.51px;
+    }
+    .i-sub-online {
+        background-position: -80.14px -56.51px;
+    }
+    .i-order-manage {
+        background-position: -80.14px -105.51px;
+    }
+    .i-interview {
+        background-position: -31.14px -7.51px;
+    }
+    .i-different-choice {
+        background-position: -31.14px -56.51px;
+    }
+    .i-pay-online {
+        background-position: -31.14px -105.51px;
     }
 }

@@ -4,7 +4,7 @@ const Image = () => {
     return (
         <div
             className={classNames({
-                "icon icon-xl i-user": true,
+                "icon icon-xxl i-user": true,
                 [classes.Image]: true,
             })}
         >

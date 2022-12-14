@@ -6,11 +6,14 @@ import { NavLink } from "react-router-dom";
 import Button from "../../components/UI/button/Button";
 import Input from "../../components/UI/input/Input";
 import useInput from "../../hooks/useInput";
-// import LegalIcon from "../../assets/icons/legalIcon";
 import Layout from "../../layouts/Layout";
+import useRequest from "src/hooks/useRequest";
+import { getOtpData } from "src/store/user-slice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const {
         hasError: phoneHasError,
         inputBlurHandler: phoneBlurHandler,
@@ -18,6 +21,8 @@ const Login = () => {
         value: phoneValue,
         valueChangeHandler: phoneChangeHandler,
     } = useInput(validPhone, 10);
+
+    const { sendRequest: sendPhoneHandler } = useRequest();
 
     let formIsValid = false;
     if (phoneIsValid) {
@@ -28,10 +33,20 @@ const Login = () => {
         if (!formIsValid) {
             return;
         }
-        // send request to database
-        navigate({ pathname: "otp" });
+        // send request to get request_id
+        sendPhoneHandler({
+            url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
+        }).then(data => {
+            dispatch(
+                getOtpData({
+                    requestId: data.request_id,
+                    receiver: `98${phoneValue}`,
+                    password: data.password,
+                })
+            );
+            navigate({ pathname: "otp" });
+        });
     };
-
     return (
         <Layout isLogin={false}>
             <div className={classes.Container}>
@@ -55,7 +70,7 @@ const Login = () => {
                             value={phoneValue}
                             isLogin={true}
                             isTouched={phoneHasError}
-                            errorMessage="لطفا شماره همراه خود را به درستی وارد کنید"
+                            errorMessage="لطفا شماره همراه خود را  وارد کنید"
                         />
                     </Form.Group>
                     <div className={classes.BottomSection}>

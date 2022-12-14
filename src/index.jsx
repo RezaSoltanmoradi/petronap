@@ -4,8 +4,6 @@ import App from "./App";
 import "./index.scss";
 // add bootstrap stying
 import "../node_modules/bootstrap/dist/css/bootstrap.rtl.min.css";
-// add datepicker package stying
-import "react-datepicker/dist/react-datepicker.css";
 // add router
 import { BrowserRouter as Router } from "react-router-dom";
 // add redux store and storage

@@ -1,5 +1,5 @@
 {
-    "name": "protonap",
+    "name": "petronap",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -12,8 +12,8 @@
         "classnames": "^2.3.2",
         "react": "^18.2.0",
         "react-bootstrap": "^2.6.0",
-        "react-datepicker": "^4.8.0",
         "react-dom": "^18.2.0",
+        "react-multi-date-picker": "^3.3.4",
         "react-redux": "^8.0.5",
         "react-router": "^6.4.3",
         "react-router-dom": "^6.4.3",

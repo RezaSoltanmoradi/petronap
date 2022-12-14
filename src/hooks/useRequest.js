@@ -22,9 +22,10 @@ const useRequest = () => {
             .then(response => {
                 setIsLoading(false);
                 const { data, status } = response;
-                if (data.data?.errors) {
-                    setError(data.data?.errors.join(","));
-                } else if (!data.data) {
+                console.log("response", response);
+                if (data?.errors) {
+                    setError(data?.errors.join(","));
+                } else if (!data) {
                     setError(errorMessageConfig(status));
                 } else {
                     setData(data);
@@ -32,11 +33,12 @@ const useRequest = () => {
                 return data;
             })
             .catch(error => {
+                console.log("error", error);
                 setIsLoading(false);
                 setError(
                     errorMessageConfig(
-                        error.request.status ||
-                            "مشکلی در سرور رخ داده است لطفا مجدد تلاش کنید!"
+                        // error.request.status ||
+                        "مشکلی در سرور رخ داده است لطفا مجدد تلاش کنید!"
                     )
                 );
             });

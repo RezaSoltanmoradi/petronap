@@ -1,19 +1,18 @@
 import classes from "./NewOrder.module.scss";
-import Select from "../../../../components/select/Select";
-import Button from "../../../../components/UI/button/Button";
-import Scroller from "../../../../components/scroller/Scroller";
+import Select from "src/components/select/Select";
+import Button from "src/components/UI/button/Button";
+import Scroller from "src/components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
-import { getContractType } from "../../../../store/order-slice";
+import { getContractType } from "src/store/order-slice";
 import { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import Input from "../../../../components/UI/input/Input";
-import useInput from "../../../../hooks/useInput";
+import Input from "src/components/UI/input/Input";
+import useInput from "src/hooks/useInput";
 import Alert from "src/components/alert/Alert";
 import { useNavigate, useParams } from "react-router";
 import Layout from "src/layouts/Layout";
-import Switch from "src/components/switch/Switch";
 
-const NewOrder = () => {
+const OrderDetail = () => {
     const [hasOrderType, setHasOrderType] = useState(false);
     const [startDate, setStartDate] = useState();
     const [isCompleted, setIsCompleted] = useState(false);
@@ -108,7 +107,6 @@ const NewOrder = () => {
         if (!formIsValid) {
             return;
         }
-
         setIsCompleted(true);
         // send request to database
     };
@@ -116,14 +114,14 @@ const NewOrder = () => {
         if (orderId !== "new") {
             // send requst to chech if there is order id
             // if there was a orderId navigate to offers
-            navigate("/trader/orders");
+            navigate("/producer/orders");
         }
     }, []);
     if (isCompleted) {
         return (
             <Layout isLogin={true}>
                 <Alert
-                    confirmed={() => navigate({ pathname: "/trader/orders" })}
+                    confirmed={() => navigate({ pathname: "/producer/orders" })}
                     height="278px"
                     width="270px"
                     description="سفارش شما با موفقیت ثبت گردید. پیشنهادات شرکت های حمل و نقل برای سفارش شما از طریق اعلان به شما اطلاع داده خواهد شد. شما میتوانید پیشنهادات شرکت های حمل و نقل را در قسمت سفارش ها و سپس بخش پیشنهادات مشاهده کنید."
@@ -143,7 +141,7 @@ const NewOrder = () => {
                             <Select
                                 options={[
                                     { value: "FCA", id: "o1", disable: false },
-                                    { value: "CPT", id: "o2", disable: true },
+                                    { value: "CPT", id: "o2", disable: false },
                                     { value: "FOB", id: "o3", disable: true },
                                     { value: "CFR", id: "o4", disable: true },
                                 ]}
@@ -177,7 +175,6 @@ const NewOrder = () => {
                                 inputType="select"
                                 placeholder="نوع قرار داد"
                                 isLogin={false}
-                                inputIsValid={contractType}
                                 errorMessage="نوع قرار داد"
                             >
                                 <div className={classes.innerIcon}>
@@ -260,11 +257,7 @@ const NewOrder = () => {
                                 changeInput={date => setStartDate(date)}
                                 errorMessage="تاریخ بارگیری"
                                 inputIsValid={true}
-                            >
-                                <div className={classes.innerIcon}>
-                                    <div className="icon icon-md i-calender" />
-                                </div>
-                            </Input>
+                            />
                             <Input
                                 inputType="text"
                                 elementType="input"
@@ -310,10 +303,9 @@ const NewOrder = () => {
                                     )}
                                 </span>
                             </Input>
-
                             <div className={classes.Button}>
                                 <Button
-                                    disabled={!contractType}
+                                    // disabled={!contractType}
                                     clicked={formSubmitionHandler}
                                     btnStyle={{
                                         fontSize: "20px",
@@ -333,4 +325,4 @@ const NewOrder = () => {
     );
 };
 
-export default NewOrder;
+export default OrderDetail;

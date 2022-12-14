@@ -1,6 +1,10 @@
 import Image from "../../../components/profileImage/Image";
 import classes from "./Profile.module.scss";
-import { validTextInput, validEmail } from "../../../helper/utils";
+import {
+    validTextInput,
+    validEmail,
+    validConfirmPassword,
+} from "../../../helper/utils";
 import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
 import Input from "../../../components/UI/input/Input";
@@ -12,12 +16,22 @@ import Scroller from "../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
 import { getNationality } from "src/store/user-slice";
 import { NATIONALIT_CHOICES } from "src/helper/types";
+import useRequest from "src/hooks/useRequest";
 
 const Profile = () => {
     // const navigate = useNavigate();
     const [isCompleted, setIsCompleted] = useState(false);
-    const { nationality } = useSelector(state => state.user);
+    const { nationality, otp, type, role, accessToken ,userId} = useSelector(
+        state => state.user
+    );
+    const { receiver: mobile } = otp;
     const dispatch = useDispatch();
+
+    const {
+        sendRequest: sendProfileData,
+        data: profileData,
+        error,
+    } = useRequest();
 
     const {
         hasError: hasErrorCompanyName,
@@ -34,19 +48,13 @@ const Profile = () => {
         valueChangeHandler: onChangeCompanyNationalId,
     } = useInput(validTextInput);
     const {
-        hasError: hasErrorRegister,
-        inputBlurHandler: onBlurRegister,
-        isValid: validRegister,
-        value: register,
-        valueChangeHandler: onChangeRegister,
+        hasError: hasErrorCompanyId,
+        inputBlurHandler: onBlurCompanyId,
+        isValid: validCompanyId,
+        value: companyId,
+        valueChangeHandler: onChangeCompanyId,
     } = useInput(validTextInput);
-    const {
-        hasError: hasErrorCompanyPhone,
-        inputBlurHandler: onBlurCompanyPhone,
-        isValid: validCompanyPhone,
-        value: companyPhone,
-        valueChangeHandler: onChangeCompanyPhone,
-    } = useInput();
+
     const {
         hasError: hasErrorCompanyFax,
         inputBlurHandler: onBlurCompanyFax,
@@ -60,7 +68,7 @@ const Profile = () => {
         isValid: validEmailAddress,
         value: emailAddress,
         valueChangeHandler: onChangeEmailAddress,
-    } = useInput(validEmail);
+    } = useInput();
     const {
         hasError: hasErrorCompanyAddress,
         inputBlurHandler: onBlurCompanyAddress,
@@ -123,14 +131,24 @@ const Profile = () => {
         isValid: validPassword,
         value: password,
         valueChangeHandler: onChangePassword,
-    } = useInput(validTextInput);
+    } = useInput();
+    const {
+        hasError: hasErrorConfirmPassword,
+        inputBlurHandler: onBlurConfirmPassword,
+        value: confirmPassword,
+        valueChangeHandler: onChangeConfirmPassword,
+    } = useInput();
 
+    const validConfirmPasswordHandler = validConfirmPassword(
+        password,
+        confirmPassword
+    );
     let formIsValid = false;
     const formValidation =
         validCompanyName &&
         validCompanyNationalId &&
-        validRegister &&
-        validCompanyPhone &&
+        validCompanyId &&
+        mobile &&
         validCompanyFax &&
         validEmailAddress &&
         validCompanyAddress &&
@@ -141,7 +159,8 @@ const Profile = () => {
         validLicense &&
         validCompanyDoc &&
         validAbout &&
-        validPassword;
+        validPassword &&
+        validConfirmPasswordHandler;
 
     if (formValidation) {
         formIsValid = true;
@@ -151,9 +170,46 @@ const Profile = () => {
         if (!formIsValid) {
             return;
         }
-        setIsCompleted(true);
+
+        sendProfileData({
+            url: `trader/profile/${userId}`,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + accessToken,
+            },
+            data: JSON.stringify({
+                password: password,
+                type: type.id,
+                role: role.id,
+                company_name: companyName,
+                company_origin: nationality.id,
+                company_id: companyId,
+                company_national_id: companyNationalId,
+                company_phone: "09195416561",
+                email: "reza@gmail.com",
+                mobile: mobile,
+                company_fax: companyFax,
+                url: emailAddress,
+                company_address: companyAddress,
+                ceo_name: ceoName,
+                agent_name: agentName,
+                agent_phone: agentPhone,
+                agent_email: agentEmail,
+                about: about,
+                license: license,
+                company_doc: companyDoc,
+            }),
+        }).then(data => {
+            // console.log("data1", data);
+            if (data) {
+                setIsCompleted(true);
+            }
+        });
         // send request to database
     };
+    console.log("profileData", profileData);
+    console.log("error", error);
     if (isCompleted) {
         return (
             <Alert
@@ -211,31 +267,28 @@ const Profile = () => {
                     />
                     <Input
                         elementType="input"
-                        blurInput={onBlurRegister}
-                        changeInput={onChangeRegister}
-                        inputIsValid={validRegister}
-                        isTouched={hasErrorRegister}
+                        blurInput={onBlurCompanyId}
+                        changeInput={onChangeCompanyId}
+                        inputIsValid={validCompanyId}
+                        isTouched={hasErrorCompanyId}
                         inputType="text"
                         placeholder="شماره ثبت"
-                        value={register}
+                        value={companyId}
                         label="شماره ثبت"
                         errorMessage="لطفا شماره ثبت را وارد کنید"
                     />
                     <Input
-                        elementType="inputgroup"
-                        blurInput={onBlurCompanyPhone}
-                        changeInput={onChangeCompanyPhone}
-                        inputIsValid={validCompanyPhone}
-                        isTouched={hasErrorCompanyPhone}
+                        elementType="select"
                         inputType="number"
                         placeholder="شماره تلفن"
-                        value={companyPhone}
+                        value={mobile}
+                        inputIsValid={mobile}
                         label="شماره تلفن"
                         isLogin={false}
                         errorMessage="لطفا شماره تلفن  را وارد کنید"
                     >
                         <span className={classes.innerIcon}>
-                            {companyPhone ? (
+                            {mobile ? (
                                 <div className="icon icon-md i-completed" />
                             ) : (
                                 <div className="icon icon-md i-plus" />
@@ -335,10 +388,18 @@ const Profile = () => {
                         inputIsValid={validLicense}
                         isTouched={hasErrorLicense}
                         inputType="text"
-                        placeholder="فایل لیسانس  شرکت "
+                        placeholder="فایل اساس نامه شرکت "
                         value={license}
-                        errorMessage="لطفا فایل لیسانس  شرکت را وارد کنید"
-                    />
+                        errorMessage="لطفا فایل اساس نامه شرکت را وارد کنید"
+                    >
+                        <div className={classes.innerIcon}>
+                            {license ? (
+                                <div className="icon icon-md i-completed" />
+                            ) : (
+                                <div className="icon icon-md i-plus" />
+                            )}
+                        </div>
+                    </Input>
                     <Input
                         elementType="input"
                         blurInput={onBlurCompanyDoc}
@@ -349,7 +410,15 @@ const Profile = () => {
                         placeholder="فایل ثبت شرکت "
                         value={companyDoc}
                         errorMessage="لطفا فایل ثبت شرکت را وارد کنید"
-                    />
+                    >
+                        <div className={classes.innerIcon}>
+                            {companyDoc ? (
+                                <div className="icon icon-md i-completed" />
+                            ) : (
+                                <div className="icon icon-md i-plus" />
+                            )}
+                        </div>
+                    </Input>
                     <Input
                         elementType="textarea"
                         blurInput={onBlurAbout}
@@ -373,6 +442,18 @@ const Profile = () => {
                         value={password}
                         label="کلمه عبور"
                         errorMessage="لطفا کلمه عبور را وارد کنید"
+                    />
+                    <Input
+                        elementType="input"
+                        blurInput={onBlurConfirmPassword}
+                        changeInput={onChangeConfirmPassword}
+                        inputIsValid={validConfirmPasswordHandler}
+                        isTouched={hasErrorConfirmPassword}
+                        inputType="text"
+                        placeholder=" تکرار کلمه عبور "
+                        value={confirmPassword}
+                        label="تکرار کلمه عبور"
+                        errorMessage="تکرار کلمه ی عبور صحیح نمیباشد"
                     />
                     <div className={classes.BottomSection}>
                         <Button

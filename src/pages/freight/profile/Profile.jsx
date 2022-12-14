@@ -346,10 +346,18 @@ const Profile = () => {
                         inputIsValid={validPermission}
                         isTouched={hasErrorPermission}
                         inputType="text"
-                        placeholder="فایل ثبت شرکت "
+                        placeholder="مجوز حمل و نقل شرکت "
                         value={permission}
-                        errorMessage="لطفا فایل ثبت شرکت را وارد کنید"
-                    />
+                        errorMessage="لطفا مجوز را وارد کنید"
+                    >
+                        <span className={classes.innerIcon}>
+                            {companyPhone ? (
+                                <div className="icon icon-md i-completed" />
+                            ) : (
+                                <div className="icon icon-md i-plus" />
+                            )}
+                        </span>
+                    </Input>
                     <Input
                         elementType="textarea"
                         blurInput={onBlurAbout}

@@ -1,6 +1,10 @@
 import Image from "../../../components/profileImage/Image";
 import classes from "./Profile.module.scss";
-import { validTextInput, validEmail } from "../../../helper/utils";
+import {
+    validTextInput,
+    validEmail,
+    validConfirmPassword,
+} from "../../../helper/utils";
 import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
 import Input from "../../../components/UI/input/Input";
@@ -117,8 +121,18 @@ const Profile = () => {
         isValid: validPassword,
         value: password,
         valueChangeHandler: onChangePassword,
-    } = useInput(validTextInput);
+    } = useInput();
+    const {
+        hasError: hasErrorConfirmPassword,
+        inputBlurHandler: onBlurConfirmPassword,
+        value: confirmPassword,
+        valueChangeHandler: onChangeConfirmPassword,
+    } = useInput();
 
+    const validConfirmPasswordHandler = validConfirmPassword(
+        password,
+        confirmPassword
+    );
     let formIsValid = false;
     const formValidation =
         validCompanyName &&
@@ -135,7 +149,8 @@ const Profile = () => {
         validLicense &&
         validCompanyDoc &&
         validAbout &&
-        validPassword;
+        validPassword &&
+        validConfirmPasswordHandler;
 
     if (formValidation) {
         formIsValid = true;
@@ -217,13 +232,13 @@ const Profile = () => {
                         isLogin={false}
                         errorMessage="لطفا شماره تلفن  را وارد کنید"
                     >
-                        <span className={classes.innerIcon}>
+                        <div className={classes.innerIcon}>
                             {companyPhone ? (
                                 <div className="icon icon-md i-completed" />
                             ) : (
                                 <div className="icon icon-md i-plus" />
                             )}
-                        </span>
+                        </div>
                     </Input>
                     <Input
                         elementType="input"
@@ -321,7 +336,15 @@ const Profile = () => {
                         placeholder="فایل اساس نامه شرکت "
                         value={license}
                         errorMessage="لطفا فایل اساس نامه شرکت را وارد کنید"
-                    />
+                    >
+                        <div className={classes.innerIcon}>
+                            {license ? (
+                                <div className="icon icon-md i-completed" />
+                            ) : (
+                                <div className="icon icon-md i-plus" />
+                            )}
+                        </div>
+                    </Input>
                     <Input
                         elementType="input"
                         blurInput={onBlurCompanyDoc}
@@ -332,7 +355,15 @@ const Profile = () => {
                         placeholder="فایل ثبت شرکت "
                         value={companyDoc}
                         errorMessage="لطفا فایل ثبت شرکت را وارد کنید"
-                    />
+                    >
+                        <div className={classes.innerIcon}>
+                            {companyDoc ? (
+                                <div className="icon icon-md i-completed" />
+                            ) : (
+                                <div className="icon icon-md i-plus" />
+                            )}
+                        </div>
+                    </Input>
                     <Input
                         elementType="textarea"
                         blurInput={onBlurAbout}
@@ -343,7 +374,7 @@ const Profile = () => {
                         placeholder="درباره شرکت "
                         value={About}
                         label="درباره شرکت"
-                        errorMessage="لطفا درباره شرکت چیزی بنویسید"
+                        errorMessage="لطفا درباره شرکت را وارد کنید"
                     />
                     <Input
                         elementType="input"
@@ -356,6 +387,18 @@ const Profile = () => {
                         value={password}
                         label="کلمه عبور"
                         errorMessage="لطفا کلمه عبور را وارد کنید"
+                    />
+                    <Input
+                        elementType="input"
+                        blurInput={onBlurConfirmPassword}
+                        changeInput={onChangeConfirmPassword}
+                        inputIsValid={validConfirmPasswordHandler}
+                        isTouched={hasErrorConfirmPassword}
+                        inputType="text"
+                        placeholder=" تکرار کلمه عبور "
+                        value={confirmPassword}
+                        label="تکرار کلمه عبور"
+                        errorMessage="تکرار کلمه ی عبور صحیح نمیباشد"
                     />
                     <div className={classes.BottomSection}>
                         <Button

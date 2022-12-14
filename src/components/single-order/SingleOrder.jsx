@@ -1,21 +1,14 @@
-import { useNavigate } from "react-router";
-import Button from "../../button/Button";
-import classes from "./OrderCard.module.scss";
-const OrderCard = ({
+import classes from "./SingleOrder.module.scss";
+const SingleOrder = ({
     loadingLocation,
     destination,
     borderPassage,
     product,
     weight,
-    offersNumber,
-    orderId,
+    top,
 }) => {
-    const navigate = useNavigate();
     return (
-        <section
-            className={classes.OrderCard}
-            onClick={() => navigate(`/trader/orders/${orderId}/offers`)}
-        >
+        <section className={classes.SingleOrder} style={{top}}>
             <div className={classes.OrderContainer}>
                 <div className={classes.ProductDetail}>
                     <div className={classes.text}>
@@ -45,19 +38,8 @@ const OrderCard = ({
                     </div>
                 </div>
             </div>
-            <div className={classes.Button}>
-                <Button
-                    btnStyle={{
-                        width: "118px",
-                        height: "24px",
-                        fontSize: "16px",
-                    }}
-                >
-                    {offersNumber} پیشنهاد
-                </Button>
-            </div>
         </section>
     );
 };
 
-export default OrderCard;
+export default SingleOrder;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import classes from "./otp.module.scss";
 import Form from "react-bootstrap/Form";
 import useTimer from "../../../hooks/useTimer";
@@ -7,10 +7,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Button from "../../../components/UI/button/Button";
 import Input from "../../../components/UI/input/Input";
 import useInput from "../../../hooks/useInput";
+import useRequest from "src/hooks/useRequest";
+import { useSelector, useDispatch } from "react-redux";
+import { getLoginStaus, getRole } from "src/store/user-slice";
 
 const Otp = () => {
     const { onClickReset, timer } = useTimer();
     const navigate = useNavigate();
+    const { requestId, receiver, password } = useSelector(
+        state => state.user.otp
+    );
+    const { role } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+
     const {
         hasError: passwordHasError,
         inputBlurHandler: passwordBlurHandler,
@@ -19,24 +28,57 @@ const Otp = () => {
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validUserCode, 4);
 
+    const { sendRequest: sendOtpRequestId, error } = useRequest();
+
     let formIsValid = false;
     if (passwordIsValid) {
         formIsValid = true;
     }
 
     const formSubmitionHandler = event => {
+        event.preventDefault();
         if (!formIsValid) {
             return;
         }
-        // send request to database
-        // if this user is exist go to /profile or order
-        // if is not exist :
-        navigate({ pathname: "/login/user-type" });
+        sendOtpRequestId({
+            url: `users/otp/`,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify({
+                request_id: requestId,
+                receiver: receiver,
+                // password: passwordValue,
+                password: password,
+            }),
+        }).then(data => {
+            if (data) {
+                dispatch(
+                    getLoginStaus({
+                        accessToken: data.token,
+                        refreshToken: data.refresh,
+                        userId: data.user_id,
+                    })
+                );
+
+                if ((!data.created && +data.user_role === 0) || data.created) {
+                    navigate({ pathname: "/login/user-type" });
+                } else if (!data.created && data.user_role > 0) {
+                    dispatch(getRole(data.user_role));
+                    navigate(`/${role}`);
+                }
+            }
+        });
     };
+
     useEffect(() => {
         //send request to database
         onClickReset();
-    }, []);
+        if (error) {
+            alert(error);
+        }
+    }, [error]);
     const sendPasswordAgain = () => {
         //send request to database
         onClickReset();
@@ -99,4 +141,4 @@ const Otp = () => {
     );
 };
 
-export default Otp;
+export default memo(Otp);

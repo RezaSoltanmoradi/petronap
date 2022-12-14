@@ -2,12 +2,12 @@ import classNames from "classnames";
 import { useSelector } from "react-redux";
 import classes from "./Footer.module.scss";
 import { useNavigate, useParams } from "react-router";
+
 const Footer = () => {
     const { role } = useSelector(state => state.user);
     const navigate = useNavigate();
     const { orderId, traderId } = useParams();
-    console.log("orderId", orderId);
-    console.log("traderId", traderId);
+
     if (role.name === "producer" || role.name === "trader") {
         return (
             <footer
@@ -21,7 +21,7 @@ const Footer = () => {
                 >
                     <span
                         className={classNames({
-                            "icon icon-md i-plus": traderId === "orders",
+                            "icon icon-md i-plus": true,
                             "icon icon-md i-plus-active":
                                 orderId === "new" && traderId === "orders",
                         })}
@@ -38,9 +38,9 @@ const Footer = () => {
                 >
                     <span
                         className={classNames({
-                            "icon icon-md i-hours ": traderId === "orders",
+                            "icon icon-md i-hours ": true,
                             "icon icon-md i-hours-active ":
-                                traderId === "orders" && !orderId,
+                                traderId === "orders" && orderId !== "new",
                         })}
                     />
                     <p>فعالیت های اخیر</p>

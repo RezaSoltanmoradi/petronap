@@ -4,7 +4,7 @@ import Button from "../../../components/UI/button/Button";
 import classes from "./SelectUserType.module.scss";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { getRole, getType, getAccessToken } from "../../../store/user-slice";
+import { getRole, getType } from "../../../store/user-slice";
 import Switch from "../../../components/switch/Switch";
 import { ROLE_CHOICES, TYPE_CHOICES } from "src/helper/types";
 
@@ -25,7 +25,6 @@ const SelectUserType = () => {
         return btnClasses;
     };
     const disable = !isCompleteType && !isComplete;
-
     const confirmButtonHandler = () => {
         if (isCompleteType) {
             setIsComplete(true);
@@ -33,9 +32,8 @@ const SelectUserType = () => {
         if (isComplete) {
             // send request to database
             // if access token recived
-            dispatch(getAccessToken("accessToken"));
 
-            navigate({ pathname: "/" });
+            navigate({ pathname: `/${role.name}` });
         }
     };
     useEffect(() => {
@@ -70,21 +68,9 @@ const SelectUserType = () => {
                         className={classes.title}
                         onClick={() => {
                             if (!isComplete) {
-                                dispatch(
-                                    getRole({
-                                        id: "3",
-                                        title: "تولید کننده",
-                                        name: "producer",
-                                    })
-                                );
+                                dispatch(getRole("3"));
                                 setIsCompleteType(true);
-                                dispatch(
-                                    getType({
-                                        id: "",
-                                        title: "",
-                                        name: "",
-                                    })
-                                );
+                                setSelectedId(3)
                             }
                         }}
                     >
@@ -103,13 +89,7 @@ const SelectUserType = () => {
                             className={classes.title}
                             onClick={() => {
                                 if (!isComplete) {
-                                    dispatch(
-                                        getRole({
-                                            id: userRole.id,
-                                            title: userRole.title,
-                                            name: userRole.name,
-                                        })
-                                    );
+                                    dispatch(getRole(userRole.id));
                                     setSelectedId(userRole.id);
                                 }
                             }}

@@ -1,19 +1,20 @@
-import Button from "../../../components/UI/button/Button";
+import Button from "../../components/UI/button/Button";
 import classes from "./Landing.module.scss";
-import logoImage from "../../../assets/images/logo.png";
+import logoImage from "../../assets/images/logo.png";
 import { useNavigate } from "react-router-dom";
-import Layout from "../../../layouts/Layout";
+import Layout from "../../layouts/Layout";
+import { useSelector } from "react-redux";
 
 const Landing = () => {
     const navigate = useNavigate();
-    const userLogin = false;
+    const { role, isLogin } = useSelector(state => state.user);
 
     const startBtnHandler = () => {
-        if (!userLogin) {
-            navigate({ pathname: "login" });
-        } else {
-            navigate({ pathname: "profile" });
-        }
+        navigate({ pathname: "login" });
+        // if (!isLogin) {
+        // } else {
+        //     navigate({ pathname: `/${role.name}` });
+        // }
     };
     return (
         <Layout>

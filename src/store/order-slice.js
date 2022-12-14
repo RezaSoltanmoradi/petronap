@@ -1,23 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    order: {},
-    orders: [],
+    contractType: null,
 };
 export const orderSlice = createSlice({
     name: "order",
     initialState: initialState,
     reducers: {
-        getOrder(state, action) {
-            const newItem = action.payload;
-            const updatedOrder = { ...state.order, ...newItem };
-            state.order = updatedOrder;
-            if (state.order.product) {
-                state.orders = [...state.orders, state.order];
-                state.order = {};
-            }
+        getContractType(state, action) {
+            state.contractType = action.payload;
         },
     },
 });
-export const { getOrder } = orderSlice.actions;
+export const { getContractType } = orderSlice.actions;
 export default orderSlice.reducer;

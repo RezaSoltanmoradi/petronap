@@ -1,40 +1,36 @@
-.OrderCard {
+.SingleOrder {
     width: 328px;
-    height: 142px;
-    border-radius: 8px;
-    background-color: var(--info-color);
+    height: 83px;
+    background-color: var(--white-color);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-bottom: 12px;
-    position: relative;
-    cursor: pointer;
+    position: fixed;
+    border-width:0 0 0.2px 0;
+    border-style: solid;
+    border-color: #c5c5c5;
+    z-index: 100;
     .OrderContainer {
         display: flex;
         justify-content: space-between;
         padding: 10px;
         width: 100%;
         .ProductDetail {
-            width: 50%;
+            width: 60%;
             display: flex;
             flex-direction: column;
         }
         .Product {
-            width: 50%;
+            width: 40%;
             display: flex;
             flex-direction: column;
         }
         .text {
             display: flex;
             align-items: center;
-            padding-top: 11px;
             line-height: 20px;
-            font-size: 16px;
+            font-size: 12px;
         }
-    }
-    .Button {
-        position: absolute;
-        left: 12px;
-        bottom: 11px;
     }
 }
