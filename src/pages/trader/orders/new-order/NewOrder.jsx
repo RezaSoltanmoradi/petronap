@@ -9,17 +9,46 @@ import Form from "react-bootstrap/Form";
 import Input from "../../../../components/UI/input/Input";
 import useInput from "../../../../hooks/useInput";
 import Alert from "src/components/alert/Alert";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import Layout from "src/layouts/Layout";
-import Switch from "src/components/switch/Switch";
+import useRequest from "src/hooks/useRequest";
+import { validTextInput } from "src/helper/utils";
+import persian from "react-date-object/calendars/persian";
+import gregorian_en from "react-date-object/locales/gregorian_en";
+import gregorian from "react-date-object/calendars/gregorian";
+import { DateObject } from "react-multi-date-picker";
+import Selectbar from "src/components/Selectbar/Selectbar";
+import { Toaster, toast } from "react-hot-toast";
+// import Switch from "src/components/switch/Switch";
+// import {
+//     RESPONSIBLE_STORE_COST,
+//     RESPONSIBLE_DEMURRAGE_COST,
+// } from "src/helper/types";
 
 const NewOrder = () => {
     const [hasOrderType, setHasOrderType] = useState(false);
     const [startDate, setStartDate] = useState();
     const [isCompleted, setIsCompleted] = useState(false);
     const { contractType } = useSelector(state => state.order);
-    const { orderId } = useParams();
+    const [required, setRequired] = useState(false);
+    const { accessToken } = useSelector(state => state.user);
     const navigate = useNavigate();
+    const [producers, setProducers] = useState(null);
+    const [producer, setProducer] = useState(null);
+    // const [responsibleStore, setResponsibleStore] = useState(
+    //     RESPONSIBLE_STORE_COST[0]
+    // );
+    // const [responsibleDemurrage, setResponsibleDemurrage] = useState(
+    //     RESPONSIBLE_DEMURRAGE_COST[0]
+    // );
+
+    const { uploadFiles } = useSelector(state => state.upload);
+    const performFile = uploadFiles?.performFile ?? "";
+    const dispatch = useDispatch();
+
+    const { sendRequest: sendNewOrder, error: newOrderError } = useRequest();
+    const { sendRequest: getProducerHandler, error: producerError } =
+        useRequest();
 
     const {
         hasError: hasErrorProduct,
@@ -27,35 +56,35 @@ const NewOrder = () => {
         isValid: validProduct,
         value: product,
         valueChangeHandler: onChangeProduct,
-    } = useInput();
+    } = useInput(validTextInput, 200);
     const {
         hasError: hasErrorWeight,
         inputBlurHandler: onBlurWeight,
         isValid: validWeight,
         value: weight,
         valueChangeHandler: onChangeWeight,
-    } = useInput();
+    } = useInput(validTextInput);
     const {
         hasError: hasErrorVehicleType,
         inputBlurHandler: onBlurVehicleType,
         isValid: validVehicleType,
         value: vehicleType,
         valueChangeHandler: onChangeVehicleType,
-    } = useInput();
+    } = useInput(validTextInput, 200);
     const {
         hasError: hasErrorLoadingLocation,
         inputBlurHandler: onBlurLoadingLocation,
         isValid: validLoadingLocation,
         value: loadingLocation,
         valueChangeHandler: onChangeLoadingLocation,
-    } = useInput();
+    } = useInput(validTextInput, 200);
     const {
         hasError: hasErrorDestination,
         inputBlurHandler: onBlurDestination,
         isValid: validDestination,
         value: destination,
         valueChangeHandler: onChangeDestination,
-    } = useInput();
+    } = useInput(validTextInput, 200);
     const {
         hasError: hasErrorBorderPassage,
         inputBlurHandler: onBlurBorderPassage,
@@ -70,18 +99,21 @@ const NewOrder = () => {
         value: description,
         valueChangeHandler: onChangeDescription,
     } = useInput();
-    const {
-        hasError: hasErrorPerformFile,
-        inputBlurHandler: onBlurPerformFile,
-        isValid: validPerformFile,
-        value: performFile,
-        valueChangeHandler: onChangePerformFile,
-    } = useInput();
 
-    const dispatch = useDispatch();
-    const onChangeOrderType = value => {
+    const onChangeContractType = value => {
         dispatch(getContractType(value));
     };
+    // const onChangeResponsibleStore = store => {
+    //     const findStore = RESPONSIBLE_STORE_COST.find(st => st.title === store);
+    //     setResponsibleStore(findStore);
+    // };
+    // const onChangeResponsibleDemurrage = demurrage => {
+    //     const findDemurrage = RESPONSIBLE_DEMURRAGE_COST.find(
+    //         dem => dem.title === demurrage
+    //     );
+    //     setResponsibleDemurrage(findDemurrage);
+    // };
+
     const onConfirmStepOne = () => {
         if (!contractType) {
             return;
@@ -96,34 +128,88 @@ const NewOrder = () => {
         validVehicleType &&
         validLoadingLocation &&
         validDestination &&
-        validBorderPassage &&
-        validDescription &&
-        validPerformFile;
+        startDate &&
+        performFile &&
+        producer;
+
     if (formValidation) {
         formIsValid = true;
     }
     const formSubmitionHandler = event => {
         event.preventDefault();
-        console.log(formIsValid);
         if (!formIsValid) {
+            setRequired(true);
+            toast.error("لطفا فیلدهای ضروری را وارد کنید");
+
             return;
         }
 
-        setIsCompleted(true);
-        // send request to database
+        const loadingDate = new DateObject({
+            calendar: persian,
+            date: startDate,
+        })
+            .convert(gregorian, gregorian_en)
+            .format();
+
+        sendNewOrder({
+            url: `trader/orders/`,
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + accessToken,
+            },
+            data: {
+                contract_type: contractType?.id,
+                product: product,
+                weight: weight,
+                vehicle_type: vehicleType,
+                loading_location: loadingLocation,
+                destination: destination,
+                loading_date: loadingDate,
+                border_passage: borderPassage,
+                description: description,
+                producer: producer,
+                proforma_file: performFile,
+            },
+        }).then(data => {
+            if (data) {
+                setIsCompleted(true);
+            }
+        });
+    };
+    const confirmOrderHandler = () => {
+        dispatch(getContractType(null));
+        navigate({ pathname: "/trader/orders" });
     };
     useEffect(() => {
-        if (orderId !== "new") {
-            // send requst to chech if there is order id
-            // if there was a orderId navigate to offers
-            navigate("/trader/orders");
-        }
+        getProducerHandler({
+            url: "producer/",
+            headers: {
+                Authorization: "Bearer " + accessToken,
+            },
+        }).then(data => {
+            let producerData = [];
+            if (data) {
+                data?.forEach(item => {
+                    producerData.push({
+                        title: item.company_name,
+                        id: item.id,
+                    });
+                });
+                setProducers(producerData);
+            }
+        });
     }, []);
+    useEffect(() => {
+        if ((newOrderError, producerError)) {
+            toast.error(newOrderError || producerError);
+        }
+    }, [newOrderError, producerError]);
+
     if (isCompleted) {
         return (
             <Layout isLogin={true}>
                 <Alert
-                    confirmed={() => navigate({ pathname: "/trader/orders" })}
+                    confirmed={confirmOrderHandler}
                     height="278px"
                     width="270px"
                     description="سفارش شما با موفقیت ثبت گردید. پیشنهادات شرکت های حمل و نقل برای سفارش شما از طریق اعلان به شما اطلاع داده خواهد شد. شما میتوانید پیشنهادات شرکت های حمل و نقل را در قسمت سفارش ها و سپس بخش پیشنهادات مشاهده کنید."
@@ -133,6 +219,11 @@ const NewOrder = () => {
     }
     return (
         <Layout isLogin={true}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerClassName={classes.Toster}
+            />
             <div className={classes.Order}>
                 <Scroller>
                     {!hasOrderType && (
@@ -142,13 +233,13 @@ const NewOrder = () => {
                             </p>
                             <Select
                                 options={[
-                                    { value: "FCA", id: "o1", disable: false },
-                                    { value: "CPT", id: "o2", disable: true },
-                                    { value: "FOB", id: "o3", disable: true },
-                                    { value: "CFR", id: "o4", disable: true },
+                                    { value: "FCA", id: "0", disable: false },
+                                    { value: "CPT", id: "1", disable: false },
+                                    { value: "FOB", id: "2", disable: true },
+                                    { value: "CFR", id: "3", disable: true },
                                 ]}
                                 selected={contractType}
-                                setSelected={onChangeOrderType}
+                                setSelected={onChangeContractType}
                                 top="80px"
                             />
                             <div className={classes.Button}>
@@ -169,8 +260,8 @@ const NewOrder = () => {
                     )}
                     {hasOrderType && (
                         <Form
-                            onSubmit={formSubmitionHandler}
                             className={classes.Form}
+                            onSubmit={e => e.preventDefault()}
                         >
                             <Input
                                 elementType="select"
@@ -178,7 +269,6 @@ const NewOrder = () => {
                                 placeholder="نوع قرار داد"
                                 isLogin={false}
                                 inputIsValid={contractType}
-                                errorMessage="نوع قرار داد"
                             >
                                 <div className={classes.innerIcon}>
                                     <Button
@@ -188,10 +278,18 @@ const NewOrder = () => {
                                             width: "154px",
                                         }}
                                     >
-                                        {contractType}
+                                        {contractType?.value}
                                     </Button>
                                 </div>
                             </Input>
+                            <Selectbar
+                                items={producers}
+                                placeholder=" تولید کننده را انتخاب کنید "
+                                label=" تولید کننده"
+                                select={setProducer}
+                                error={!producer}
+                                required={required}
+                            />
                             <Input
                                 inputType="text"
                                 elementType="input"
@@ -199,67 +297,68 @@ const NewOrder = () => {
                                 placeholder="نوع کالا"
                                 changeInput={onChangeProduct}
                                 blurInput={onBlurProduct}
-                                errorMessage="نوع کالا"
                                 inputIsValid={validProduct}
                                 label="نام کالا"
                                 isTouched={hasErrorProduct}
+                                required={required}
                             />
                             <Input
-                                inputType="text"
+                                inputType="number"
                                 elementType="input"
                                 placeholder="وزن"
-                                errorMessage="وزن را وارد کنید"
                                 label="وزن "
                                 value={weight}
                                 inputIsValid={validWeight}
                                 changeInput={onChangeWeight}
                                 blurInput={onBlurWeight}
                                 isTouched={hasErrorWeight}
+                                required={required}
                             />
                             <Input
                                 inputType="text"
                                 elementType="input"
                                 placeholder="نوع ناوگان"
-                                errorMessage="نوع ناوگان را وارد کنید"
                                 label="نوع ناوگان "
                                 value={vehicleType}
                                 inputIsValid={validVehicleType}
                                 changeInput={onChangeVehicleType}
                                 blurInput={onBlurVehicleType}
                                 isTouched={hasErrorVehicleType}
+                                required={required}
                             />
                             <Input
                                 inputType="text"
                                 elementType="input"
                                 placeholder="محل بارگیری "
-                                errorMessage=" محل بارگیری را وارد کنید"
                                 label="محل بارگیری "
                                 value={loadingLocation}
                                 inputIsValid={validLoadingLocation}
                                 changeInput={onChangeLoadingLocation}
                                 blurInput={onBlurLoadingLocation}
                                 isTouched={hasErrorLoadingLocation}
+                                required={required}
                             />
                             <Input
                                 inputType="text"
                                 elementType="input"
                                 placeholder="محل تخلیه "
-                                errorMessage=" محل تخلیه را وارد کنید"
                                 label="محل تخلیه "
                                 value={destination}
                                 inputIsValid={validDestination}
                                 changeInput={onChangeDestination}
                                 blurInput={onBlurDestination}
                                 isTouched={hasErrorDestination}
+                                required={required}
                             />
                             <Input
                                 inputType="date"
                                 elementType="datepicker"
                                 value={startDate}
                                 placeholder="تاریخ بارگیری"
+                                label="تاریخ بارگیری"
                                 changeInput={date => setStartDate(date)}
-                                errorMessage="تاریخ بارگیری"
-                                inputIsValid={true}
+                                inputIsValid={startDate}
+                                required={required}
                             >
                                 <div className={classes.innerIcon}>
                                     <div className="icon icon-md i-calender" />
@@ -269,7 +368,6 @@ const NewOrder = () => {
                                 inputType="text"
                                 elementType="input"
                                 placeholder="گذرگاه مرزی "
-                                errorMessage=" گذرگاه مرزی را وارد کنید"
                                 label="گذرگاه مرزی "
                                 value={borderPassage}
                                 inputIsValid={validBorderPassage}
@@ -277,11 +375,11 @@ const NewOrder = () => {
                                 blurInput={onBlurBorderPassage}
                                 isTouched={hasErrorBorderPassage}
                             />
+
                             <Input
                                 inputType="text"
                                 elementType="textarea"
-                                placeholder="توضیحات (اختیاری)"
-                                errorMessage=" توضیحات را وارد کنید"
+                                placeholder="توضیحات"
                                 label="توضیحات"
                                 value={description}
                                 inputIsValid={validDescription}
@@ -290,17 +388,14 @@ const NewOrder = () => {
                                 isTouched={hasErrorDescription}
                             />
                             <Input
-                                elementType="inputgroup"
-                                blurInput={onBlurPerformFile}
-                                changeInput={onChangePerformFile}
-                                inputIsValid={validPerformFile}
-                                isTouched={hasErrorPerformFile}
+                                elementType="select-file"
+                                inputIsValid={performFile}
                                 inputType="text"
                                 placeholder="فایل پرفورما"
                                 value={performFile}
                                 label="فایل پرفورما"
-                                isLogin={false}
-                                errorMessage="فایل پرفورما را وارد کنید "
+                                fileName="performFile"
+                                required={required}
                             >
                                 <span className={classes.innerIcon}>
                                     {performFile ? (
@@ -310,7 +405,30 @@ const NewOrder = () => {
                                     )}
                                 </span>
                             </Input>
-
+                            {/* <p className={classes.description}>
+                                مسئول هزینه انبارداری
+                            </p> */}
+                            {/* <Switch
+                                changeTitle={onChangeResponsibleStore}
+                                option={responsibleStore.title}
+                                options={RESPONSIBLE_STORE_COST}
+                                switchStyles={{
+                                    width: "280px",
+                                    position: "relative",
+                                }}
+                            />
+                            <p className={classes.description}>
+                                مسئول هزینه دموراژ
+                            </p>
+                            <Switch
+                                changeTitle={onChangeResponsibleDemurrage}
+                                option={responsibleDemurrage.title}
+                                options={RESPONSIBLE_DEMURRAGE_COST}
+                                switchStyles={{
+                                    width: "280px",
+                                    position: "relative",
+                                }}
+                            /> */}
                             <div className={classes.Button}>
                                 <Button
                                     disabled={!contractType}

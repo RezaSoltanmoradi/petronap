@@ -6,7 +6,7 @@ export const NATIONALIT_CHOICES = [
     },
     {
         id: "1",
-        title: "نماینده شرکت ایرانی",
+        title: "نماینده شرکت خارجی",
         name: "foreign",
     },
 ];
@@ -15,6 +15,7 @@ export const ROLE_CHOICES = [
     { name: "freight", id: "2", title: " حمل و نقل" },
 ];
 export const ROLES = [
+    { name: "unknown", id: "0", title: "ناشناس" },
     { name: "trader", id: "1", title: "بازرگان" },
     { name: "freight", id: "2", title: " حمل و نقل" },
     { name: "producer", id: "3", title: "تولید کننده " },
@@ -28,6 +29,15 @@ export const ORDERS_STATUS_CHOICES = [
     { name: "isDoing", id: "1", title: "در حال انجام" },
     { name: "isCompleted", id: "2", title: "اتمام یافته" },
 ];
+export const RESPONSIBLE_STORE_COST = [
+    { name: "mySelf", id: "1", title: "خودم" },
+    { name: "freight", id: "2", title: "شرکت حمل و نقل" },
+];
+export const RESPONSIBLE_DEMURRAGE_COST = [
+    { name: "mySlef", id: "1", title: "خودم" },
+    { name: "producer", id: "2", title: "شرکت تولید کننده" },
+];
+
 export const DUMMY_HOME_ICONS = [
     {
         icon: "icon-illustration icon-xl i-order-online ",

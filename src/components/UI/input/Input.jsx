@@ -3,6 +3,8 @@ import classNames from "classnames";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
+import { showUploadModal } from "src/store/uploadFile-slice";
+import { useDispatch } from "react-redux";
 const Input = ({
     inputIsValid,
     changeInput,
@@ -16,15 +18,20 @@ const Input = ({
     isLogin,
     isTouched,
     children,
-    errorMessage,
+    required,
+    width,
+    fileName,
 }) => {
     let inputElement = null;
     const inputClasses = classNames({
         [classes.InputElement]: true,
         [classes.validInput]: (inputIsValid && value?.length > 0) || value,
         [classes.isLogin]: isLogin,
-        [classes.InvalidInput]: !inputIsValid && isTouched,
+        [classes.InvalidInput]:
+            (required && !inputIsValid) || (!inputIsValid && isTouched),
     });
+    const dispatch = useDispatch();
+
     switch (elementType) {
         case "inputGroup":
             inputElement = (
@@ -68,6 +75,7 @@ const Input = ({
                     onChange={changeInput}
                     onClick={changeInput}
                     onBlur={blurInput}
+                    style={width && { width: width }}
                 />
             );
             break;
@@ -96,6 +104,32 @@ const Input = ({
                     aria-describedby="basic"
                     className={inputClasses}
                     value={value}
+                    style={width && { width: width }}
+                />
+            );
+            break;
+        case "select-file":
+            inputElement = (
+                <input
+                    type={inputType}
+                    readOnly
+                    placeholder={placeholder}
+                    aria-label="input"
+                    aria-describedby="basic"
+                    className={inputClasses}
+                    value={value}
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                        dispatch(
+                            showUploadModal({
+                                fileName,
+                                title: label,
+                                view: false,
+                                acceptType: "*",
+                                fileType: "document",
+                            })
+                        )
+                    }
                 />
             );
             break;
@@ -108,7 +142,7 @@ const Input = ({
                         placeholder={placeholder}
                         calendar={persian}
                         locale={persian_fa}
-                        format=" DD/MM/YYYY"
+                        format="YYYY-MM-DDThh:mm"
                         calendarPosition="bottom-right"
                     />
                 </div>
@@ -130,17 +164,18 @@ const Input = ({
             );
     }
     return (
-        <div className={classes.Input}>
-            {value?.length > 0 && (
+        <div className={classes.Input} style={width && { width: width }}>
+            {((required && !inputIsValid) || (!inputIsValid && isTouched)) && (
+                <label className={classes.LabelIsRequired}>
+                    {label}
+                    <span className={classes.star}>*</span>
+                </label>
+            )}
+            {inputIsValid && value?.length > 0 && (
                 <label className={classes.Label}>{label}</label>
             )}
             {inputElement}
             {children}
-            {errorMessage && (
-                <p className={classes.error}>
-                    {(isTouched || !inputIsValid) && errorMessage}
-                </p>
-            )}
         </div>
     );
 };

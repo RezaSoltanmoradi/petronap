@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     contractType: null,
 };
-export const orderSlice = createSlice({
+const orderSlice = createSlice({
     name: "order",
     initialState: initialState,
     reducers: {

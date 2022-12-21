@@ -9,7 +9,14 @@ import Input from "../../../components/UI/input/Input";
 import useInput from "../../../hooks/useInput";
 import useRequest from "src/hooks/useRequest";
 import { useSelector, useDispatch } from "react-redux";
-import { getLoginStaus, getRole } from "src/store/user-slice";
+import {
+    getLoginStaus,
+    getOldRole,
+    getOtpData,
+    getRole,
+} from "src/store/user-slice";
+import { ROLES } from "src/helper/types";
+import { Toaster, toast } from "react-hot-toast";
 
 const Otp = () => {
     const { onClickReset, timer } = useTimer();
@@ -17,7 +24,6 @@ const Otp = () => {
     const { requestId, receiver, password } = useSelector(
         state => state.user.otp
     );
-    const { role } = useSelector(state => state.user);
     const dispatch = useDispatch();
 
     const {
@@ -28,64 +34,104 @@ const Otp = () => {
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validUserCode, 4);
 
-    const { sendRequest: sendOtpRequestId, error } = useRequest();
+    const { sendRequest: sendOtpRequestId, error: sendOtpError } = useRequest();
+    const { sendRequest: getPasswrodAgain, error: getOtpError } = useRequest();
 
     let formIsValid = false;
     if (passwordIsValid) {
         formIsValid = true;
     }
 
-    const formSubmitionHandler = event => {
+    const formSubmitionHandler = ({ event, sendPasswordAgain }) => {
         event.preventDefault();
-        if (!formIsValid) {
-            return;
+        if (!receiver) {
+            navigate("/login");
+            toast.error(
+                "لطفا اول شماره تلفن همراه خود را برای دریافت و تایید کد وارد کنید."
+            );
         }
-        sendOtpRequestId({
-            url: `users/otp/`,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            data: JSON.stringify({
-                request_id: requestId,
-                receiver: receiver,
-                // password: passwordValue,
-                password: password,
-            }),
-        }).then(data => {
-            if (data) {
-                dispatch(
-                    getLoginStaus({
-                        accessToken: data.token,
-                        refreshToken: data.refresh,
-                        userId: data.user_id,
-                    })
-                );
-
-                if ((!data.created && +data.user_role === 0) || data.created) {
-                    navigate({ pathname: "/login/user-type" });
-                } else if (!data.created && data.user_role > 0) {
-                    dispatch(getRole(data.user_role));
-                    navigate(`/${role}`);
+        if (sendPasswordAgain) {
+            onClickReset();
+            dispatch(
+                getOtpData({
+                    requestId: null,
+                    receiver: "",
+                    password: null,
+                })
+            );
+            getPasswrodAgain({
+                url: `users/otp/?receiver=${receiver}&channel=Phone`,
+            }).then(data => {
+                if (data && receiver) {
+                    dispatch(
+                        getOtpData({
+                            requestId: data?.request_id,
+                            receiver: receiver,
+                            password: data?.password,
+                        })
+                    );
                 }
+            });
+        } else {
+            if (!formIsValid) {
+                return;
             }
-        });
-    };
+            sendOtpRequestId({
+                url: `users/otp/`,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                data: JSON.stringify({
+                    request_id: requestId,
+                    receiver: receiver,
+                    // password: passwordValue,
+                    password: password,
+                }),
+            }).then(data => {
+                if (data) {
+                    dispatch(
+                        getLoginStaus({
+                            accessToken: data.token,
+                            refreshToken: data.refresh,
+                            userId: data.user_id,
+                        })
+                    );
+                    if (data.created || data.user_role === "0") {
+                        navigate(`/roles`);
+                    } else if (!data.created && data.user_role !== "0") {
+                        dispatch(getOldRole(data.user_role));
+                        dispatch(getRole(data.user_role));
 
-    useEffect(() => {
-        //send request to database
-        onClickReset();
-        if (error) {
-            alert(error);
+                        const findRole = ROLES.find(
+                            role => role.id === data.user_role
+                        );
+
+                        if (findRole.name === "freight") {
+                            navigate(`/${findRole.name}/orders`);
+                        } else {
+                            navigate(`/${findRole.name}/orders/new`);
+                        }
+                    }
+                } else {
+                    toast.error("پسورد وارد شده صحیح نمیباشد");
+                }
+            });
         }
-    }, [error]);
-    const sendPasswordAgain = () => {
-        //send request to database
-        onClickReset();
     };
+    useEffect(() => {
+        if (sendOtpError || getOtpError) {
+            toast.error(sendOtpError || getOtpError);
+        }
+    }, [sendOtpError, getOtpError]);
     return (
         <div className={classes.Container}>
-            <Form onSubmit={formSubmitionHandler} className={classes.Form}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerClassName={classes.Toster}
+            />
+            <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <Form.Group
                     className={classes.FormGroup}
                     controlId="exampleForm.ControlInput1"
@@ -114,7 +160,12 @@ const Otp = () => {
                         <NavLink
                             to="#"
                             className={classes.sendAgain}
-                            onClick={sendPasswordAgain}
+                            onClick={event =>
+                                formSubmitionHandler({
+                                    event,
+                                    sendPasswordAgain: true,
+                                })
+                            }
                         >
                             ارسال مجدد
                         </NavLink>
@@ -125,7 +176,12 @@ const Otp = () => {
 
                     <Button
                         disabled={formIsValid ? false : true}
-                        clicked={formSubmitionHandler}
+                        clicked={event =>
+                            formSubmitionHandler({
+                                event,
+                                sendPasswordAgain: false,
+                            })
+                        }
                         btnStyle={{
                             padding: "2px 50px",
                             height: "45px",

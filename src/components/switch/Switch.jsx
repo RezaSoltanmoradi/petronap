@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import classes from "./Switch.module.scss";
 
-const Switch = ({ changeTitle, options, option, top, width, children }) => {
+const Switch = ({ changeTitle, options, option, children, switchStyles }) => {
     const titleIsActive = isActive => {
         const btnClasses = classNames({
             [classes.title]: true,
@@ -33,7 +33,7 @@ const Switch = ({ changeTitle, options, option, top, width, children }) => {
         }
     };
     return (
-        <div className={classes.Switch} style={{ top: top, width: width }}>
+        <div className={classes.Switch} style={switchStyles}>
             <div
                 className={classNames({
                     [classes.toggle]: true,

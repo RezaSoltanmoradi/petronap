@@ -1,7 +1,6 @@
 :root {
     .icon {
         background: url("../src/assets/images/icons.png");
-        cursor: pointer;
     }
     .icon-illustration {
         background: url("../src/assets//images/Illustrationicons.png");
@@ -28,42 +27,66 @@
     }
     .i-user-circle {
         background-position: -7px -8px;
+        cursor: pointer;
+
     }
     .i-back {
         background-position: -104px -190px;
+        cursor: pointer;
+
     }
     .i-hours {
         background-position: -4px -114px;
+        cursor: pointer;
+
     }
     .i-hours-active {
         background-position: -4px -89px;
+        cursor: pointer;
+
     }
     .i-order {
         background-position: -29px -114px;
+        cursor: pointer;
+
     }
     .i-order-active {
         background-position: -29px -89px;
+        cursor: pointer;
+
     }
     .i-alert {
         background-position: -54px -114px;
+        cursor: pointer;
+
     }
     .i-alert-active {
         background-position: -54px -89px;
+        cursor: pointer;
+
     }
     .i-user {
         background-position: -48px -8px;
+        cursor: pointer;
+
     }
     .i-camera {
         background-position: -104px -139px;
+        cursor: pointer;
+
     }
     .i-info {
         background-position: -78px -231px;
     }
     .i-eye {
         background-position: -79px -164px;
+        cursor: pointer;
+
     }
     .i-eye-hidden {
-        background-position: -29px -164px;
+        background-position: -29px -165px;
+        cursor: pointer;
+
     }
     .i-normal {
         background-position: -112px -231px;
@@ -79,18 +102,26 @@
     }
     .i-plus {
         background-position: -54px -139px;
+        cursor: pointer;
+
     }
     .i-plus-active {
         background-position: -79px -139px;
+        cursor: pointer;
+
     }
     .i-completed {
         background-position: -104px -164px;
     }
     .i-bar {
         background-position: -79px -114px;
+        cursor: pointer;
+
     }
     .i-bar-active {
         background-position: -79px -89px;
+        cursor: pointer;
+
     }
     .i-circle {
         background-position: -44px -231px;
@@ -115,6 +146,8 @@
     }
     .i-calender {
         background-position: -4px -164px;
+        cursor: pointer;
+
     }
     .i-order-online {
         background-position: -80.14px -7.51px;

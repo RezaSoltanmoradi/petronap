@@ -18,14 +18,20 @@ const Select = ({ top, options, setSelected, selected }) => {
                         key={opt.id}
                         id={opt.id}
                         onClick={() =>
-                            notAllowdDisabled(opt.value, opt.disable)
+                            notAllowdDisabled(
+                                {
+                                    value: opt.value,
+                                    id: opt.id,
+                                },
+                                opt.disable
+                            )
                         }
                         className={classNames({
                             [classes.option]: true,
                             [classes.active]: !opt.disable,
                             [classes.disable]: opt.disable,
                             [classes.selected]:
-                                selected && opt.value === selected,
+                                selected && opt.value === selected.value,
                         })}
                     >
                         {opt.value}

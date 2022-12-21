@@ -3,17 +3,20 @@ import Layout from "../../layouts/Layout";
 import Profile from "./profile/Profile";
 import Orders from "./orders/Orders";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const TraderController = () => {
     const { traderId } = useParams();
     const navigate = useNavigate();
+    const { oldRole } = useSelector(state => state.user);
+
     const traderIds = ["profile", "orders"];
     useEffect(() => {
         const findId = traderIds.indexOf(traderId);
-        if (findId < 0) {
-            navigate("/trader");
+        if (findId < 0 || +oldRole.id > 0) {
+            navigate("/trader/orders");
         }
-    }, []);
+    }, [traderId]);
 
     const traderName = {
         profile: <Profile />,

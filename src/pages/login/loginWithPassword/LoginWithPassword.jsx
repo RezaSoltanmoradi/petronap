@@ -42,7 +42,7 @@ const LoginWithPassword = () => {
 
     return (
         <div className={classes.Container}>
-            <Form onSubmit={formSubmitionHandler} className={classes.Form}>
+            <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <p className={classes.title}>ورود با کلمه عبور</p>
                 <Form.Group
                     className={classes.FormGroup}

@@ -15,7 +15,6 @@
     }
     .Form {
         position: absolute;
-        top: 160px;
         padding-bottom: 130px;
         .innerIcon {
             left: 10px;
@@ -23,6 +22,14 @@
             top: 14px;
             position: absolute;
         }
+    }
+    .FormNatural{
+        top: 100px;
+
+    }
+    .FormLegal{
+        top: 150px;
+
     }
     .BottomSection {
         margin-top: 2rem;

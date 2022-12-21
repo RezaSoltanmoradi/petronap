@@ -7,14 +7,20 @@ import { useSelector } from "react-redux";
 
 const Landing = () => {
     const navigate = useNavigate();
-    const { role, isLogin } = useSelector(state => state.user);
-
+    const { isLogin, oldRole } = useSelector(state => state.user);
     const startBtnHandler = () => {
-        navigate({ pathname: "login" });
-        // if (!isLogin) {
-        // } else {
-        //     navigate({ pathname: `/${role.name}` });
-        // }
+        if (
+            isLogin &&
+            (oldRole.name === "producer" || oldRole.name === "trader")
+        ) {
+            navigate({ pathname: `/${oldRole.name}/orders` });
+        } else if (isLogin && oldRole.name === "freight") {
+            navigate({ pathname: "/freight/orders" });
+        } else if (isLogin && oldRole.id === "0") {
+            navigate({ pathname: "login" });
+        } else {
+            navigate({ pathname: "login" });
+        }
     };
     return (
         <Layout>

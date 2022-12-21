@@ -4,34 +4,42 @@ import {
     validTextInput,
     validEmail,
     validConfirmPassword,
+    validPhone,
 } from "../../../helper/utils";
 import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
 import Input from "../../../components/UI/input/Input";
 import Button from "../../../components/UI/button/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Alert from "../../../components/alert/Alert";
 import Switch from "../../../components/switch/Switch";
 import Scroller from "../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
-import { getNationality } from "src/store/user-slice";
+import { getOldRole, logout } from "src/store/user-slice";
 import { NATIONALIT_CHOICES } from "src/helper/types";
 import useRequest from "src/hooks/useRequest";
+import { resetUploader } from "src/store/uploadFile-slice";
+import classNames from "classnames";
+import { Toaster, toast } from "react-hot-toast";
 
 const Profile = () => {
-    // const navigate = useNavigate();
     const [isCompleted, setIsCompleted] = useState(false);
-    const { nationality, otp, type, role, accessToken ,userId} = useSelector(
+    const [required, setRequired] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [nationality, setNationality] = useState(NATIONALIT_CHOICES[0]);
+
+    const { otp, type, role, accessToken, userId } = useSelector(
         state => state.user
     );
-    const { receiver: mobile } = otp;
+    const { uploadFiles } = useSelector(state => state.upload);
+    const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
+    const companyDocFile = uploadFiles?.companyDocFile ?? "";
+    const licenseFile = uploadFiles?.licenseFile ?? "";
     const dispatch = useDispatch();
 
-    const {
-        sendRequest: sendProfileData,
-        data: profileData,
-        error,
-    } = useRequest();
+    const { receiver: mobile } = otp;
+    const { sendRequest: sendProfileData, error: profileError } = useRequest();
 
     const {
         hasError: hasErrorCompanyName,
@@ -39,29 +47,42 @@ const Profile = () => {
         isValid: validCompanyName,
         value: companyName,
         valueChangeHandler: onChangeCompanyName,
-    } = useInput(validTextInput);
+    } = useInput(validTextInput, 50);
     const {
         hasError: hasErrorCompanyNationalId,
         inputBlurHandler: onBlurCompanyNationalId,
         isValid: validCompanyNationalId,
         value: companyNationalId,
         valueChangeHandler: onChangeCompanyNationalId,
-    } = useInput(validTextInput);
+    } = useInput(validTextInput, 10);
     const {
         hasError: hasErrorCompanyId,
         inputBlurHandler: onBlurCompanyId,
         isValid: validCompanyId,
         value: companyId,
         valueChangeHandler: onChangeCompanyId,
-    } = useInput(validTextInput);
-
+    } = useInput(validTextInput, 10);
+    const {
+        hasError: hasErrorCompanyPhone,
+        inputBlurHandler: onBlurCompanyPhone,
+        isValid: validCompanyPhone,
+        value: companyPhone,
+        valueChangeHandler: onChangeCompanyPhone,
+    } = useInput("", 12);
     const {
         hasError: hasErrorCompanyFax,
         inputBlurHandler: onBlurCompanyFax,
         isValid: validCompanyFax,
         value: companyFax,
         valueChangeHandler: onChangeCompanyFax,
-    } = useInput();
+    } = useInput("", 11);
+    const {
+        hasError: hasErrorUrl,
+        inputBlurHandler: onBlurUrl,
+        isValid: validUrl,
+        value: Url,
+        valueChangeHandler: onChangeUrl,
+    } = useInput(validTextInput);
     const {
         hasError: hasErrorEmailAddress,
         inputBlurHandler: onBlurEmailAddress,
@@ -82,21 +103,21 @@ const Profile = () => {
         isValid: validCeoName,
         value: ceoName,
         valueChangeHandler: onChangeCeoName,
-    } = useInput(validTextInput);
+    } = useInput(validTextInput, 50);
     const {
         hasError: hasErrorAgentName,
         inputBlurHandler: onBlurAgentName,
         isValid: validAgentName,
         value: agentName,
         valueChangeHandler: onChangeAgentName,
-    } = useInput(validTextInput);
+    } = useInput(validTextInput, 50);
     const {
         hasError: hasErrorAgentPhone,
         inputBlurHandler: onBlurAgentPhone,
         isValid: validAgentPhone,
         value: agentPhone,
         valueChangeHandler: onChangeAgentPhone,
-    } = useInput();
+    } = useInput(validPhone, 12);
     const {
         hasError: hasErrorAgentEmail,
         inputBlurHandler: onBlurAgentEmail,
@@ -104,20 +125,6 @@ const Profile = () => {
         value: agentEmail,
         valueChangeHandler: onChangeAgentEmail,
     } = useInput(validEmail);
-    const {
-        hasError: hasErrorLicense,
-        inputBlurHandler: onBlurLicense,
-        isValid: validLicense,
-        value: license,
-        valueChangeHandler: onChangeLicense,
-    } = useInput(validTextInput);
-    const {
-        hasError: hasErrorCompanyDoc,
-        inputBlurHandler: onBlurCompanyDoc,
-        isValid: validCompanyDoc,
-        value: companyDoc,
-        valueChangeHandler: onChangeCompanyDoc,
-    } = useInput();
     const {
         hasError: hasErrorAbout,
         inputBlurHandler: onBlurAbout,
@@ -133,7 +140,6 @@ const Profile = () => {
         valueChangeHandler: onChangePassword,
     } = useInput();
     const {
-        hasError: hasErrorConfirmPassword,
         inputBlurHandler: onBlurConfirmPassword,
         value: confirmPassword,
         valueChangeHandler: onChangeConfirmPassword,
@@ -143,24 +149,33 @@ const Profile = () => {
         password,
         confirmPassword
     );
+    let _validCompanyDocFile, _validCompanyId, _validCeoName, _validLicenseFile;
+    if (type.id === "2") {
+        _validCompanyDocFile = companyDocFile !== "";
+        _validLicenseFile = licenseFile !== "";
+        _validCompanyId = validCompanyId;
+        _validCeoName = validCeoName;
+    } else {
+        _validCompanyDocFile = true;
+        _validCompanyId = true;
+        _validCeoName = true;
+        _validLicenseFile = true;
+    }
     let formIsValid = false;
     const formValidation =
-        validCompanyName &&
-        validCompanyNationalId &&
-        validCompanyId &&
         mobile &&
-        validCompanyFax &&
-        validEmailAddress &&
+        validCompanyName &&
+        _validCompanyId &&
+        validCompanyNationalId &&
         validCompanyAddress &&
-        validCeoName &&
+        _validCeoName &&
         validAgentName &&
-        validAgentPhone &&
         validAgentEmail &&
-        validLicense &&
-        validCompanyDoc &&
+        validAgentPhone &&
+        _validLicenseFile &&
         validAbout &&
-        validPassword &&
-        validConfirmPasswordHandler;
+        validConfirmPasswordHandler &&
+        _validCompanyDocFile;
 
     if (formValidation) {
         formIsValid = true;
@@ -168,52 +183,58 @@ const Profile = () => {
     const formSubmitionHandler = event => {
         event.preventDefault();
         if (!formIsValid) {
+            setRequired(true);
+            toast.error("لطفا فیلدهای ضروری را وارد کنید");
             return;
         }
-
         sendProfileData({
-            url: `trader/profile/${userId}`,
-            method: "PUT",
+            url: `trader/profile/${userId}/`,
+            method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 Authorization: "Bearer " + accessToken,
             },
-            data: JSON.stringify({
-                password: password,
+            data: {
                 type: type.id,
+                company_origin: type.id === "1" ? "0" : nationality.id,
                 role: role.id,
                 company_name: companyName,
-                company_origin: nationality.id,
-                company_id: companyId,
+                company_id: type.id === "1" ? "-" : companyId,
                 company_national_id: companyNationalId,
-                company_phone: "09195416561",
-                email: "reza@gmail.com",
+                email: emailAddress,
                 mobile: mobile,
                 company_fax: companyFax,
-                url: emailAddress,
+                url: Url,
                 company_address: companyAddress,
-                ceo_name: ceoName,
+                ceo_name: type.id === "1" ? "-" : ceoName,
                 agent_name: agentName,
                 agent_phone: agentPhone,
                 agent_email: agentEmail,
                 about: about,
-                license: license,
-                company_doc: companyDoc,
-            }),
+                profile_picture_file: profilePictureFile,
+                company_doc_file: type.id === "1" ? "-" : companyDocFile,
+                license_file: type.id === "1" ? "-" : licenseFile,
+                password: password,
+                company_phone: companyPhone,
+            },
         }).then(data => {
-            // console.log("data1", data);
-            if (data) {
+            if (data?.id) {
+                dispatch(getOldRole(role.id));
                 setIsCompleted(true);
             }
         });
-        // send request to database
     };
-    console.log("profileData", profileData);
-    console.log("error", error);
+    useEffect(() => {
+        if (profileError) {
+            toast.error(profileError);
+        }
+    }, [profileError]);
     if (isCompleted) {
         return (
             <Alert
-                confirmed={() => {}}
+                confirmed={() => {
+                    dispatch(logout());
+                    dispatch(resetUploader());
+                }}
                 height="209px"
                 width="270px"
                 title="تبریک!"
@@ -225,22 +246,38 @@ const Profile = () => {
         const findNationality = NATIONALIT_CHOICES.find(
             n => n.title === companyType
         );
-        dispatch(getNationality(findNationality));
+        setNationality(findNationality);
     };
     return (
         <div className={classes.container}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerClassName={classes.Toster}
+            />
             <Scroller>
                 <div className={classes.imageContainer}>
                     <Image />
                 </div>
-                <Switch
-                    changeTitle={onChangeNationality}
-                    option={nationality.title}
-                    options={NATIONALIT_CHOICES}
-                    top="100px"
-                    width="280px"
-                />
-                <Form onSubmit={formSubmitionHandler} className={classes.Form}>
+                {type.id === "2" && (
+                    <Switch
+                        changeTitle={onChangeNationality}
+                        option={nationality.title}
+                        options={NATIONALIT_CHOICES}
+                        switchStyles={{
+                            top: "110px",
+                            width: "280px",
+                        }}
+                    />
+                )}
+                <Form
+                    className={classNames({
+                        [classes.Form]: true,
+                        [classes.FormNatural]: type.id === "1",
+                        [classes.FormLegal]: type.id === "2",
+                    })}
+                    onSubmit={e => e.preventDefault()}
+                >
                     <Input
                         elementType="input"
                         blurInput={onBlurCompanyName}
@@ -248,10 +285,14 @@ const Profile = () => {
                         inputIsValid={validCompanyName}
                         isTouched={hasErrorCompanyName}
                         inputType="text"
-                        placeholder="نام شرکت"
+                        placeholder={
+                            type.id === "1" ? "نام و نام خانوادگی" : "نام شرکت "
+                        }
                         value={companyName}
-                        label="نام شرکت"
-                        errorMessage="لطفا نام شرکت را وارد کنید"
+                        label={
+                            type.id === "1" ? "نام و نام خانوادگی" : "نام شرکت "
+                        }
+                        required={required}
                     />
                     <Input
                         elementType="input"
@@ -259,33 +300,36 @@ const Profile = () => {
                         changeInput={onChangeCompanyNationalId}
                         inputIsValid={validCompanyNationalId}
                         isTouched={hasErrorCompanyNationalId}
-                        inputType="text"
-                        placeholder="شناسه ملی"
+                        inputType="number"
+                        placeholder={type.id === "2" ? "شناسه ملی" : "کد ملی "}
                         value={companyNationalId}
-                        label="شناسه ملی"
-                        errorMessage="لطفا شناسه ملی را وارد کنید"
+                        label={type.id === "2" ? "شناسه ملی" : "کد ملی "}
+                        required={required}
                     />
-                    <Input
-                        elementType="input"
-                        blurInput={onBlurCompanyId}
-                        changeInput={onChangeCompanyId}
-                        inputIsValid={validCompanyId}
-                        isTouched={hasErrorCompanyId}
-                        inputType="text"
-                        placeholder="شماره ثبت"
-                        value={companyId}
-                        label="شماره ثبت"
-                        errorMessage="لطفا شماره ثبت را وارد کنید"
-                    />
+                    {type.id === "2" && (
+                        <Input
+                            elementType="input"
+                            blurInput={onBlurCompanyId}
+                            changeInput={onChangeCompanyId}
+                            inputIsValid={validCompanyId}
+                            isTouched={hasErrorCompanyId}
+                            inputType="number"
+                            placeholder="شماره ثبت"
+                            value={companyId}
+                            label="شماره ثبت"
+                            required={required}
+                        />
+                    )}
+
                     <Input
                         elementType="select"
                         inputType="number"
-                        placeholder="شماره تلفن"
+                        placeholder="شماره همراه"
                         value={mobile}
                         inputIsValid={mobile}
-                        label="شماره تلفن"
+                        label="شماره همراه"
                         isLogin={false}
-                        errorMessage="لطفا شماره تلفن  را وارد کنید"
+                        required={required}
                     >
                         <span className={classes.innerIcon}>
                             {mobile ? (
@@ -297,6 +341,18 @@ const Profile = () => {
                     </Input>
                     <Input
                         elementType="input"
+                        blurInput={onBlurCompanyPhone}
+                        changeInput={onChangeCompanyPhone}
+                        inputIsValid={validCompanyPhone}
+                        isTouched={hasErrorCompanyPhone}
+                        inputType="number"
+                        placeholder="شماره تلفن"
+                        value={companyPhone}
+                        label="شماره تلفن"
+                        isLogin={false}
+                    />
+                    <Input
+                        elementType="input"
                         blurInput={onBlurCompanyFax}
                         changeInput={onChangeCompanyFax}
                         inputIsValid={validCompanyFax}
@@ -306,7 +362,17 @@ const Profile = () => {
                         value={companyFax}
                         label="شماره فکس"
                         isLogin={false}
-                        errorMessage="لطفا شماره فکس  را وارد کنید"
+                    />
+                    <Input
+                        elementType="input"
+                        blurInput={onBlurUrl}
+                        changeInput={onChangeUrl}
+                        inputIsValid={validUrl}
+                        isTouched={hasErrorUrl}
+                        inputType="text"
+                        placeholder="نشانی اینترنتی"
+                        value={Url}
+                        label="نشانی اینترنتی"
                     />
                     <Input
                         elementType="input"
@@ -315,10 +381,9 @@ const Profile = () => {
                         inputIsValid={validEmailAddress}
                         isTouched={hasErrorEmailAddress}
                         inputType="text"
-                        placeholder="نشانی اینترنتی"
+                        placeholder={type.id === "1" ? "ایمیل" : "ایمیل شرکت"}
                         value={emailAddress}
-                        label="نشانی اینترنتی"
-                        errorMessage="لطفا نشانی اینترنتی  را وارد کنید"
+                        label={type.id === "1" ? "ایمیل" : "ایمیل شرکت"}
                     />
                     <Input
                         elementType="textarea"
@@ -330,20 +395,22 @@ const Profile = () => {
                         placeholder="آدرس"
                         value={companyAddress}
                         label="آدرس"
-                        errorMessage="لطفا آدرس  را وارد کنید"
+                        required={required}
                     />
-                    <Input
-                        elementType="input"
-                        blurInput={onBlurCeoName}
-                        changeInput={onChangeCeoName}
-                        inputIsValid={validCeoName}
-                        isTouched={hasErrorCeoName}
-                        inputType="text"
-                        placeholder="نام و نام خانوادگی مدیر عامل"
-                        value={ceoName}
-                        label="نام و نام خانوادگی مدیر عامل"
-                        errorMessage="لطفا نام و نام خانوادگی مدیر عامل را وارد کنید"
-                    />
+                    {type.id === "2" && (
+                        <Input
+                            elementType="input"
+                            blurInput={onBlurCeoName}
+                            changeInput={onChangeCeoName}
+                            inputIsValid={validCeoName}
+                            isTouched={hasErrorCeoName}
+                            inputType="text"
+                            placeholder="نام و نام خانوادگی مدیر عامل"
+                            value={ceoName}
+                            label="نام و نام خانوادگی مدیر عامل"
+                            required={required}
+                        />
+                    )}
                     <Input
                         elementType="input"
                         blurInput={onBlurAgentName}
@@ -354,7 +421,7 @@ const Profile = () => {
                         placeholder="نام و نام خانوادگی نماینده "
                         value={agentName}
                         label="نام و نام خانوادگی نماینده لجستیک"
-                        errorMessage="لطفا نام و نام خانوادگی  نماینده لجستیک  را وارد کنید"
+                        required={required}
                     />
                     <Input
                         elementType="input"
@@ -367,7 +434,7 @@ const Profile = () => {
                         value={agentPhone}
                         label="شماره همراه نماینده"
                         isLogin={false}
-                        errorMessage="لطفا شماره همراه نماینده را وارد کنید"
+                        required={required}
                     />
                     <Input
                         elementType="input"
@@ -379,46 +446,56 @@ const Profile = () => {
                         placeholder="ایمیل نماینده لجستیک "
                         value={agentEmail}
                         label=" ایمیل نماینده لجستیک"
-                        errorMessage="لطفا ایمیل  نماینده لجستیک را وارد کنید"
+                        required={required}
                     />
-                    <Input
-                        elementType="input"
-                        blurInput={onBlurLicense}
-                        changeInput={onChangeLicense}
-                        inputIsValid={validLicense}
-                        isTouched={hasErrorLicense}
-                        inputType="text"
-                        placeholder="فایل اساس نامه شرکت "
-                        value={license}
-                        errorMessage="لطفا فایل اساس نامه شرکت را وارد کنید"
-                    >
-                        <div className={classes.innerIcon}>
-                            {license ? (
-                                <div className="icon icon-md i-completed" />
-                            ) : (
-                                <div className="icon icon-md i-plus" />
-                            )}
-                        </div>
-                    </Input>
-                    <Input
-                        elementType="input"
-                        blurInput={onBlurCompanyDoc}
-                        changeInput={onChangeCompanyDoc}
-                        inputIsValid={validCompanyDoc}
-                        isTouched={hasErrorCompanyDoc}
-                        inputType="text"
-                        placeholder="فایل ثبت شرکت "
-                        value={companyDoc}
-                        errorMessage="لطفا فایل ثبت شرکت را وارد کنید"
-                    >
-                        <div className={classes.innerIcon}>
-                            {companyDoc ? (
-                                <div className="icon icon-md i-completed" />
-                            ) : (
-                                <div className="icon icon-md i-plus" />
-                            )}
-                        </div>
-                    </Input>
+                    {type.id === "2" && (
+                        <Input
+                            elementType="select-file"
+                            inputIsValid={licenseFile}
+                            inputType="text"
+                            fileName="licenseFile"
+                            required={required}
+                            value={licenseFile}
+                            placeholder={
+                                nationality.id === "1"
+                                    ? "فایل لیسانس  شرکت "
+                                    : "فایل اساس نامه شرکت "
+                            }
+                            label={
+                                nationality.id === "1"
+                                    ? "فایل لیسانس  شرکت "
+                                    : "فایل اساس نامه شرکت "
+                            }
+                        >
+                            <span className={classes.innerIcon}>
+                                {licenseFile ? (
+                                    <div className="icon icon-md i-completed" />
+                                ) : (
+                                    <div className="icon icon-md i-plus" />
+                                )}
+                            </span>
+                        </Input>
+                    )}
+                    {type.id === "2" && (
+                        <Input
+                            elementType="select-file"
+                            inputIsValid={companyDocFile}
+                            inputType="text"
+                            placeholder="فایل ثبت شرکت"
+                            label="فایل ثبت شرکت"
+                            value={companyDocFile}
+                            required={required}
+                            fileName="companyDocFile"
+                        >
+                            <span className={classes.innerIcon}>
+                                {companyDocFile ? (
+                                    <div className="icon icon-md i-completed" />
+                                ) : (
+                                    <div className="icon icon-md i-plus" />
+                                )}
+                            </span>
+                        </Input>
+                    )}
                     <Input
                         elementType="textarea"
                         blurInput={onBlurAbout}
@@ -426,10 +503,12 @@ const Profile = () => {
                         inputIsValid={validAbout}
                         isTouched={hasErrorAbout}
                         inputType="text"
-                        placeholder="درباره شرکت "
+                        placeholder={
+                            type.id === "1" ? "درباره من" : "درباره شرکت"
+                        }
                         value={about}
-                        label="درباره شرکت"
-                        errorMessage="لطفا درباره شرکت چیزی بنویسید"
+                        label={type.id === "1" ? "درباره من" : "درباره شرکت"}
+                        required={required}
                     />
                     <Input
                         elementType="input"
@@ -437,27 +516,51 @@ const Profile = () => {
                         changeInput={onChangePassword}
                         inputIsValid={validPassword}
                         isTouched={hasErrorPassword}
-                        inputType="text"
+                        inputType={showPassword ? "text" : "password"}
                         placeholder="کلمه عبور "
                         value={password}
                         label="کلمه عبور"
-                        errorMessage="لطفا کلمه عبور را وارد کنید"
-                    />
+                    >
+                        <span
+                            className={classes.innerIcon}
+                            onClick={() => {
+                                setShowPassword(!showPassword);
+                            }}
+                        >
+                            {showPassword ? (
+                                <div className="icon icon-md i-eye" />
+                            ) : (
+                                <div className="icon icon-md i-eye-hidden" />
+                            )}
+                        </span>
+                    </Input>
                     <Input
                         elementType="input"
                         blurInput={onBlurConfirmPassword}
                         changeInput={onChangeConfirmPassword}
                         inputIsValid={validConfirmPasswordHandler}
-                        isTouched={hasErrorConfirmPassword}
-                        inputType="text"
+                        isTouched={!validConfirmPasswordHandler}
+                        inputType={showConfirmPassword ? "text" : "password"}
                         placeholder=" تکرار کلمه عبور "
                         value={confirmPassword}
                         label="تکرار کلمه عبور"
-                        errorMessage="تکرار کلمه ی عبور صحیح نمیباشد"
-                    />
+                    >
+                        <span
+                            className={classes.innerIcon}
+                            onClick={() => {
+                                setShowConfirmPassword(!showConfirmPassword);
+                            }}
+                        >
+                            {showConfirmPassword ? (
+                                <div className="icon icon-md i-eye" />
+                            ) : (
+                                <div className="icon icon-md i-eye-hidden" />
+                            )}
+                        </span>
+                    </Input>
                     <div className={classes.BottomSection}>
                         <Button
-                            disabled={!formIsValid}
+                            disabled={false}
                             clicked={formSubmitionHandler}
                             btnStyle={{
                                 padding: "2px 50px",

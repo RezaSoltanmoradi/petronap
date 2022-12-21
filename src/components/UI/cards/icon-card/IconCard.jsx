@@ -6,12 +6,7 @@ const Card = ({ path, icon, title, id }) => {
     const location = useLocation();
     const findIcon = DUMMY_HOME_ICONS.find(item => item.id === id);
     return (
-        <section
-            className={classes.Card}
-            onClick={() => {
-                console.log("path", path);
-            }}
-        >
+        <section className={classes.Card}>
             <div className={icon}></div>
             <p className={classes.title}>
                 {location.pathname === "/freight" && findIcon.id === "i2"

@@ -10,6 +10,8 @@ import Layout from "../../layouts/Layout";
 import useRequest from "src/hooks/useRequest";
 import { getOtpData } from "src/store/user-slice";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -22,7 +24,8 @@ const Login = () => {
         valueChangeHandler: phoneChangeHandler,
     } = useInput(validPhone, 10);
 
-    const { sendRequest: sendPhoneHandler } = useRequest();
+    const { sendRequest: getPasswordHandler, error: getOtpError } =
+        useRequest();
 
     let formIsValid = false;
     if (phoneIsValid) {
@@ -33,30 +36,54 @@ const Login = () => {
         if (!formIsValid) {
             return;
         }
-        // send request to get request_id
-        sendPhoneHandler({
+        getPasswordHandler({
             url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
         }).then(data => {
-            dispatch(
-                getOtpData({
-                    requestId: data.request_id,
-                    receiver: `98${phoneValue}`,
-                    password: data.password,
-                })
-            );
-            navigate({ pathname: "otp" });
+            console.log({ data });
+            if (data) {
+                dispatch(
+                    getOtpData({
+                        requestId: data?.request_id,
+                        receiver: `98${phoneValue}`,
+                        password: data?.password,
+                    })
+                );
+                navigate({ pathname: "otp" });
+            }
         });
     };
+    useEffect(() => {
+        if (getOtpError) {
+            toast.error(getOtpError);
+        }
+
+        dispatch(
+            getOtpData({
+                requestId: null,
+                receiver: "",
+                password: null,
+            })
+        );
+    }, [getOtpError]);
     return (
         <Layout isLogin={false}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerClassName={classes.Toster}
+            />
             <div className={classes.Container}>
-                <Form onSubmit={formSubmitionHandler} className={classes.Form}>
+                <Form
+                    className={classes.Form}
+                    onSubmit={e => e.preventDefault()}
+                >
                     <Form.Group
                         className={classes.FormGroup}
                         controlId="exampleForm.ControlInput1"
                     >
                         <Form.Label className={classes.label}>
-                            لطفا شماره تلفن همراه خود را وارد کنی
+                            لطفا اول شماره تلفن همراه خود را برای دریافت و تایید
+                            کد وارد کنید.
                         </Form.Label>
                         <Input
                             elementType="inputGroup"
@@ -70,7 +97,6 @@ const Login = () => {
                             value={phoneValue}
                             isLogin={true}
                             isTouched={phoneHasError}
-                            errorMessage="لطفا شماره همراه خود را  وارد کنید"
                         />
                     </Form.Group>
                     <div className={classes.BottomSection}>

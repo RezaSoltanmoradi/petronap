@@ -44,6 +44,7 @@ const Offers = () => {
                                 }
                                 offerId={offer.id}
                                 companyName={offer.companyName}
+                                
                             />
                         ))}
                     </div>

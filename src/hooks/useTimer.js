@@ -27,7 +27,7 @@ const useTimer = () => {
     };
 
     const clearTimer = e => {
-        setTimer("01:00");
+        setTimer("02:00");
 
         if (Ref.current) clearInterval(Ref.current);
         const id = setInterval(() => {
@@ -38,7 +38,7 @@ const useTimer = () => {
 
     const getDeadTime = () => {
         let deadline = new Date();
-        deadline.setSeconds(deadline.getSeconds() + 60);
+        deadline.setSeconds(deadline.getSeconds() + 120);
         return deadline;
     };
 

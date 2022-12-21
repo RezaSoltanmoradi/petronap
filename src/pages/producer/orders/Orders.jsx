@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FilterOrders from "src/components/container/filter-orders/FilterOrders";
 import Scroller from "src/components/scroller/Scroller";
 import OrderCard from "src/components/UI/cards/order-card/OrderCard";
-import useRequest from "src/hooks/useRequest";
 import classes from "./Orders.module.scss";
 
 const DUMMY_ORDERS = [
@@ -36,17 +35,7 @@ const Orders = () => {
         // send request to fetch new data
         console.log("the status section was changed !");
     };
-    const {
-        sendRequest: getOrdersHandler,
-        isLoading: ordersLoading,
-        data: ordersData,
-        error: ordersError,
-    } = useRequest();
-    useEffect(() => {
-        getOrdersHandler({
-            url: "orders/orders",
-        });
-    }, []);
+    
     return (
         <div className={classes.Order}>
             <Scroller>

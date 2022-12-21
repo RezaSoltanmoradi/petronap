@@ -33,7 +33,7 @@ const ForgetPassword = () => {
 
     return (
         <div className={classes.Container}>
-            <Form onSubmit={formSubmitionHandler} className={classes.Form}>
+            <Form onSubmit={e => e.preventDefault()} className={classes.Form}>
                 <p className={classes.title}> فراموشی کلمه عبور</p>
                 <Form.Group
                     className={classes.FormGroup}

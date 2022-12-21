@@ -4,7 +4,7 @@ import { ROLES } from "src/helper/types";
 const initialState = {
     accessToken: null,
     refreshToken: null,
-    userId:null,
+    userId: null,
     isLogin: false,
     otp: {
         requestId: null,
@@ -16,15 +16,19 @@ const initialState = {
         title: "حقیقی",
         name: "individual person",
     },
-    role: { name: "producer", id: "3", title: "تولید کننده " },
-    
-    nationality: {
+
+    oldRole: {
         id: "0",
-        title: "شرکت ایرانی",
-        name: "iranian",
+        title: "ناشناس",
+        name: "unknown",
+    },
+    role: {
+        id: "0",
+        title: "ناشناس",
+        name: "unknown",
     },
 };
-export const UserSlice = createSlice({
+const userSlice = createSlice({
     name: "user",
     initialState: initialState,
     reducers: {
@@ -36,15 +40,20 @@ export const UserSlice = createSlice({
             const findRole = ROLES.find(role => role.id === roleId);
             state.role = findRole;
         },
-        getNationality(state, action) {
-            state.nationality = action.payload;
+        getOldRole(state, action) {
+            const roleId = action.payload;
+            const findRole = ROLES.find(role => role.id === roleId);
+            state.oldRole = findRole;
         },
+
         getLoginStaus(state, action) {
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.userId = action.payload.userId;
             if (state.accessToken) {
                 state.isLogin = true;
+            } else {
+                state.isLogin = false;
             }
         },
         getOtpData(state, action) {
@@ -52,8 +61,17 @@ export const UserSlice = createSlice({
             const updatedOtp = { ...state.otp, ...newItem };
             state.otp = updatedOtp;
         },
+
+        logout: () => initialState,
     },
 });
-export const { getType, getRole, getNationality, getLoginStaus, getOtpData } =
-    UserSlice.actions;
-export default UserSlice.reducer;
+export const {
+    getType,
+    getRole,
+    getLoginStaus,
+    getOtpData,
+    getOldRole,
+    logout,
+} = userSlice.actions;
+
+export default userSlice.reducer;

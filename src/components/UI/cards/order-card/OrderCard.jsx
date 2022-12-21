@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Button from "../../button/Button";
 import classes from "./OrderCard.module.scss";
@@ -11,10 +12,14 @@ const OrderCard = ({
     orderId,
 }) => {
     const navigate = useNavigate();
+    const { oldRole } = useSelector(state => state.user);
     return (
         <section
             className={classes.OrderCard}
-            onClick={() => navigate(`/trader/orders/${orderId}/offers`)}
+            onClick={() =>
+                // navigate(`/${oldRole.name}/orders/${orderId}/offers`)
+                navigate(`/producer/orders/${orderId}/offers`)
+            }
         >
             <div className={classes.OrderContainer}>
                 <div className={classes.ProductDetail}>
@@ -41,7 +46,7 @@ const OrderCard = ({
                     </div>
                     <div className={classes.text}>
                         <span className="icon icon-sm i-weight mx-1" />
-                        {weight}
+                        {weight} تن
                     </div>
                 </div>
             </div>

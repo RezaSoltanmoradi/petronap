@@ -12,6 +12,7 @@
     width: 280px;
     font-size: 16px;
     position: relative;
+    margin-top: 20px;
     textarea {
         padding: 10px 10px 0px 50px !important;
         line-height: 16px;
@@ -21,6 +22,26 @@
         align-items: center;
     }
 
+    .LabelIsRequired {
+        color: var(--danger-color);
+        font-weight: 400;
+        font-size: 9px;
+        position: absolute;
+        right: 20px;
+        top: -10px;
+        z-index: 90;
+        font-size: 12px;
+        padding: 0 5px 0 10px;
+        border-radius: 25px;
+        background-color: white;
+    }
+    .star {
+        position: absolute;
+        top: -7px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 0 2px;
+    }
     .Label {
         color: var(--primary-color);
         font-weight: 400;
@@ -43,13 +64,13 @@
         position: relative;
         padding: 0px 10px 0px 50px;
         gap: 10px;
-        width: 280px !important;
+        width: 280px;
         height: 50px;
         color: var(--primary-color);
         border: 0.1px solid var(--dark-color);
         position: relative;
         &:focus {
-            border: 0.1px solid #b00020;
+            border: 0.1px solid var(--danger-color);
             box-shadow: none;
             outline: none;
         }
@@ -58,16 +79,16 @@
             width: 100% !important;
             height: 100% !important;
             left: 0;
-            padding: 0 8px 0 0;
             border: none;
             :global(.rmdp-input) {
                 width: 100% !important;
-                height: 90% !important;
+                height: 91% !important;
+                padding: 0 8px 0 0;
                 border: none;
                 outline: none;
                 &::placeholder {
                     color: var(--dark-color);
-                    opacity: 0.7;
+                    opacity: 0.6;
                 }
             }
         }
@@ -144,15 +165,5 @@
         width: 50px;
         font-weight: 400;
         color: var(--primary-color);
-    }
-    .error {
-        color: #b00020;
-        margin: 0;
-        text-align: start;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 12px;
-        height: 20px;
-        margin-bottom: 5px;
     }
 }
