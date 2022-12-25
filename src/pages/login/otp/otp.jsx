@@ -126,11 +126,7 @@ const Otp = () => {
     }, [sendOtpError, getOtpError]);
     return (
         <div className={classes.Container}>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                containerClassName={classes.Toster}
-            />
+            <Toaster position="top-center" reverseOrder={false} />
             <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <Form.Group
                     className={classes.FormGroup}

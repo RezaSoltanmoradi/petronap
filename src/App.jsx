@@ -39,42 +39,39 @@ function App() {
                     <Route index element={<SelectRoles />} />
                 </Route>
             )}
-            {role.name === "trader" && isLogin && (
-                <Route path="trader">
-                    <Route index element={<Trader />} />
-                    <Route path=":traderId">
-                        <Route index element={<TraderController />} />
-                        <Route path=":orderId">
-                            <Route index element={<TraderNewOrder />} />
-                            <Route path="offers">
-                                <Route index element={<TraderOffers />} />
-                                <Route
-                                    path=":offerId"
-                                    element={<TraderDetail />}
-                                />
-                            </Route>
+            {/* {role.name === "trader" && isLogin && (
+                                )} */}
+            <Route path="trader">
+                <Route index element={<Trader />} />
+                <Route path=":traderId">
+                    <Route index element={<TraderController />} />
+                    <Route path=":orderId">
+                        <Route index element={<TraderNewOrder />} />
+                        <Route path="offers">
+                            <Route index element={<TraderOffers />} />
+                            <Route path=":offerId" element={<TraderDetail />} />
                         </Route>
                     </Route>
                 </Route>
-            )}
-            {role.name === "producer" && isLogin && (
-                <Route path="producer">
-                    <Route index element={<Producer />} />
-                    <Route path=":producerId">
-                        <Route index element={<ProducerController />} />
-                        <Route path=":orderId">
-                            <Route index element={<ProducerNewOrder />} />
-                            <Route path="offers">
-                                <Route index element={<ProducerOffers />} />
-                                <Route
-                                    path=":offerId"
-                                    element={<ProducerDetail />}
-                                />
-                            </Route>
+            </Route>
+            {/* {role.name === "producer" && isLogin && (
+                    )} */}
+            <Route path="producer">
+                <Route index element={<Producer />} />
+                <Route path=":producerId">
+                    <Route index element={<ProducerController />} />
+                    <Route path=":orderId">
+                        <Route index element={<ProducerNewOrder />} />
+                        <Route path="offers">
+                            <Route index element={<ProducerOffers />} />
+                            <Route
+                                path=":offerId"
+                                element={<ProducerDetail />}
+                            />
                         </Route>
                     </Route>
                 </Route>
-            )}
+            </Route>
             {role.name === "freight" && isLogin && (
                 <Route path="freight">
                     <Route index element={<Freight />} />

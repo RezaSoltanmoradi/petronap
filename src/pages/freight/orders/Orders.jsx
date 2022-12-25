@@ -5,6 +5,7 @@ import Scroller from "src/components/scroller/Scroller";
 import OrderCard from "src/components/UI/cards/order-card/OrderCard";
 import useRequest from "src/hooks/useRequest";
 import classes from "./Orders.module.scss";
+import { Toaster, toast } from "react-hot-toast";
 
 const Orders = () => {
     const [ordersStatus, setOrdersStatus] = useState({
@@ -26,18 +27,22 @@ const Orders = () => {
         console.log("the status section was changed !");
     };
     useEffect(() => {
-        fetchOrdersHandler({
-            url: `freight/orders/`,
-            headers: {
-                Authorization: "Bearer " + accessToken,
-            },
-        });
-        if (hasErrorOrders) {
-            alert(hasErrorOrders);
+        if (accessToken) {
+            fetchOrdersHandler({
+                url: `freight/orders/`,
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+            });
+            if (hasErrorOrders) {
+                toast.error(hasErrorOrders);
+            }
         }
     }, [hasErrorOrders]);
     return (
         <div className={classes.Order}>
+            <Toaster position="top-center" reverseOrder={false} />
+
             <Scroller>
                 <FilterOrders
                     filterOrders={onChangeStatusHandler}

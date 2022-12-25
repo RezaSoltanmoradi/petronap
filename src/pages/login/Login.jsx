@@ -67,11 +67,7 @@ const Login = () => {
     }, [getOtpError]);
     return (
         <Layout isLogin={false}>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                containerClassName={classes.Toster}
-            />
+            <Toaster position="top-center" reverseOrder={false} />
             <div className={classes.Container}>
                 <Form
                     className={classes.Form}

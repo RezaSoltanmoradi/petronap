@@ -1,7 +1,223 @@
+import Scroller from "src/components/scroller/Scroller";
+import SingleOrder from "src/components/single-order/SingleOrder";
 import Layout from "src/layouts/Layout";
+import classes from "./Detail.module.scss";
+import classNames from "classnames";
+import Button from "src/components/UI/button/Button";
+import { useEffect, useState } from "react";
+import ModalCard from "src/components/modal/Modal";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import useRequest from "src/hooks/useRequest";
+import { Toaster, toast } from "react-hot-toast";
+import { imageHandler } from "src/helper/baseUrls";
 
 const Detail = () => {
-    return <Layout isLogin={true}></Layout>;
+    const [show, setShow] = useState(false);
+    const { accessToken } = useSelector(state => state.user);
+    const { orderId, offerId } = useParams();
+    const {
+        sendRequest: fetchSingleOffer,
+        error: hasErrorSingleOffer,
+        data: singleOfferData,
+    } = useRequest();
+    useEffect(() => {
+        if (accessToken && !hasErrorSingleOffer) {
+            console.log("some thing");
+            fetchSingleOffer({
+                url: `producer/orders/${orderId}/offers/${offerId}/`,
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+            });
+        }
+        if (hasErrorSingleOffer) {
+            toast.error(hasErrorSingleOffer);
+        }
+    }, [hasErrorSingleOffer]);
+
+    const { offer_items: offerItems, order_items: orderItems } =
+        singleOfferData ?? {};
+    const { freight } = offerItems ?? {};
+    console.log("offerItems", offerItems);
+    console.log("freight", freight);
+    console.log("orderItems", orderItems);
+    const confirmButtonHandler = () => {
+        setShow(false);
+    };
+
+    const sendUserToMail = () => {
+        if (!freight) return;
+        else {
+            window.open(
+                `mailto:${freight?.agent_email}?subject=subject&body=body`
+            );
+        }
+    };
+    const sendUserToCotact = () => {
+        if (!freight) return;
+        else if (window.matchMedia("(max-width: 767px)").matches) {
+            window.open(`tel:${freight?.agent_phone}`);
+        } else return;
+    };
+
+    return (
+        <Layout isLogin={true}>
+            <Toaster position="top-center" reverseOrder={false} />
+            <div className={classes.Detail}>
+                <Scroller>
+                    <SingleOrder
+                        top="50px"
+                        borderPassage={orderItems?.border_passage}
+                        destination={orderItems?.destination}
+                        loadingLocation={orderItems?.loading_location}
+                        product={orderItems?.product}
+                        weight={orderItems?.weight}
+                    />
+                    <div className={classes.DetailContainer}>
+                        <section
+                            className={classNames({
+                                [classes.DetailCard]: true,
+                                [classes.DetailCardHasNotAbout]:
+                                    !freight?.about,
+                                [classes.DetailCardHasAbout]: freight?.about,
+                            })}
+                        >
+                            <div className={classes.titleContainer}>
+                                <div className={classes.ImageContainer}>
+                                    <img
+                                        alt=""
+                                        src={imageHandler(
+                                            freight?.profile_picture_file
+                                        )}
+                                    />
+                                </div>
+                                <h5 className={classes.title}>
+                                    {freight?.company_name}
+                                </h5>
+                            </div>
+                            <div className={classes.fildset}>
+                                <div className={classes.border} />
+                                <div className={classes.legend} />
+                                <p className={classes.innerLegend}>قیمت</p>
+                            </div>
+                            <div className={classes.PriceContainer}>
+                                <div className={classes.label}>
+                                    <div className="icon icon-sm i-offer mx-1" />
+                                    قیمت پیشنهادی
+                                </div>
+                                <div className={classes.price}>
+                                    {offerItems?.price} تومان
+                                </div>
+                            </div>
+                            <div className={classes.PriceContainer}>
+                                <div className={classes.label}>
+                                    <div className="icon icon-sm i-payment mx-1" />
+                                    پیش پرداخت
+                                </div>
+                                <div className={classes.price}>
+                                    {offerItems?.prepayment_percentage}
+                                    <span className={classes.innerPrice}>
+                                        ({offerItems?.prepayment_amount} تومان)
+                                    </span>
+                                </div>
+                            </div>
+                            {freight?.about && (
+                                <>
+                                    <div className={classes.fildset}>
+                                        <div className={classes.border} />
+                                        <div className={classes.legend1}>
+                                            <p className={classes.innerLegend1}>
+                                                درباره شرکت
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className={classes.AboutContainer}>
+                                        <p className={classes.About}>
+                                            {freight?.about}
+                                        </p>
+                                    </div>
+                                </>
+                            )}
+                        </section>
+                        <div className={classes.contract}>
+                            <h4 className={classes.contractTitle}>
+                                {" "}
+                                متن قرار داد
+                            </h4>
+                            <div>
+                                <Button
+                                    clicked={() => {}}
+                                    btnStyle={{
+                                        width: "106px",
+                                        height: "24px",
+                                        fontSize: "16px",
+                                        padding: "2px 29px",
+                                    }}
+                                >
+                                    مشاهده
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className={classes.contactUsContainer}>
+                            <div
+                                className={classes.contactUs}
+                                onClick={sendUserToCotact}
+                            >
+                                <span>تماس تلفنی با</span>
+                                <span> {freight?.agent_phone}</span>
+                            </div>
+                            {/* <div className={classes.contactUs}>
+                                <span>ارسال پیامک به </span>
+                                <span> {phone}</span>
+                            </div> */}
+                            <div
+                                className={classes.contactUs}
+                                onClick={sendUserToMail}
+                            >
+                                <span>ارسال ایمیل به </span>
+                                <span> {freight?.agent_email}</span>
+                            </div>
+                        </div>
+                        <div className={classes.Buttons}>
+                            <Button
+                                clicked={() => {}}
+                                btnStyle={{
+                                    width: "148px",
+                                    height: "40px",
+                                    fontSize: "16px",
+                                    padding: "2px 29px",
+                                }}
+                            >
+                                رد پیشنهاد
+                            </Button>
+                            <Button
+                                clicked={() => setShow(true)}
+                                btnStyle={{
+                                    width: "148px",
+                                    height: "40px",
+                                    fontSize: "16px",
+                                    padding: "2px 29px",
+                                }}
+                            >
+                                قبول پیشنهاد
+                            </Button>
+                        </div>
+                        <ModalCard
+                            show={show}
+                            cancel={() => setShow(false)}
+                            confirm={confirmButtonHandler}
+                            content="ایا توافق شما با این شرکت نهایی شد؟"
+                            height={300}
+                            confirmText="بله"
+                            cancelText="خیر"
+                        />
+                    </div>
+                </Scroller>
+            </div>
+        </Layout>
+    );
 };
 
 export default Detail;

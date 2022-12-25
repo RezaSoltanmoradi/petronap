@@ -18,7 +18,7 @@ const OrderCard = ({
             className={classes.OrderCard}
             onClick={() =>
                 // navigate(`/${oldRole.name}/orders/${orderId}/offers`)
-                navigate(`/producer/orders/${orderId}/offers`)
+                navigate(`/${oldRole.name}/orders/${orderId}/offers`)
             }
         >
             <div className={classes.OrderContainer}>

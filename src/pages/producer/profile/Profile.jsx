@@ -229,11 +229,7 @@ const Profile = () => {
 
     return (
         <div className={classes.container}>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                containerClassName={classes.Toster}
-            />
+            <Toaster position="top-center" reverseOrder={false} />
             <Scroller>
                 <div className={classes.imageContainer}>
                     <Image />

@@ -4,28 +4,12 @@ import Scroller from "src/components/scroller/Scroller";
 import OrderCard from "src/components/UI/cards/order-card/OrderCard";
 import useRequest from "src/hooks/useRequest";
 import classes from "./Orders.module.scss";
+import { Toaster, toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
-const DUMMY_ORDERS = [
-    {
-        id: "or1",
-        borderPassage: "رازی",
-        destination: "استانبول",
-        loadingLocation: "خوزستان",
-        offersNumber: 10,
-        product: "اپوکسی رزین مایع",
-        weight: "13 تن",
-    },
-    {
-        id: "or2",
-        borderPassage: "_",
-        destination: "خوزستان",
-        loadingLocation: "یزد",
-        offersNumber: 10,
-        product: "آمونیاک",
-        weight: "20 تن",
-    },
-];
 const Orders = () => {
+    const { accessToken } = useSelector(state => state.user);
+
     const [ordersStatus, setOrdersStatus] = useState({
         name: "isLoading",
         id: "0",
@@ -36,21 +20,43 @@ const Orders = () => {
         // send request to fetch new data
         console.log("the status section was changed !");
     };
+    const {
+        sendRequest: fetchOrdersHandler,
+        error: hasErrorOrders,
+        data: ordersData,
+    } = useRequest();
+
+    useEffect(() => {
+        if (accessToken) {
+            fetchOrdersHandler({
+                url: `trader/orders/`,
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+            });
+            if (hasErrorOrders) {
+                toast.error(hasErrorOrders);
+            }
+        }
+    }, [hasErrorOrders]);
+
     return (
         <div className={classes.Order}>
+            <Toaster position="top-center" reverseOrder={false} />
+
             <Scroller>
                 <FilterOrders
                     filterOrders={onChangeStatusHandler}
                     ordersStatus={ordersStatus}
                 />
                 <div className={classes.orderCards}>
-                    {DUMMY_ORDERS.map(order => (
+                    {ordersData?.map(order => (
                         <OrderCard
                             key={order.id}
                             orderId={order.id}
-                            borderPassage={order.borderPassage}
+                            borderPassage={order.border_passage}
                             destination={order.destination}
-                            loadingLocation={order.loadingLocation}
+                            loadingLocation={order.loading_location}
                             offersNumber={10}
                             product={order.product}
                             weight={order.weight}

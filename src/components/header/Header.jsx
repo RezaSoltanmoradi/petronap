@@ -1,40 +1,51 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import classes from "./Header.module.scss";
 import { logout } from "src/store/user-slice";
 import { imageHandler } from "src/helper/baseUrls";
 import { resetUploader, showUploadModal } from "src/store/uploadFile-slice";
 
 const Header = () => {
-    const { traderId, freightId, producerId, orderId } = useParams();
+    const { traderId, freightId, producerId, orderId, offerId } = useParams();
     const navigate = useNavigate();
-    const { oldRole, role } = useSelector(state => state.user);
-
-    const { uploadFiles } = useSelector(state => state.upload);
-    const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
+    const location = useLocation();
     const dispatch = useDispatch();
 
+    const { oldRole, role } = useSelector(state => state.user);
+    const { uploadFiles } = useSelector(state => state.upload);
+    const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
+
+    const validOffers = location.pathname.includes("offers");
+    const validOrders =
+        (traderId === "orders" || producerId === "orders") && !validOffers;
+    const validProfile =
+        (traderId === "profile" ||
+            freightId === "profile" ||
+            producerId === "profile") &&
+        !validOffers;
+        
     let title;
-    if (
-        traderId === "profile" ||
-        freightId === "profile" ||
-        producerId === "profile"
-    ) {
+    if (validProfile) {
         title = "پروفایل";
     } else if (
         orderId === "new" &&
-        (traderId === "orders" ||
-            freightId === "orders" ||
-            producerId === "orders")
+        (traderId === "orders" || producerId === "orders")
     ) {
         title = "ثبت سفارش";
-    } else if (
-        traderId === "orders" ||
-        freightId === "orders" ||
-        producerId === "orders"
-    ) {
-        title = "سفارشات";
-    }
+    } else if (validOrders) {
+        title = "فعالیت های اخیر";
+    } else if (freightId === "orders") {
+        title = "بارهای موجود";
+    } else if ((!producerId || !traderId || !freightId) && validProfile) {
+        title = "پترونپ";
+    } else if (validOffers && !offerId) {
+        title = "پیشنهادات";
+    } else if (typeof offerId !== "undefined") {
+        title = "جزئیات پیشنهاد";
+    } 
+    // else if (typeof offerId !== "undefined" && freightId === "orders") {
+    //     title = "جزئیات بار";
+    // }
     const changeRouteHandler = () => {
         // if (oldRole.id === "0") {
         //     navigate(`/${role.name}/profile`);

@@ -1,19 +1,21 @@
 import classes from "./OfferCard.module.scss";
 import Button from "./../../button/Button";
 import { useNavigate } from "react-router";
+import { imageHandler } from "src/helper/baseUrls";
 const OfferCard = ({
     offerId,
     prepayment,
-    prepaymentpercentage,
+    prepaymentPercentage,
     offerPrice,
     companyName,
+    image,
 }) => {
     const navigate = useNavigate();
     return (
         <section className={classes.OfferCard}>
             <div className={classes.titleContainer}>
                 <div className={classes.ImageContainer}>
-                    <img alt="" src="" />
+                    <img alt="" src={imageHandler(image)} />
                 </div>
                 <h5 className={classes.title}>{companyName}</h5>
             </div>
@@ -30,7 +32,7 @@ const OfferCard = ({
                     پیش پرداخت
                 </div>
                 <div className={classes.price}>
-                    {prepaymentpercentage}
+                    {prepaymentPercentage}%
                     <span className={classes.innerPrice}>
                         ({prepayment} تومان)
                     </span>
