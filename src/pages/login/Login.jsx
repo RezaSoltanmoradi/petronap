@@ -56,7 +56,6 @@ const Login = () => {
         if (getOtpError) {
             toast.error(getOtpError);
         }
-
         dispatch(
             getOtpData({
                 requestId: null,
@@ -64,10 +63,12 @@ const Login = () => {
                 password: null,
             })
         );
-    }, [getOtpError]);
+    }, [getOtpError, dispatch]);
     return (
         <Layout isLogin={false}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {getOtpError && (
+                <Toaster position="top-center" reverseOrder={false} />
+            )}
             <div className={classes.Container}>
                 <Form
                     className={classes.Form}
@@ -78,8 +79,7 @@ const Login = () => {
                         controlId="exampleForm.ControlInput1"
                     >
                         <Form.Label className={classes.label}>
-                            لطفا اول شماره تلفن همراه خود را برای دریافت و تایید
-                            کد وارد کنید.
+                            لطفا شماره همراه خود را وارد کنید.
                         </Form.Label>
                         <Input
                             elementType="inputGroup"
@@ -101,8 +101,7 @@ const Login = () => {
                                 <span className="icon icon-sm i-info mx-1" />
                                 استفاده از پترونپ به معنی
                                 <span className={classes.boldContent}>
-                                    {" "}
-                                    پذیرش قوانین و مقررات{" "}
+                                    پذیرش قوانین و مقررات
                                 </span>
                                 آن است.
                             </p>

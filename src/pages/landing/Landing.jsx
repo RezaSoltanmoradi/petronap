@@ -22,6 +22,7 @@ const Landing = () => {
             navigate({ pathname: "login" });
         }
     };
+
     return (
         <Layout>
             <div className={classes.Container}>

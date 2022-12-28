@@ -4,10 +4,11 @@
     left: 0;
     width: 100%;
     display: flex;
+    // height: 300px;
     justify-content: center;
 }
 .Modal {
-    width: 280px !important;
+    width: 300px !important;
     position: absolute;
     right: 50% !important;
     transform: translate(50%, 0);
@@ -15,7 +16,6 @@
     :global(.modal-content) {
         border-radius: 8px;
         background: rgba(189, 189, 189, 0.1);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(1.9px);
         border: 0.2px solid var(--dark-color-h);
@@ -23,7 +23,7 @@
     :global(.modal-body) {
         display: flex;
         justify-content: center;
-        font-size: 12px;
+        font-size: 16px;
     }
     :global(.modal-footer) {
         padding-top: 0;

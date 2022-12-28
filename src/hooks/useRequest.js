@@ -37,6 +37,7 @@ const useRequest = () => {
                 } else {
                     setData(data);
                 }
+                setError(null);
                 return data;
             })
             .catch(error => {

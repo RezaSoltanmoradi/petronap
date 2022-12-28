@@ -29,6 +29,10 @@ export const ORDERS_STATUS_CHOICES = [
     { name: "isDoing", id: "1", title: "در حال انجام" },
     { name: "isCompleted", id: "2", title: "اتمام یافته" },
 ];
+export const ORDERS_NATIONALITY = [
+    { name: "internal", id: "0", title: "داخلی" },
+    { name: "foreign", id: "1", title: "خارجی" },
+];
 export const RESPONSIBLE_STORE_COST = [
     { name: "mySelf", id: "1", title: "خودم" },
     { name: "freight", id: "2", title: "شرکت حمل و نقل" },

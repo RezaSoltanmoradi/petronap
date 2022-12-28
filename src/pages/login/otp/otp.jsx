@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import classes from "./otp.module.scss";
 import Form from "react-bootstrap/Form";
 import useTimer from "../../../hooks/useTimer";
@@ -34,7 +34,7 @@ const Otp = () => {
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validUserCode, 4);
 
-    const { sendRequest: sendOtpRequestId, error: sendOtpError } = useRequest();
+    const { sendRequest: sendOtpRequestId } = useRequest();
     const { sendRequest: getPasswrodAgain, error: getOtpError } = useRequest();
 
     let formIsValid = false;
@@ -46,9 +46,7 @@ const Otp = () => {
         event.preventDefault();
         if (!receiver) {
             navigate("/login");
-            toast.error(
-                "لطفا اول شماره تلفن همراه خود را برای دریافت و تایید کد وارد کنید."
-            );
+            return;
         }
         if (sendPasswordAgain) {
             onClickReset();
@@ -114,16 +112,23 @@ const Otp = () => {
                         }
                     }
                 } else {
-                    toast.error("پسورد وارد شده صحیح نمیباشد");
+                    toast.error(
+                        "پسورد وارد شده صحیح نمیباشد لطفا شماره همراه خود را مجدد وارد کنید"
+                    );
+                    setTimeout(() => {
+                        navigate("/login");
+                    }, 4000);
                 }
             });
         }
     };
     useEffect(() => {
-        if (sendOtpError || getOtpError) {
-            toast.error(sendOtpError || getOtpError);
+        if (getOtpError) {
+            toast.error(getOtpError);
         }
-    }, [sendOtpError, getOtpError]);
+        onClickReset();
+    }, [getOtpError]);
+
     return (
         <div className={classes.Container}>
             <Toaster position="top-center" reverseOrder={false} />

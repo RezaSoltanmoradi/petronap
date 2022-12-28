@@ -1,18 +1,28 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import FilterOrders from "src/components/container/filter-orders/FilterOrders";
 import Scroller from "src/components/scroller/Scroller";
 import OrderCard from "src/components/UI/cards/order-card/OrderCard";
 import useRequest from "src/hooks/useRequest";
 import classes from "./Orders.module.scss";
 import { Toaster, toast } from "react-hot-toast";
+import persian from "react-date-object/calendars/persian";
+import { persian_fa } from "react-date-object/locales/persian_fa";
+import { gregorian } from "react-date-object/calendars/gregorian";
+import { DateObject } from "react-multi-date-picker";
+import FilterOrdersDate from "src/components/container/filter-orders-date/FilterOrdersDate";
+import FilterOrigin from "src/components/container/filter-origin/FilterOrigin";
+import { ORDERS_NATIONALITY } from "src/helper/types";
 
 const Orders = () => {
-    const [ordersStatus, setOrdersStatus] = useState({
-        name: "isLoading",
-        id: "0",
-        title: "در انتظار",
-    });
+    const [ordersStatus, setOrdersStatus] = useState(
+        new DateObject({
+            calendar: gregorian,
+            date: new Date(),
+        })
+            .convert(persian, persian_fa)
+            .format()
+    );
+    const [originStatus, setOriginStatus] = useState(ORDERS_NATIONALITY[0]);
     const {
         sendRequest: fetchOrdersHandler,
         error: hasErrorOrders,
@@ -21,10 +31,13 @@ const Orders = () => {
 
     const { accessToken } = useSelector(state => state.user);
 
-    const onChangeStatusHandler = status => {
+    const onChangeOrderStatus = status => {
         setOrdersStatus(status);
         // send request to fetch new data
-        console.log("the status section was changed !");
+    };
+    const onChangeOriginStatus = status => {
+        setOriginStatus(status);
+        // send request to fetch new data
     };
     useEffect(() => {
         if (accessToken) {
@@ -34,18 +47,27 @@ const Orders = () => {
                     Authorization: "Bearer " + accessToken,
                 },
             });
-            if (hasErrorOrders) {
-                toast.error(hasErrorOrders);
-            }
+        }
+    }, []);
+    useEffect(() => {
+        if (hasErrorOrders) {
+            toast.error(hasErrorOrders);
         }
     }, [hasErrorOrders]);
+    console.log("ordersData", ordersData);
     return (
         <div className={classes.Order}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {hasErrorOrders && (
+                <Toaster position="top-center" reverseOrder={false} />
+            )}
 
             <Scroller>
-                <FilterOrders
-                    filterOrders={onChangeStatusHandler}
+                <FilterOrigin
+                    originStatus={originStatus}
+                    filterOrigin={onChangeOriginStatus}
+                />
+                <FilterOrdersDate
+                    filterOrdersDate={onChangeOrderStatus}
                     ordersStatus={ordersStatus}
                 />
                 <div className={classes.orderCards}>
@@ -56,9 +78,12 @@ const Orders = () => {
                             borderPassage={order.border_passage}
                             destination={order.destination}
                             loadingLocation={order.loading_location}
-                            offersNumber={10}
+                            btnText="مشاهده جزئیات"
                             product={order.product}
                             weight={order.weight}
+                            loadingDate={order.loading_date}
+                            companyName={order.orderer.company_name}
+                            image={order.orderer.profile_picture_file}
                         />
                     ))}
                 </div>

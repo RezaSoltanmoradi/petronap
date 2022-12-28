@@ -23,7 +23,7 @@ const Header = () => {
             freightId === "profile" ||
             producerId === "profile") &&
         !validOffers;
-        
+
     let title;
     if (validProfile) {
         title = "پروفایل";
@@ -34,18 +34,17 @@ const Header = () => {
         title = "ثبت سفارش";
     } else if (validOrders) {
         title = "فعالیت های اخیر";
-    } else if (freightId === "orders") {
+    } else if (freightId === "orders" && !orderId) {
         title = "بارهای موجود";
+    } else if (freightId === "orders" && orderId) {
+        title = "جزئیات بار";
     } else if ((!producerId || !traderId || !freightId) && validProfile) {
         title = "پترونپ";
     } else if (validOffers && !offerId) {
         title = "پیشنهادات";
     } else if (typeof offerId !== "undefined") {
         title = "جزئیات پیشنهاد";
-    } 
-    // else if (typeof offerId !== "undefined" && freightId === "orders") {
-    //     title = "جزئیات بار";
-    // }
+    }
     const changeRouteHandler = () => {
         // if (oldRole.id === "0") {
         //     navigate(`/${role.name}/profile`);

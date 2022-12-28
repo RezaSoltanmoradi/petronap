@@ -9,22 +9,6 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Toaster, toast } from "react-hot-toast";
 
-// const DUMMY_OFFERS = [
-//     {
-//         id: "o1",
-//         offerPrice: "500000000",
-//         prepayment: "1000000000",
-//         prepaymentpercentage: "20%",
-//         companyName: "شرکت حمل ونقل کاسپین",
-//     },
-//     {
-//         id: "o2",
-//         offerPrice: "400000000",
-//         prepayment: "900000000",
-//         prepaymentpercentage: "20%",
-//         companyName: "شرکت حمل ونقل خلیج فارس",
-//     },
-// ];
 const Offers = () => {
     const { accessToken } = useSelector(state => state.user);
     const { orderId } = useParams();
@@ -33,8 +17,20 @@ const Offers = () => {
         error: hasErrorOffers,
         data: offersData,
     } = useRequest();
+    const {
+        sendRequest: fetchOrderItems,
+        error: hasErrorOrderItems,
+        data: orderItems,
+    } = useRequest();
+
     useEffect(() => {
-        if (accessToken && !hasErrorOffers) {
+        if (accessToken) {
+            fetchOrderItems({
+                url: `producer/orders/${orderId}/`,
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+            });
             fetchOffersHandler({
                 url: `producer/orders/${orderId}/offers/`,
                 headers: {
@@ -42,26 +38,41 @@ const Offers = () => {
                 },
             });
         }
-        if (hasErrorOffers) {
-            toast.error(hasErrorOffers);
+    }, []);
+
+    useEffect(() => {
+        if (hasErrorOffers || hasErrorOrderItems) {
+            toast.error(hasErrorOffers || hasErrorOrderItems);
         }
-    }, [hasErrorOffers]);
-    console.log({ offersData });
-    
+    }, [hasErrorOffers, hasErrorOrderItems]);
+
+    const {
+        border_passage,
+        destination,
+        loading_location,
+        product,
+        weight,
+        loading_date,
+    } = orderItems ?? {};
     return (
         <Layout isLogin={true}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {(hasErrorOffers || hasErrorOrderItems) && (
+                <Toaster position="top-center" reverseOrder={false} />
+            )}
 
             <div className={classes.Offers}>
                 <Scroller>
-                    <SingleOrder
-                        top="50px"
-                        borderPassage=" رازی "
-                        destination=" استانبول"
-                        loadingLocation=" خوزستان"
-                        product="اپوکسی رزین مایع"
-                        weight="13 تن"
-                    />
+                    {orderItems && (
+                        <SingleOrder
+                            top="50px"
+                            borderPassage={border_passage}
+                            destination={destination}
+                            loadingLocation={loading_location}
+                            product={product}
+                            weight={weight}
+                            loadingDate={loading_date}
+                        />
+                    )}
                     <div className={classes.OfferCards}>
                         {offersData?.map(offer => (
                             <OfferCard

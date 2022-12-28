@@ -23,7 +23,6 @@ const Orders = () => {
 
     const onChangeStatusHandler = status => {
         setOrdersStatus(status);
-        // send request to fetch new data
         console.log("the status section was changed !");
     };
 
@@ -35,32 +34,36 @@ const Orders = () => {
                     Authorization: "Bearer " + accessToken,
                 },
             });
-            if (hasErrorOrders) {
-                toast.error(hasErrorOrders);
-            }
+        }
+    }, []);
+
+    useEffect(() => {
+        if (hasErrorOrders) {
+            toast.error(hasErrorOrders);
         }
     }, [hasErrorOrders]);
-
     return (
         <div className={classes.Order}>
-            <Toaster position="top-center" reverseOrder={false} />
-
+            {hasErrorOrders && (
+                <Toaster position="top-center" reverseOrder={false} />
+            )}
             <Scroller>
                 <FilterOrders
                     filterOrders={onChangeStatusHandler}
                     ordersStatus={ordersStatus}
                 />
                 <div className={classes.orderCards}>
-                    {ordersData?.map(order => (
+                    {ordersData?.map(data => (
                         <OrderCard
-                            key={order.id}
-                            orderId={order.id}
-                            borderPassage={order.border_passage}
-                            destination={order.destination}
-                            loadingLocation={order.loading_location}
-                            offersNumber={10}
-                            product={order.product}
-                            weight={order.weight}
+                            key={data.order.id}
+                            orderId={data.order.id}
+                            borderPassage={data.order.border_passage}
+                            destination={data.order.destination}
+                            loadingLocation={data.order.loading_location}
+                            product={data.order.product}
+                            weight={data.order.weight}
+                            loadingDate={data.order.loading_date}
+                            btnText={`${data.offer_count} پیشنهاد`}
                         />
                     ))}
                 </div>

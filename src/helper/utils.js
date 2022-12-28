@@ -48,6 +48,18 @@ export const validConfirmPassword = (password, confirmPassword) => {
     }
     return value;
 };
+export const getDay = day => {
+    let days = {
+        Saturday: "شنبه",
+        Sunday: "یکشنبه",
+        Monday: "دوشنبه",
+        Tuesday: "سه شنبه",
+        Wednesday: "چهارشنبه",
+        Thursday: "پنجشنبه",
+        Friday: "جمعه",
+    };
+    return days[day];
+};
 export const errorMessageConfig = (error, logout) => {
     let message;
 
@@ -77,6 +89,9 @@ export const errorMessageConfig = (error, logout) => {
         case 405:
             message =
                 "درخواست شمااشتباه میباشد, لطفا درخواست خود را تغییر دهید!";
+            break;
+        case 415:
+            message = "مشکل پردازش فرایند رخ داده است!";
             break;
         case 422:
             message = "مشکل پردازش فرایند رخ داده است!";

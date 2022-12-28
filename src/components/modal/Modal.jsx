@@ -9,6 +9,7 @@ const ModalCard = ({
     show,
     confirmText,
     cancelText,
+    height,
 }) => {
     return (
         <div className={classes.ModalContainer}>
@@ -20,15 +21,15 @@ const ModalCard = ({
                 centered
                 className={classes.Modal}
             >
-                <Modal.Body>{content}</Modal.Body>
+                <Modal.Body style={{ height }}>{content}</Modal.Body>
                 <Modal.Footer>
                     <Button
                         clicked={confirm}
                         btnStyle={{
-                            width: "88px",
+                            width: btnWidth,
                             height: "40px",
                             fontSize: "16px",
-                            padding: "2px, 50px, 2px, 50px",
+                            padding: "2px 10px ",
                             margin: "0 10px",
                         }}
                     >
@@ -37,10 +38,10 @@ const ModalCard = ({
                     <Button
                         clicked={cancel}
                         btnStyle={{
-                            width: "88px",
+                            width: btnWidth,
                             height: "40px",
                             fontSize: "16px",
-                            padding: "2px, 50px, 2px, 50px",
+                            padding: "2px 10px",
                             margin: "0 10px",
                         }}
                     >

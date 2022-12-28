@@ -14,9 +14,13 @@ const OfferCard = ({
     return (
         <section className={classes.OfferCard}>
             <div className={classes.titleContainer}>
-                <div className={classes.ImageContainer}>
-                    <img alt="" src={imageHandler(image)} />
-                </div>
+                {image ? (
+                    <div className={classes.ImageContainer}>
+                        <img alt="" src={imageHandler(image)} />
+                    </div>
+                ) : (
+                    <div className="icon icon-lg i-user-circle"></div>
+                )}
                 <h5 className={classes.title}>{companyName}</h5>
             </div>
             <div className={classes.PriceContainer}>

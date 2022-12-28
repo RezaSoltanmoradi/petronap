@@ -290,7 +290,7 @@ const FileUpload = () => {
                                         </div>
                                     ) : (
                                         <p className="title">
-                                            لطفا {title} و فایل ان را وارد کنید
+                                            {/* لطفا {title} و فایل ان را وارد کنید */}
                                         </p>
                                     )}
                                 </div>

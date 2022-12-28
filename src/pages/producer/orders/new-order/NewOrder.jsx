@@ -171,11 +171,7 @@ const NewOrder = () => {
     }
     return (
         <Layout isLogin={true}>
-            <Toaster
-                position="top-center"
-                reverseOrder={false}
-                containerClassName={classes.Toster}
-            />
+            <Toaster position="top-center" reverseOrder={false} />
             <div className={classes.Order}>
                 <Scroller>
                     {!hasOrderType && (

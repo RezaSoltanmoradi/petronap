@@ -12,7 +12,8 @@ const FilterOrders = ({ ordersStatus, filterOrders }) => {
                     className={classNames({
                         [classes.status]: true,
                         [classes.ActiveStatus]: status.id === ordersStatus.id,
-                        [classes.notActiveStatus]: status.id !== ordersStatus.id,
+                        [classes.notActiveStatus]:
+                            status.id !== ordersStatus.id,
                     })}
                 >
                     {status.title}

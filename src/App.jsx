@@ -7,10 +7,8 @@ import TraderNewOrder from "./pages/trader/orders/new-order/NewOrder";
 import ProducerNewOrder from "./pages/producer/orders/new-order/NewOrder";
 import TraderOffers from "./pages/trader/orders/offers/Offers";
 import ProducerOffers from "./pages/producer/orders/offers/Offers"; // this is extra
-import FreightOffers from "./pages/freight/orders/offers/Offers"; // this is extra
 import TraderDetail from "./pages/trader/orders/offers/detail/Detail";
 import ProducerDetail from "./pages/producer/orders/offers/detail/Detail"; // this is extra
-import FreightDetail from "./pages/freight/orders/offers/detail/Detail"; // this is extra
 import TraderController from "./pages/trader/TraderController";
 import FreightController from "./pages/freight/FreightController";
 import ProducerController from "./pages/producer/ProducerController";
@@ -18,6 +16,7 @@ import LoginController from "./pages/login/loginController/LoginController";
 import Landing from "./pages/landing/Landing";
 import { useSelector } from "react-redux";
 import SelectRoles from "./pages/select-roles/SelectRoles";
+import FreightDetail from "./pages/freight/orders/detail/Detail";
 
 function App() {
     const { isLogin, role } = useSelector(state => state.user);
@@ -72,23 +71,15 @@ function App() {
                     </Route>
                 </Route>
             </Route>
-            {role.name === "freight" && isLogin && (
-                <Route path="freight">
-                    <Route index element={<Freight />} />
-                    <Route path=":freightId">
-                        <Route index element={<FreightController />} />
-                        <Route path=":orderId">
-                            <Route path="offers">
-                                <Route index element={<FreightOffers />} />
-                                <Route
-                                    path=":offerId"
-                                    element={<FreightDetail />}
-                                />
-                            </Route>
-                        </Route>
-                    </Route>
+            {/* {role.name === "freight" && isLogin && (
+                    )} */}
+            <Route path="freight">
+                <Route index element={<Freight />} />
+                <Route path=":freightId">
+                    <Route index element={<FreightController />} />
+                    <Route path=":orderId" element={<FreightDetail />} />
                 </Route>
-            )}
+            </Route>
         </Routes>
     );
 }

@@ -74,8 +74,9 @@ const Footer = () => {
                 <span className={classes.orderIcon} onClick={newBarPathHandler}>
                     <span
                         className={classNames({
-                            "icon icon-md i-bar-active": orderId === "new",
-                            "icon icon-md i-bar": orderId !== "new",
+                            "icon icon-md i-bar-active":
+                                freightId === "orders" && orderId !== "new",
+                            "icon icon-md i-bar": true,
                         })}
                     />
                     <p>بارهای موجود</p>
@@ -86,9 +87,8 @@ const Footer = () => {
                 >
                     <span
                         className={classNames({
-                            "icon icon-md i-hours ": true,
-                            "icon icon-md i-hours-active ":
-                                freightId === "orders" && orderId !== "new",
+                            "icon icon-md i-hours ": orderId !== "new",
+                            "icon icon-md i-hours-active ": orderId === "new",
                         })}
                     />
                     <p>فعالیت های اخیر</p>

@@ -118,7 +118,7 @@ const Input = ({
                     aria-describedby="basic"
                     className={inputClasses}
                     value={value}
-                    style={{ cursor: "pointer" }}
+                    style={{ width: width, cursor: "pointer" }}
                     onClick={() =>
                         dispatch(
                             showUploadModal({
