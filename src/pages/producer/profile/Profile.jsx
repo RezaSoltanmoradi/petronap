@@ -405,8 +405,8 @@ const Profile = () => {
                         inputType="text"
                         fileName="licenseFile"
                         required={required}
-                        value={licenseFile}
-                        label="فایل اساس نامه شرکت "
+                        value={licenseFile ? "فایل اساس نامه شرکت " : ""}
+                        label={licenseFile ? "" : "فایل اساس نامه شرکت "}
                         placeholder="فایل اساس نامه شرکت "
                     >
                         <div className={classes.innerIcon}>
@@ -422,8 +422,8 @@ const Profile = () => {
                         inputIsValid={companyDocFile}
                         inputType="text"
                         placeholder="فایل ثبت شرکت"
-                        label="فایل ثبت شرکت"
-                        value={companyDocFile}
+                        label={companyDocFile ? "" : "فایل ثبت شرکت"}
+                        value={companyDocFile ? "فایل ثبت شرکت" : ""}
                         required={required}
                         fileName="companyDocFile"
                     >

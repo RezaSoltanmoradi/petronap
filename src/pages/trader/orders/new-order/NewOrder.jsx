@@ -19,6 +19,7 @@ import gregorian from "react-date-object/calendars/gregorian";
 import { DateObject } from "react-multi-date-picker";
 import Selectbar from "src/components/Selectbar/Selectbar";
 import { Toaster, toast } from "react-hot-toast";
+import { resetUploader } from "src/store/uploadFile-slice";
 // import Switch from "src/components/switch/Switch";
 // import {
 //     RESPONSIBLE_STORE_COST,
@@ -178,6 +179,7 @@ const NewOrder = () => {
     };
     const confirmOrderHandler = () => {
         dispatch(getContractType(null));
+        dispatch(resetUploader());
         navigate({ pathname: "/trader/orders" });
     };
     useEffect(() => {
@@ -388,8 +390,8 @@ const NewOrder = () => {
                                 inputIsValid={performFile}
                                 inputType="text"
                                 placeholder="فایل پرفورما"
-                                value={performFile}
-                                label="فایل پرفورما"
+                                value={performFile ? "فایل پرفورما" : ""}
+                                label={performFile ? "" : "فایل پرفورما"}
                                 fileName="performFile"
                                 required={required}
                             >

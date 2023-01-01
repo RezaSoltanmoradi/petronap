@@ -457,14 +457,22 @@ const Profile = () => {
                             inputType="text"
                             fileName="licenseFile"
                             required={required}
-                            value={licenseFile}
+                            value={
+                                licenseFile
+                                    ? nationality.id === "1"
+                                        ? "فایل لیسانس  شرکت "
+                                        : "فایل اساس نامه شرکت "
+                                    : ""
+                            }
                             placeholder={
                                 nationality.id === "1"
                                     ? "فایل لیسانس  شرکت "
                                     : "فایل اساس نامه شرکت "
                             }
                             label={
-                                nationality.id === "1"
+                                licenseFile
+                                    ? ""
+                                    : nationality.id === "1"
                                     ? "فایل لیسانس  شرکت "
                                     : "فایل اساس نامه شرکت "
                             }
@@ -484,8 +492,8 @@ const Profile = () => {
                             inputIsValid={_validCompanyDocFile}
                             inputType="text"
                             placeholder="فایل ثبت شرکت"
-                            label="فایل ثبت شرکت"
-                            value={companyDocFile}
+                            label={companyDocFile ? "" : "فایل ثبت شرکت"}
+                            value={companyDocFile ? "فایل ثبت شرکت" : ""}
                             required={required}
                             fileName="companyDocFile"
                         >
@@ -508,11 +516,19 @@ const Profile = () => {
                                 : "مجوز حمل ونقل"
                         }
                         label={
-                            type.id === "2"
+                            permisionDocFile
+                                ? ""
+                                : type.id === "2"
                                 ? "مجوز حمل و نقل شرکت "
                                 : "مجوز حمل ونقل"
                         }
-                        value={permisionDocFile}
+                        value={
+                            permisionDocFile
+                                ? type.id === "2"
+                                    ? "مجوز حمل و نقل شرکت "
+                                    : "مجوز حمل ونقل"
+                                : ""
+                        }
                         required={required}
                         fileName="permisionDocFile"
                     >

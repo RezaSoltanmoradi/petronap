@@ -12,13 +12,14 @@ const Footer = () => {
         if (oldRole.id === "0") return;
         navigate({ pathname: `/${oldRole.name}/orders/new` });
     };
-    const recentActivityHandlre = () => {
+    const allOrdersHandler = () => {
         if (oldRole.id === "0") return;
         navigate({ pathname: `/${oldRole.name}/orders` });
     };
-    const newBarPathHandler = () => {
+    const recentActivityHandlre = () => {
         if (oldRole.id === "0") return;
-        console.log("go to new bar");
+        console.log(`/freight/offers`);
+        navigate({ pathname: `/freight/offers` });
     };
     if (
         role.name === "producer" ||
@@ -47,10 +48,7 @@ const Footer = () => {
                     />
                     <p>ثبت سفارش</p>
                 </span>
-                <span
-                    className={classes.hoursIcon}
-                    onClick={recentActivityHandlre}
-                >
+                <span className={classes.hoursIcon} onClick={allOrdersHandler}>
                     <span
                         className={classNames({
                             "icon icon-md i-hours ": true,
@@ -71,7 +69,7 @@ const Footer = () => {
                     [classes.Footer]: true,
                 })}
             >
-                <span className={classes.orderIcon} onClick={newBarPathHandler}>
+                <span className={classes.orderIcon} onClick={allOrdersHandler}>
                     <span
                         className={classNames({
                             "icon icon-md i-bar-active":
@@ -88,7 +86,8 @@ const Footer = () => {
                     <span
                         className={classNames({
                             "icon icon-md i-hours ": orderId !== "new",
-                            "icon icon-md i-hours-active ": orderId === "new",
+                            "icon icon-md i-hours-active ":
+                                freightId === "offers" && orderId !== "new",
                         })}
                     />
                     <p>فعالیت های اخیر</p>

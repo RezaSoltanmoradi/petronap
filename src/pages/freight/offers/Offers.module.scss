@@ -1,0 +1,11 @@
+.Offer {
+    width: 100%;
+    height: 100vh;
+    overflow-y: hidden;
+    position: relative;
+    .orderCards {
+        position: absolute;
+        top: 60px;
+        padding-bottom: 130px;
+    }
+}

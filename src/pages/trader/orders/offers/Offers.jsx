@@ -52,7 +52,6 @@ const Offers = () => {
         weight,
         loading_date,
     } = orderItems ?? {};
-
     return (
         <Layout isLogin={true}>
             {(hasErrorOffers || hasErrorOrderItems) && (

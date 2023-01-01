@@ -243,7 +243,7 @@ const NewOrder = () => {
                                 required={required}
                             />
                             <Input
-                                inputType="number"
+                                inputType="text"
                                 elementType="input"
                                 placeholder="وزن"
                                 label="وزن "
@@ -331,8 +331,8 @@ const NewOrder = () => {
                                 inputIsValid={performFile}
                                 inputType="text"
                                 placeholder="فایل پرفورما"
-                                value={performFile}
-                                label="فایل پرفورما"
+                                value={performFile ? "فایل پرفورما" : ""}
+                                label={performFile ? "" : "فایل پرفورما"}
                                 fileName="performFile"
                                 required={required}
                             >

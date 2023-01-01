@@ -28,7 +28,9 @@ const OfferCard = ({
                     <div className="icon icon-sm i-offer mx-1" />
                     قیمت پیشنهادی
                 </div>
-                <div className={classes.price}>{offerPrice} تومان</div>
+                <div className={classes.price}>
+                    {offerPrice.toLocaleString(3)} تومان
+                </div>
             </div>
             <div className={classes.PriceContainer}>
                 <div className={classes.label}>
@@ -38,7 +40,7 @@ const OfferCard = ({
                 <div className={classes.price}>
                     {prepaymentPercentage}%
                     <span className={classes.innerPrice}>
-                        ({prepayment} تومان)
+                        ({prepayment.toLocaleString(3)} تومان)
                     </span>
                 </div>
             </div>

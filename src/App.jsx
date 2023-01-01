@@ -16,7 +16,7 @@ import LoginController from "./pages/login/loginController/LoginController";
 import Landing from "./pages/landing/Landing";
 import { useSelector } from "react-redux";
 import SelectRoles from "./pages/select-roles/SelectRoles";
-import FreightDetail from "./pages/freight/orders/detail/Detail";
+import DetailControllers from "./pages/freight/DetailControllers";
 
 function App() {
     const { isLogin, role } = useSelector(state => state.user);
@@ -77,7 +77,7 @@ function App() {
                 <Route index element={<Freight />} />
                 <Route path=":freightId">
                     <Route index element={<FreightController />} />
-                    <Route path=":orderId" element={<FreightDetail />} />
+                    <Route path=":orderId" element={<DetailControllers />} />
                 </Route>
             </Route>
         </Routes>

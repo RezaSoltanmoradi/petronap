@@ -21,6 +21,9 @@ const Input = ({
     required,
     width,
     fileName,
+    view,
+    fileId,
+    title,
 }) => {
     let inputElement = null;
     const inputClasses = classNames({
@@ -110,27 +113,53 @@ const Input = ({
             break;
         case "select-file":
             inputElement = (
-                <input
-                    type={inputType}
-                    readOnly
-                    placeholder={placeholder}
-                    aria-label="input"
-                    aria-describedby="basic"
-                    className={inputClasses}
-                    value={value}
-                    style={{ width: width, cursor: "pointer" }}
-                    onClick={() =>
-                        dispatch(
-                            showUploadModal({
-                                fileName,
-                                title: label,
-                                view: false,
-                                acceptType: "*",
-                                fileType: "document",
-                            })
-                        )
-                    }
-                />
+                <>
+                    {view ? (
+                        <input
+                            type={inputType}
+                            readOnly
+                            placeholder={placeholder}
+                            aria-label="input"
+                            aria-describedby="basic"
+                            className={inputClasses}
+                            value={value}
+                            style={{ width: width, cursor: "pointer" }}
+                            onClick={() =>
+                                dispatch(
+                                    showUploadModal({
+                                        title: title,
+                                        view: view,
+                                        fileId: fileId,
+                                        acceptType: "*",
+                                        fileType: "document",
+                                    })
+                                )
+                            }
+                        />
+                    ) : (
+                        <input
+                            type={inputType}
+                            readOnly
+                            placeholder={placeholder}
+                            aria-label="input"
+                            aria-describedby="basic"
+                            className={inputClasses}
+                            value={value}
+                            style={{ width: width, cursor: "pointer" }}
+                            onClick={() =>
+                                dispatch(
+                                    showUploadModal({
+                                        fileName,
+                                        title: label,
+                                        view: false,
+                                        acceptType: "*",
+                                        fileType: "document",
+                                    })
+                                )
+                            }
+                        />
+                    )}
+                </>
             );
             break;
         case "datepicker":
@@ -142,7 +171,7 @@ const Input = ({
                         placeholder={placeholder}
                         calendar={persian}
                         locale={persian_fa}
-                        format="YYYY-MM-DDThh:mm"
+                        format="YYYY-MM-DD"
                         calendarPosition="bottom-right"
                     />
                 </div>

@@ -6,17 +6,20 @@ import classNames from "classnames";
 import Button from "src/components/UI/button/Button";
 import { useEffect, useState } from "react";
 import ModalCard from "src/components/modal/Modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import useRequest from "src/hooks/useRequest";
 import { Toaster, toast } from "react-hot-toast";
 import { imageHandler } from "src/helper/baseUrls";
+import { viewTime } from "src/helper/utils";
+import { showUploadModal } from "src/store/uploadFile-slice";
 
 const Detail = () => {
     const [show, setShow] = useState(false);
     const { accessToken } = useSelector(state => state.user);
     const { orderId, offerId } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const {
         sendRequest: fetchSingleOffer,
@@ -24,6 +27,8 @@ const Detail = () => {
         data: singleOfferData,
     } = useRequest();
     const { sendRequest: sendConfirmOffer, error: hasErrorConfirmOffer } =
+        useRequest();
+    const { sendRequest: sendOrderView, error: hasErrorSendOrderView } =
         useRequest();
 
     useEffect(() => {
@@ -33,19 +38,37 @@ const Detail = () => {
                 headers: {
                     Authorization: "Bearer " + accessToken,
                 },
+            }).then(() => {
+                setTimeout(() => {
+                    sendOrderView({
+                        method: "PUT",
+                        url: `orders/orders/${offerId}/`,
+                        headers: {
+                            Authorization: "Bearer " + accessToken,
+                        },
+                    });
+                }, viewTime);
             });
         }
     }, []);
 
     useEffect(() => {
-        if (hasErrorSingleOffer || hasErrorConfirmOffer) {
-            toast.error(hasErrorSingleOffer || hasErrorConfirmOffer);
+        if (
+            hasErrorSingleOffer ||
+            hasErrorConfirmOffer ||
+            hasErrorSendOrderView
+        ) {
+            toast.error(
+                hasErrorSingleOffer ||
+                    hasErrorConfirmOffer ||
+                    hasErrorSendOrderView
+            );
         }
-    }, [hasErrorSingleOffer, hasErrorConfirmOffer]);
+    }, [hasErrorSingleOffer, hasErrorConfirmOffer, hasErrorSendOrderView]);
 
     const { offer_items: offerItems, order_items: orderItems } =
         singleOfferData ?? {};
-    const { freight } = offerItems ?? {};
+    const { freight, deal_draft } = offerItems ?? {};
 
     const confirmOffer = () => {
         sendConfirmOffer({
@@ -90,10 +113,12 @@ const Detail = () => {
         weight,
         loading_date,
     } = orderItems ?? {};
-
+    console.log("singleOfferData", singleOfferData);
     return (
         <Layout isLogin={true}>
-            {(hasErrorSingleOffer || hasErrorConfirmOffer) && (
+            {(hasErrorSingleOffer ||
+                hasErrorConfirmOffer ||
+                hasErrorSendOrderView) && (
                 <Toaster position="top-center" reverseOrder={false} />
             )}
             <div className={classes.Detail}>
@@ -154,7 +179,10 @@ const Detail = () => {
                                             قیمت پیشنهادی
                                         </div>
                                         <div className={classes.price}>
-                                            {offerItems?.price} تومان
+                                            {offerItems?.price.toLocaleString(
+                                                3
+                                            )}{" "}
+                                            تومان
                                         </div>
                                     </div>
                                     <div className={classes.PriceContainer}>
@@ -168,7 +196,10 @@ const Detail = () => {
                                             <span
                                                 className={classes.innerPrice}
                                             >
-                                                ({offerItems?.prepayment_amount}{" "}
+                                                (
+                                                {offerItems?.prepayment_amount.toLocaleString(
+                                                    3
+                                                )}{" "}
                                                 تومان)
                                             </span>
                                         </div>
@@ -210,7 +241,17 @@ const Detail = () => {
                                     </h4>
                                     <div>
                                         <Button
-                                            clicked={() => {}}
+                                            clicked={() => {
+                                                dispatch(
+                                                    showUploadModal({
+                                                        title: "  پیش نویس قرارداد ",
+                                                        view: true,
+                                                        acceptType: "*",
+                                                        fileId: freight?.company_doc_file,
+                                                        fileType: "document",
+                                                    })
+                                                );
+                                            }}
                                             btnStyle={{
                                                 width: "106px",
                                                 height: "24px",
@@ -275,7 +316,6 @@ const Detail = () => {
                                     confirmText="بله"
                                     cancelText="خیر"
                                     btnWidth="88px"
-                                    
                                 />
                             </div>
                         </>

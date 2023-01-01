@@ -10,12 +10,14 @@ import Layout from "../../layouts/Layout";
 import useRequest from "src/hooks/useRequest";
 import { getOtpData } from "src/store/user-slice";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [sentRequest, setSentRequest] = useState(false);
+
     const {
         hasError: phoneHasError,
         inputBlurHandler: phoneBlurHandler,
@@ -36,21 +38,26 @@ const Login = () => {
         if (!formIsValid) {
             return;
         }
-        getPasswordHandler({
-            url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
-        }).then(data => {
-            console.log({ data });
-            if (data) {
-                dispatch(
-                    getOtpData({
-                        requestId: data?.request_id,
-                        receiver: `98${phoneValue}`,
-                        password: data?.password,
-                    })
-                );
-                navigate({ pathname: "otp" });
-            }
-        });
+        if(sentRequest) return;
+        else if (!sentRequest){
+            setSentRequest(true)
+            getPasswordHandler({
+                url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
+            }).then(data => {
+                console.log({ data });
+                if (data) {
+                    dispatch(
+                        getOtpData({
+                            requestId: data?.request_id,
+                            receiver: `98${phoneValue}`,
+                            password: data?.password,
+                        })
+                    );
+                    navigate({ pathname: "otp" });
+                }
+            });
+
+        }
     };
     useEffect(() => {
         if (getOtpError) {

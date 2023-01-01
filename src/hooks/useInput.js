@@ -47,6 +47,12 @@ const useInput = (validateValue, maxLength) => {
             value: event.target.value,
         });
     };
+    const setDefaultInputValue = value => {
+        dispatchInputState({
+            type: types.input,
+            value: value,
+        });
+    };
     const inputBlurHandler = () => {
         dispatchInputState({ type: types.blur });
     };
@@ -57,6 +63,7 @@ const useInput = (validateValue, maxLength) => {
         hasError,
         valueChangeHandler,
         inputBlurHandler,
+        defaultValue: setDefaultInputValue,
     };
 };
 export default useInput;

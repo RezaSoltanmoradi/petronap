@@ -1,0 +1,187 @@
+.Detail {
+    width: 100%;
+    height: 100vh;
+    overflow-y: hidden;
+    position: relative;
+}
+.DetailContainer {
+    position: absolute;
+    top: 20px;
+    padding-bottom: 200px;
+    height: 100vh;
+    .OrderCard {
+        position: relative;
+        top: 0px;
+        padding-bottom: 130px;
+        width: 328px;
+        border-radius: 8px;
+        background-color: var(--info-color);
+        display: flex;
+        flex-direction: column;
+        .titleContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 11px;
+            .ImageContainer {
+                border: 0.2px solid var(--dark-color);
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                margin: 0 0.5rem;
+                overflow: hidden;
+                img {
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .title {
+                font-size: 16px;
+                font-weight: 400;
+                margin: 0;
+                margin: 0 0.5rem;
+            }
+        }
+        .OrderContainer {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 10px 0 10px;
+            width: 100%;
+            .ProductDetail {
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+            }
+            .Product {
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+            }
+            .text {
+                display: flex;
+                align-items: center;
+                padding-top: 4px;
+                padding-bottom: 4px;
+                line-height: 20px;
+                font-size: 16px;
+            }
+        }
+        .description {
+            margin: 0 auto;
+            font-size: 16px;
+        }
+        .fildset {
+            position: relative;
+            margin: 12px auto 10px auto;
+            height: 10px;
+            width: 290px;
+            .border {
+                background-color: var(--dark-color);
+                height: 0.2px;
+                width: 100%;
+                top: 0;
+                right: 0;
+                z-index: 0;
+                position: absolute;
+            }
+            .legend {
+                z-index: 1;
+                position: absolute;
+                right: 10px;
+                top: -5px;
+                border-radius: 25px;
+                margin: 0;
+                min-width: 55px;
+                height: 10px;
+                background-color: white;
+                padding: 0 5px;
+            }
+            .innerLegend {
+                z-index: 2;
+                font-size: 9px;
+                position: absolute;
+                right: 10px;
+                top: -5px;
+                background-color: #bdbdbd33;
+                min-width: 55px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 25px;
+                margin: 0;
+                height: 10px;
+                padding: 0 5px;
+            }
+        }
+        .AboutContainer {
+            width: 296px;
+            margin: 0 auto;
+            .About {
+                font-size: 12px;
+                line-height: 12px;
+                width: 222px;
+                margin: 5px 0 0 0;
+            }
+        }
+    }
+    .Form {
+        position: absolute;
+        top: 320px;
+        padding-bottom: 150px;
+        .innerIcon {
+            left: 10px;
+            z-index: 100;
+            top: 14px;
+            position: absolute;
+        }
+    }
+    .staticPriceContainer {
+        display: flex;
+        background-color: var(--info-color);
+        width: 328px;
+        height: 43px;
+        justify-content: space-between;
+        margin-top: 11px;
+        border-radius: 8px;
+        padding: 0 10px;
+        align-items: center;
+        border: 0.2px solid var(--dark-color);
+        .staticPrice{
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+            .innerPrice{
+                font-size: 12px;
+                margin: 0 3px;
+            }
+        }
+    }
+    .offerPriceBox {
+        width: 328px;
+        height: 137px;
+        margin-top: 20px;
+        border-radius: 8px;
+        border: 0.2px solid var(--dark-color);
+        padding: 10px;
+        .prepayment {
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            .price {
+                display: flex;
+            }
+        }
+    }
+    .BottomSection {
+        margin-top: 2rem;
+    }
+}
+
+.hasNotAbout {
+    height: 250px;
+}
+.hasAbout {
+    height: 319px;
+}

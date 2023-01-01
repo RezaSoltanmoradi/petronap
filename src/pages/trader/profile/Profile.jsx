@@ -451,14 +451,22 @@ const Profile = () => {
                             inputType="text"
                             fileName="licenseFile"
                             required={required}
-                            value={licenseFile}
+                            value={
+                                licenseFile
+                                    ? nationality.id === "1"
+                                        ? "فایل لیسانس  شرکت "
+                                        : "فایل اساس نامه شرکت "
+                                    : ""
+                            }
                             placeholder={
                                 nationality.id === "1"
                                     ? "فایل لیسانس  شرکت "
                                     : "فایل اساس نامه شرکت "
                             }
                             label={
-                                nationality.id === "1"
+                                licenseFile
+                                    ? ""
+                                    : nationality.id === "1"
                                     ? "فایل لیسانس  شرکت "
                                     : "فایل اساس نامه شرکت "
                             }
@@ -478,8 +486,8 @@ const Profile = () => {
                             inputIsValid={companyDocFile}
                             inputType="text"
                             placeholder="فایل ثبت شرکت"
-                            label="فایل ثبت شرکت"
-                            value={companyDocFile}
+                            label={companyDocFile ? "" : "فایل ثبت شرکت"}
+                            value={companyDocFile ? "فایل ثبت شرکت" : ""}
                             required={required}
                             fileName="companyDocFile"
                         >

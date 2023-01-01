@@ -60,6 +60,9 @@ export const getDay = day => {
     };
     return days[day];
 };
+
+export const viewTime = 3000;
+
 export const errorMessageConfig = (error, logout) => {
     let message;
 

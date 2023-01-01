@@ -42,6 +42,7 @@ const Orders = () => {
             toast.error(hasErrorOrders);
         }
     }, [hasErrorOrders]);
+
     return (
         <div className={classes.Order}>
             {hasErrorOrders && (

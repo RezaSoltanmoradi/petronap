@@ -17,7 +17,10 @@ const Header = () => {
 
     const validOffers = location.pathname.includes("offers");
     const validOrders =
-        (traderId === "orders" || producerId === "orders") && !validOffers;
+        (traderId === "orders" ||
+            producerId === "orders") &&
+        !validOffers;
+   
     const validProfile =
         (traderId === "profile" ||
             freightId === "profile" ||
@@ -32,7 +35,7 @@ const Header = () => {
         (traderId === "orders" || producerId === "orders")
     ) {
         title = "ثبت سفارش";
-    } else if (validOrders) {
+    } else if (validOrders ||( freightId==='offers')) {
         title = "فعالیت های اخیر";
     } else if (freightId === "orders" && !orderId) {
         title = "بارهای موجود";

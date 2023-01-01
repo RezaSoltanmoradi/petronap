@@ -38,6 +38,7 @@ const Detail = () => {
         isValid: validPrice,
         value: price,
         valueChangeHandler: onChangePrice,
+        defaultValue: setDefaultPrice,
     } = useInput(validTextInput, 50);
 
     const {
@@ -53,7 +54,7 @@ const Detail = () => {
     useEffect(() => {
         if (accessToken) {
             fetchSingleOrder({
-                url: `freight/orders/${orderId}/`,
+                url: `freight/offers/${orderId}/`,
                 headers: {
                     Authorization: "Bearer " + accessToken,
                 },
@@ -65,8 +66,10 @@ const Detail = () => {
         if (hasErrorSingleOrder || hasSendNewOfferError) {
             toast.error(hasErrorSingleOrder || hasSendNewOfferError);
         }
-    }, [hasErrorSingleOrder, hasSendNewOfferError]);
-
+        if (singleOrder) {
+            setDefaultPrice(singleOrder.price);
+        }
+    }, [hasErrorSingleOrder, hasSendNewOfferError, singleOrder]);
     const {
         border_passage: borderPassage,
         destination,
@@ -75,13 +78,20 @@ const Detail = () => {
         weight,
         loading_date,
         vehicle_type: vehicleType,
-        orderer,
+        deal_draft,
+        seen,
+        price: offerPrice,
+        prepayment_percentage,
+        prepayment_amount,
+        order,
     } = singleOrder ?? {};
+    const { orderer } = order ?? {};
     const {
         about,
         company_name: companyName,
         profile_picture_file: image,
     } = orderer ?? "";
+
     const convertLoadingDate = new DateObject({
         calendar: gregorian,
         date: loading_date,
@@ -90,7 +100,8 @@ const Detail = () => {
         .format();
     let formIsValid = false;
 
-    const formValidation = contractFile && validPrice;
+    const formValidation =
+        (contractFile || deal_draft?.bill_file) && (validPrice || offerPrice);
 
     if (formValidation) {
         formIsValid = true;
@@ -127,7 +138,6 @@ const Detail = () => {
             });
         }
     };
-    
     return (
         <Layout isLogin={true}>
             <div className={classes.Detail}>
@@ -237,73 +247,122 @@ const Detail = () => {
                                 <Input
                                     width="328px"
                                     elementType="select-file"
-                                    inputIsValid={contractFile}
+                                    inputIsValid={deal_draft.bill_file}
                                     inputType="text"
                                     fileName="contractFile"
+                                    view={true}
                                     required={required}
+                                    fileId={deal_draft?.bill_file}
                                     value={
-                                        contractFile ? "پیش نویس قرار داد" : ""
+                                        deal_draft?.bill_file
+                                            ? "پیش نویس قرار داد"
+                                            : ""
                                     }
                                     placeholder="پیش نویس قرار داد"
+                                    title="پیش نویس قرار داد"
                                     label={
-                                        contractFile ? "" : "پیش نویس قرار داد"
+                                        deal_draft?.bill_file
+                                            ? ""
+                                            : "پیش نویس قرار داد"
                                     }
                                 >
                                     <span className={classes.innerIcon}>
-                                        {contractFile ? (
+                                        {deal_draft?.bill_file ? (
                                             <div className="icon icon-md i-completed" />
                                         ) : (
                                             <div className="icon icon-md i-plus" />
                                         )}
                                     </span>
                                 </Input>
-                                <Input
-                                    width="328px"
-                                    elementType="input"
-                                    blurInput={onBlurPrice}
-                                    changeInput={onChangePrice}
-                                    inputIsValid={validPrice}
-                                    isTouched={hasErrorPrice}
-                                    inputType="number"
-                                    placeholder="قیمت پیشنهادی (تومان) "
-                                    label="قیمت پیشنهادی (تومان) "
-                                    value={price.toLocaleString(3)}
-                                    isLogin={false}
-                                    required={required}
-                                />
-                                <div className={classes.offerPriceBox}>
-                                    <div className={classes.prepayment}>
-                                        <p>پیش پرداخت</p>
-                                        <div className={classes.price}>
-                                            <p>
-                                                {realPrecentageValue.toLocaleString(
-                                                    3
-                                                )}
+                                {seen && (
+                                    <Input
+                                        width="328px"
+                                        elementType="input"
+                                        blurInput={onBlurPrice}
+                                        changeInput={onChangePrice}
+                                        inputIsValid={validPrice}
+                                        isTouched={hasErrorPrice}
+                                        inputType="number"
+                                        placeholder="قیمت پیشنهادی (تومان) "
+                                        label="قیمت پیشنهادی (تومان) "
+                                        value={price}
+                                        isLogin={false}
+                                        required={required}
+                                    />
+                                )}
+                                {seen && (
+                                    <div className={classes.offerPriceBox}>
+                                        <div className={classes.prepayment}>
+                                            <p>پیش پرداخت</p>
+                                            <div className={classes.price}>
+                                                <p>
+                                                    {realPrecentageValue.toLocaleString(
+                                                        3
+                                                    )}
+                                                </p>
+                                                <span className="mx-1">از</span>
+                                                <p>{validPriceValue}</p>
+                                            </div>
+                                        </div>
+                                        <FilterByPrice
+                                            FilterByPrecentage={setPrecentage}
+                                            precentage={precentage}
+                                            maxValue={100}
+                                        />
+                                    </div>
+                                )}
+                                {seen && (
+                                    <div className={classes.BottomSection}>
+                                        <Button
+                                            disabled={false}
+                                            clicked={formSubmitionHandler}
+                                            btnStyle={{
+                                                padding: "2px 50px",
+                                                height: "40px",
+                                                fontWeight: "400",
+                                                fontSize: "16px",
+                                            }}
+                                        >
+                                            تغییر قیمت و ارسال
+                                        </Button>
+                                    </div>
+                                )}
+                                {!seen && (
+                                    <div
+                                        className={classes.staticPriceContainer}
+                                    >
+                                        <div className={classes.staticTitle}>
+                                            قیمت پیشنهادی
+                                        </div>
+                                        <div className={classes.staticPrice}>
+                                            <p className="m-0">
+                                                {offerPrice.toLocaleString(3)}
                                             </p>
-                                            <span className="mx-1">از</span>
-                                            <p>{validPriceValue}</p>
+                                            <p className="m-0 mx-1">تومان</p>
                                         </div>
                                     </div>
-                                    <FilterByPrice
-                                        FilterByPrecentage={setPrecentage}
-                                        precentage={precentage}
-                                        maxValue={100}
-                                    />
-                                </div>
-                                <div className={classes.BottomSection}>
-                                    <Button
-                                        disabled={false}
-                                        clicked={formSubmitionHandler}
-                                        btnStyle={{
-                                            padding: "2px 50px",
-                                            height: "40px",
-                                            fontWeight: "400",
-                                            fontSize: "16px",
-                                        }}
+                                )}
+                                {!seen && (
+                                    <div
+                                        className={classes.staticPriceContainer}
                                     >
-                                        تایید و ارسال قیمت
-                                    </Button>
-                                </div>
+                                        <div className={classes.staticTitle}>
+                                            پیش پرداخت
+                                        </div>
+                                        <div className={classes.staticPrice}>
+                                            {prepayment_percentage}%
+                                            <span
+                                                className={classes.innerPrice}
+                                            >
+                                                (
+                                                {prepayment_amount.toLocaleString(
+                                                    3
+                                                )}{" "}
+                                                تومان)
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                             </Form>
                             <ModalCard
                                 show={show}

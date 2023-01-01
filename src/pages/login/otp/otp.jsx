@@ -20,12 +20,13 @@ import { Toaster, toast } from "react-hot-toast";
 
 const Otp = () => {
     const { onClickReset, timer } = useTimer();
+    const [sentRequest, setSentRequest] = useState(false);
     const navigate = useNavigate();
     const { requestId, receiver, password } = useSelector(
         state => state.user.otp
     );
     const dispatch = useDispatch();
-
+    
     const {
         hasError: passwordHasError,
         inputBlurHandler: passwordBlurHandler,
@@ -48,8 +49,11 @@ const Otp = () => {
             navigate("/login");
             return;
         }
+        if(sentRequest)return;
+        
         if (sendPasswordAgain) {
             onClickReset();
+            setSentRequest(false)
             dispatch(
                 getOtpData({
                     requestId: null,
@@ -74,6 +78,7 @@ const Otp = () => {
             if (!formIsValid) {
                 return;
             }
+            setSentRequest(true)
             sendOtpRequestId({
                 url: `users/otp/`,
                 method: "POST",

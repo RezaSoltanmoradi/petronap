@@ -34,9 +34,6 @@ const Orders = () => {
                 },
             });
         }
-        if (hasErrorOrders) {
-            toast.error(hasErrorOrders);
-        }
     }, []);
     useEffect(() => {
         if (hasErrorOrders) {

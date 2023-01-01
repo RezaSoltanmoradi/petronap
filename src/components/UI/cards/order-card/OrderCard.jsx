@@ -29,10 +29,15 @@ const OrderCard = ({
     })
         .convert(persian, persian_fa)
         .format();
+    const { freightId } = useParams();
+
     const cardDetailHandler = () => {
-        console.log("oldrole", oldRole);
         if (oldRole.id === "2") {
-            navigate(`/${oldRole.name}/orders/${orderId}`);
+            if (freightId === "offers") {
+                navigate(`/${oldRole.name}/offers/${orderId}`);
+            } else {
+                navigate(`/${oldRole.name}/orders/${orderId}`);
+            }
         } else {
             navigate(`/${oldRole.name}/orders/${orderId}/offers`);
         }
