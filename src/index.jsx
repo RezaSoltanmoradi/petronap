@@ -8,14 +8,17 @@ import "../node_modules/bootstrap/dist/css/bootstrap.rtl.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
 // add redux store and storage
 import { Provider } from "react-redux";
-import { initStore } from "./store/index";
+import { initStore, presister } from "./store/index";
+import { PersistGate } from "reduxjs-toolkit-persist/integration/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <Provider store={initStore}>
-            <Router>
-                <App />
-            </Router>
+            <PersistGate loading={null} persistor={presister}>
+                <Router>
+                    <App />
+                </Router>
+            </PersistGate>
         </Provider>
     </React.StrictMode>
 );

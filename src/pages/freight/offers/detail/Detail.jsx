@@ -41,19 +41,19 @@ const Detail = () => {
         defaultValue: setDefaultPrice,
     } = useInput(validTextInput, 50);
 
+    const realPrecentageValue = (precentage / 100) * price;
+
     const {
-        sendRequest: fetchSingleOrder,
-        error: hasErrorSingleOrder,
-        data: singleOrder,
+        sendRequest: fetchSingleOffer,
+        error: hasErrorSingleOffer,
+        data: singleOffer,
     } = useRequest();
     const { sendRequest: sendNewOffer, error: hasSendNewOfferError } =
         useRequest();
-    const realPrecentageValue = (precentage / 100) * price;
-    const validPriceValue = Number(price).toLocaleString(3);
 
     useEffect(() => {
         if (accessToken) {
-            fetchSingleOrder({
+            fetchSingleOffer({
                 url: `freight/offers/${orderId}/`,
                 headers: {
                     Authorization: "Bearer " + accessToken,
@@ -63,29 +63,35 @@ const Detail = () => {
     }, []);
 
     useEffect(() => {
-        if (hasErrorSingleOrder || hasSendNewOfferError) {
-            toast.error(hasErrorSingleOrder || hasSendNewOfferError);
+        if (hasErrorSingleOffer || hasSendNewOfferError) {
+            toast.error(hasErrorSingleOffer || hasSendNewOfferError);
         }
-        if (singleOrder) {
-            setDefaultPrice(singleOrder.price);
+        if (singleOffer) {
+            setDefaultPrice(singleOffer.price);
+            setPrecentage(singleOffer.prepayment_percentage);
         }
-    }, [hasErrorSingleOrder, hasSendNewOfferError, singleOrder]);
+    }, [hasErrorSingleOffer, hasSendNewOfferError, singleOffer]);
     const {
-        border_passage: borderPassage,
-        destination,
-        loading_location: loadingLocation,
-        product,
-        weight,
-        loading_date,
-        vehicle_type: vehicleType,
         deal_draft,
         seen,
-        price: offerPrice,
-        prepayment_percentage,
-        prepayment_amount,
+        orderer_acception,
         order,
-    } = singleOrder ?? {};
-    const { orderer } = order ?? {};
+        prepayment_amount,
+        prepayment_percentage,
+        price: offerPrice,
+    } = singleOffer ?? {};
+
+    const {
+        orderer,
+        loading_date,
+        weight,
+        product,
+        loading_location: loadingLocation,
+        border_passage: borderPassage,
+        destination,
+        vehicle_type: vehicleType,
+    } = order ?? {};
+
     const {
         about,
         company_name: companyName,
@@ -117,32 +123,54 @@ const Detail = () => {
         setShow(true);
     };
     const confirmOfferHandler = () => {
-        if (price) {
+        if (price || offerPrice) {
             sendNewOffer({
-                url: `freight/orders/${orderId}/create_offer/`,
+                url: `freight/orders/${order?.id}/update_offer/${orderId}/`,
                 method: "POST",
                 headers: {
                     Authorization: "Bearer " + accessToken,
                 },
                 data: {
-                    price: price,
-                    prepayment_percentage: precentage,
-                    deal_draft_file: contractFile,
+                    price: price ?? offerPrice,
+                    prepayment_percentage: precentage ?? prepayment_percentage,
                 },
             }).then(data => {
                 if (data.price) {
                     dispatch(resetUploader());
                     setShow(false);
-                    navigate(`/freight/orders`);
+                    navigate(`/freight/offers`);
                 }
             });
         }
+    };
+    const confirmOrderHandler = () => {
+        if (price || offerPrice) {
+            sendNewOffer({
+                url: `freight/orders/${order?.id}/offers/${orderId}/offer_confirmation/`,
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+                data: {
+                    price: price ?? offerPrice,
+                    prepayment_percentage: precentage ?? prepayment_percentage,
+                },
+            }).then(data => {
+                if (data.price) {
+                    setShow(false);
+                    navigate(`/freight/offers`);
+                }
+            });
+        }
+    };
+    const rejectedOrderHandler = () => {
+        navigate("/freight/offers/");
     };
     return (
         <Layout isLogin={true}>
             <div className={classes.Detail}>
                 <Toaster position="top-center" reverseOrder={false} />
-                {singleOrder && (
+                {singleOffer && (
                     <Scroller>
                         <div className={classes.DetailContainer}>
                             <section
@@ -274,7 +302,7 @@ const Detail = () => {
                                         )}
                                     </span>
                                 </Input>
-                                {seen && (
+                                {seen && !orderer_acception && (
                                     <Input
                                         width="328px"
                                         elementType="input"
@@ -290,7 +318,7 @@ const Detail = () => {
                                         required={required}
                                     />
                                 )}
-                                {seen && (
+                                {seen && !orderer_acception && (
                                     <div className={classes.offerPriceBox}>
                                         <div className={classes.prepayment}>
                                             <p>پیش پرداخت</p>
@@ -301,7 +329,11 @@ const Detail = () => {
                                                     )}
                                                 </p>
                                                 <span className="mx-1">از</span>
-                                                <p>{validPriceValue}</p>
+                                                <p>
+                                                    {Number(
+                                                        price
+                                                    ).toLocaleString(3)}
+                                                </p>
                                             </div>
                                         </div>
                                         <FilterByPrice
@@ -311,7 +343,7 @@ const Detail = () => {
                                         />
                                     </div>
                                 )}
-                                {seen && (
+                                {seen && !orderer_acception && (
                                     <div className={classes.BottomSection}>
                                         <Button
                                             disabled={false}
@@ -327,7 +359,7 @@ const Detail = () => {
                                         </Button>
                                     </div>
                                 )}
-                                {!seen && (
+                                {(!seen || orderer_acception) && (
                                     <div
                                         className={classes.staticPriceContainer}
                                     >
@@ -342,7 +374,7 @@ const Detail = () => {
                                         </div>
                                     </div>
                                 )}
-                                {!seen && (
+                                {(!seen || orderer_acception) && (
                                     <div
                                         className={classes.staticPriceContainer}
                                     >
@@ -363,22 +395,75 @@ const Detail = () => {
                                         </div>
                                     </div>
                                 )}
+                                {seen && orderer_acception && (
+                                    <div className={classes.BottomSection}>
+                                        <Button
+                                            disabled={false}
+                                            clicked={formSubmitionHandler}
+                                            btnStyle={{
+                                                padding: "2px 30px",
+                                                height: "40px",
+                                                fontWeight: "400",
+                                                fontSize: "16px",
+                                                width: "118px",
+                                            }}
+                                        >
+                                            قبول بار
+                                        </Button>
+                                        <Button
+                                            disabled={false}
+                                            clicked={rejectedOrderHandler}
+                                            btnStyle={{
+                                                padding: "2px 30px",
+                                                height: "40px",
+                                                fontWeight: "400",
+                                                fontSize: "16px",
+                                                width: "118px",
+                                            }}
+                                        >
+                                            رد بار
+                                        </Button>
+                                    </div>
+                                )}
                             </Form>
-                            <ModalCard
-                                show={show}
-                                cancel={() => setShow(false)}
-                                confirm={confirmOfferHandler}
-                                content={`پیشنهاد قیمت ${validPriceValue}
-                                تومان با ${precentage}%
-                                پیش پرداخت 
-                                برای حمل ${weight} تن 
-                                ${product}
-                                از مبدا: ${loadingLocation} به مقصد: ${destination}
-                                `}
-                                height={120}
-                                confirmText="تایید و ارسال"
-                                cancelText="عدم تایید"
-                            />
+                            {seen && orderer_acception ? (
+                                <ModalCard
+                                    show={show}
+                                    cancel={() => setShow(false)}
+                                    confirm={confirmOrderHandler}
+                                    content={`
+                                    آیا از قبول تحویل بار ${weight} تن 
+                                    ${product}
+                                    از: شرکت ${companyName}
+                                    از: مبدا ${loadingLocation}
+                                    به مقصد: ${destination}
+                                    گذرگاه مرزی: ${borderPassage}
+                                    اطمینان کامل را دارید؟
+                                 `}
+                                    height={160}
+                                    confirmText="بله "
+                                    cancelText="خیر "
+                                    btnWidth={100}
+                                />
+                            ) : (
+                                <ModalCard
+                                    show={show}
+                                    cancel={() => setShow(false)}
+                                    confirm={confirmOfferHandler}
+                                    content={`پیشنهاد قیمت ${Number(
+                                        price
+                                    ).toLocaleString(3)}
+                                    تومان با ${precentage}%
+                                    پیش پرداخت 
+                                    برای حمل ${weight} تن 
+                                    ${product}
+                                    از مبدا: ${loadingLocation} به مقصد: ${destination}
+                                    `}
+                                    height={120}
+                                    confirmText="تایید و ارسال"
+                                    cancelText="عدم تایید"
+                                />
+                            )}
                         </div>
                     </Scroller>
                 )}

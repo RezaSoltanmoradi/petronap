@@ -127,9 +127,10 @@ const Input = ({
                             onClick={() =>
                                 dispatch(
                                     showUploadModal({
-                                        title: title,
-                                        view: view,
-                                        fileId: fileId,
+                                        title,
+                                        fileName,
+                                        fileId,
+                                        view,
                                         acceptType: "*",
                                         fileType: "document",
                                     })

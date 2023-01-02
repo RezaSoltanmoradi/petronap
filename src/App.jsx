@@ -38,48 +38,54 @@ function App() {
                     <Route index element={<SelectRoles />} />
                 </Route>
             )}
-            {/* {role.name === "trader" && isLogin && (
-                                )} */}
-            <Route path="trader">
-                <Route index element={<Trader />} />
-                <Route path=":traderId">
-                    <Route index element={<TraderController />} />
-                    <Route path=":orderId">
-                        <Route index element={<TraderNewOrder />} />
-                        <Route path="offers">
-                            <Route index element={<TraderOffers />} />
-                            <Route path=":offerId" element={<TraderDetail />} />
+            {role.name === "trader" && isLogin && (
+                <Route path="trader">
+                    <Route index element={<Trader />} />
+                    <Route path=":traderId">
+                        <Route index element={<TraderController />} />
+                        <Route path=":orderId">
+                            <Route index element={<TraderNewOrder />} />
+                            <Route path="offers">
+                                <Route index element={<TraderOffers />} />
+                                <Route
+                                    path=":offerId"
+                                    element={<TraderDetail />}
+                                />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>
-            </Route>
-            {/* {role.name === "producer" && isLogin && (
-                    )} */}
-            <Route path="producer">
-                <Route index element={<Producer />} />
-                <Route path=":producerId">
-                    <Route index element={<ProducerController />} />
-                    <Route path=":orderId">
-                        <Route index element={<ProducerNewOrder />} />
-                        <Route path="offers">
-                            <Route index element={<ProducerOffers />} />
-                            <Route
-                                path=":offerId"
-                                element={<ProducerDetail />}
-                            />
+            )}
+            {role.name === "producer" && isLogin && (
+                <Route path="producer">
+                    <Route index element={<Producer />} />
+                    <Route path=":producerId">
+                        <Route index element={<ProducerController />} />
+                        <Route path=":orderId">
+                            <Route index element={<ProducerNewOrder />} />
+                            <Route path="offers">
+                                <Route index element={<ProducerOffers />} />
+                                <Route
+                                    path=":offerId"
+                                    element={<ProducerDetail />}
+                                />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>
-            </Route>
-            {/* {role.name === "freight" && isLogin && (
-                    )} */}
-            <Route path="freight">
-                <Route index element={<Freight />} />
-                <Route path=":freightId">
-                    <Route index element={<FreightController />} />
-                    <Route path=":orderId" element={<DetailControllers />} />
+            )}
+            {role.name === "freight" && isLogin && (
+                <Route path="freight">
+                    <Route index element={<Freight />} />
+                    <Route path=":freightId">
+                        <Route index element={<FreightController />} />
+                        <Route
+                            path=":orderId"
+                            element={<DetailControllers />}
+                        />
+                    </Route>
                 </Route>
-            </Route>
+            )}
         </Routes>
     );
 }

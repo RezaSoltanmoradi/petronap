@@ -1,21 +1,13 @@
 import { useCallback, useState } from "react";
 import { errorMessageConfig } from "src/helper/utils";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { logout } from "src/store/user-slice";
-import { resetUploader } from "src/store/uploadFile-slice";
 import { BASE_URL } from "src/helper/baseUrls";
 
 const useRequest = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [data, setData] = useState(null);
-    const dispatch = useDispatch();
 
-    const logoutHandler = () => {
-        dispatch(logout());
-        dispatch(resetUploader());
-    };
     const sendRequest = useCallback(async requestConfig => {
         setIsLoading(true);
         setError(null);
@@ -44,8 +36,7 @@ const useRequest = () => {
                 setError(
                     errorMessageConfig(
                         error.request.status ||
-                            "مشکلی در سرور رخ داده است لطفا مجدد تلاش کنید!",
-                        logoutHandler
+                            "مشکلی در سرور رخ داده است لطفا مجدد تلاش کنید!"
                     )
                 );
                 setIsLoading(false);

@@ -1,3 +1,5 @@
+import Logout from "src/components/logout/Logout";
+
 export const validPassword = value => value.length >= 4;
 export const validUserCode = value => value.length === 4;
 
@@ -63,7 +65,7 @@ export const getDay = day => {
 
 export const viewTime = 3000;
 
-export const errorMessageConfig = (error, logout) => {
+export const errorMessageConfig = (error) => {
     let message;
 
     switch (error) {
@@ -78,7 +80,7 @@ export const errorMessageConfig = (error, logout) => {
             {
                 message = " شما احراز هویت نشدید, لطفا مجدد وارد شوید!";
                 setTimeout(() => {
-                    logout();
+                    Logout();
                 }, 500);
             }
             break;

@@ -42,8 +42,6 @@ const Offers = () => {
         }
     }, [hasErrorOffers]);
 
-    console.log("offersData", offersData);
-
     return (
         <div className={classes.Offer}>
             {hasErrorOffers && (
@@ -64,8 +62,10 @@ const Offers = () => {
                             destination={offer.order.destination}
                             loadingLocation={offer.order.loading_location}
                             btnText={
-                                offer.seen
-                                    ? "قیمت پیشنهادی شما دیده شد"
+                                offer?.seen
+                                    ? offer?.orderer_acception
+                                        ? "قبول نهایی یا رد بار"
+                                        : "قیمت پیشنهادی شما دیده شد"
                                     : "هنوز قیمت پیشنهادی شما دیده نشده"
                             }
                             product={offer.order.product}

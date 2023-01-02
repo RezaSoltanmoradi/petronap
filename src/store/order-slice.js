@@ -10,7 +10,8 @@ const orderSlice = createSlice({
         getContractType(state, action) {
             state.contractType = action.payload;
         },
+        resetContractType: () => initialState
     },
 });
-export const { getContractType } = orderSlice.actions;
+export const { getContractType, resetContractType } = orderSlice.actions;
 export default orderSlice.reducer;

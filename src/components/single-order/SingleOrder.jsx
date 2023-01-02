@@ -47,7 +47,7 @@ const SingleOrder = ({
                     </div>
                     <div className={classes.text}>
                         <span className="icon icon-sm i-weight mx-1" />
-                        {weight}
+                        {weight} تن 
                     </div>
                     <div className={classes.text}>
                         <span className="icon icon-sm i-calender-sm mx-1" />

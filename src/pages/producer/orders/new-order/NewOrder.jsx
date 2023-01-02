@@ -243,7 +243,7 @@ const NewOrder = () => {
                                 required={required}
                             />
                             <Input
-                                inputType="text"
+                                inputType="number"
                                 elementType="input"
                                 placeholder="وزن"
                                 label="وزن "

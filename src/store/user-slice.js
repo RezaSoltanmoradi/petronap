@@ -10,6 +10,8 @@ const initialState = {
         requestId: null,
         receiver: "",
         password: null,
+        companyName: null,
+        profilePicture: null,
     },
     type: {
         id: "1",
@@ -50,6 +52,7 @@ const userSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.userId = action.payload.userId;
+
             if (state.accessToken) {
                 state.isLogin = true;
             } else {

@@ -286,17 +286,6 @@ const Detail = () => {
                                 </div>
                                 <div className={classes.Buttons}>
                                     <Button
-                                        clicked={rejectedOffer}
-                                        btnStyle={{
-                                            width: "148px",
-                                            height: "40px",
-                                            fontSize: "16px",
-                                            padding: "2px 29px",
-                                        }}
-                                    >
-                                        رد پیشنهاد
-                                    </Button>
-                                    <Button
                                         clicked={() => setShow(true)}
                                         btnStyle={{
                                             width: "148px",
@@ -306,6 +295,17 @@ const Detail = () => {
                                         }}
                                     >
                                         قبول پیشنهاد
+                                    </Button>
+                                    <Button
+                                        clicked={rejectedOffer}
+                                        btnStyle={{
+                                            width: "148px",
+                                            height: "40px",
+                                            fontSize: "16px",
+                                            padding: "2px 29px",
+                                        }}
+                                    >
+                                        رد پیشنهاد
                                     </Button>
                                 </div>
                                 <ModalCard

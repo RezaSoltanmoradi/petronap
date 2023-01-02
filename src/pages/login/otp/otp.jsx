@@ -22,11 +22,12 @@ const Otp = () => {
     const { onClickReset, timer } = useTimer();
     const [sentRequest, setSentRequest] = useState(false);
     const navigate = useNavigate();
+
     const { requestId, receiver, password } = useSelector(
         state => state.user.otp
     );
     const dispatch = useDispatch();
-    
+
     const {
         hasError: passwordHasError,
         inputBlurHandler: passwordBlurHandler,
@@ -35,7 +36,7 @@ const Otp = () => {
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validUserCode, 4);
 
-    const { sendRequest: sendOtpRequestId } = useRequest();
+    const { sendRequest: sendOtpRequestId, error: sendOtpError } = useRequest();
     const { sendRequest: getPasswrodAgain, error: getOtpError } = useRequest();
 
     let formIsValid = false;
@@ -49,11 +50,11 @@ const Otp = () => {
             navigate("/login");
             return;
         }
-        if(sentRequest)return;
-        
+        if (sentRequest) return;
+
         if (sendPasswordAgain) {
             onClickReset();
-            setSentRequest(false)
+            setSentRequest(false);
             dispatch(
                 getOtpData({
                     requestId: null,
@@ -78,7 +79,7 @@ const Otp = () => {
             if (!formIsValid) {
                 return;
             }
-            setSentRequest(true)
+            setSentRequest(true);
             sendOtpRequestId({
                 url: `users/otp/`,
                 method: "POST",
@@ -100,6 +101,12 @@ const Otp = () => {
                             userId: data.user_id,
                         })
                     );
+                    dispatch(
+                        getOtpData({
+                            companyName: data.company_name,
+                            profilePicture: data.profile_picture_file,
+                        })
+                    );
                     if (data.created || data.user_role === "0") {
                         navigate(`/roles`);
                     } else if (!data.created && data.user_role !== "0") {
@@ -117,9 +124,6 @@ const Otp = () => {
                         }
                     }
                 } else {
-                    toast.error(
-                        "پسورد وارد شده صحیح نمیباشد لطفا شماره همراه خود را مجدد وارد کنید"
-                    );
                     setTimeout(() => {
                         navigate("/login");
                     }, 4000);
@@ -128,15 +132,17 @@ const Otp = () => {
         }
     };
     useEffect(() => {
-        if (getOtpError) {
-            toast.error(getOtpError);
+        if (getOtpError || sendOtpError) {
+            toast.error(getOtpError || sendOtpError);
         }
         onClickReset();
-    }, [getOtpError]);
+    }, [getOtpError, sendOtpError]);
 
     return (
         <div className={classes.Container}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {(getOtpError || sendOtpError) && (
+                <Toaster position="top-center" reverseOrder={false} />
+            )}
             <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <Form.Group
                     className={classes.FormGroup}
