@@ -4,8 +4,8 @@ import Scroller from "src/components/scroller/Scroller";
 import OrderCard from "src/components/UI/cards/order-card/OrderCard";
 import useRequest from "src/hooks/useRequest";
 import classes from "./Offers.module.scss";
-import { Toaster, toast } from "react-hot-toast";
 import FilterOrders from "src/components/container/filter-orders/FilterOrders";
+import Notification from "src/components/notification/Notification";
 
 const Offers = () => {
     const [offerStatus, setOfferStatus] = useState({
@@ -13,70 +13,111 @@ const Offers = () => {
         id: "0",
         title: "در انتظار",
     });
+    const [offers, setOffers] = useState(null);
+
     const {
-        sendRequest: fetchOfferHandler,
-        error: hasErrorOffers,
-        data: offersData,
+        sendRequest: fetchLoadingOffers,
+        error: hasErrorLoadingOffers,
+        data: loadingOffersData,
+        isLoading: loadingOffersPending,
+    } = useRequest();
+    const {
+        sendRequest: fetchDoingOffers,
+        error: hasErrorDoingOffers,
+        data: doingOffersData,
+        isLoading: doingOffersPending,
     } = useRequest();
 
     const { accessToken } = useSelector(state => state.user);
 
     const onChangeOfferStatus = status => {
         setOfferStatus(status);
-        // send request to fetch new data
     };
-
     useEffect(() => {
         if (accessToken) {
-            fetchOfferHandler({
-                url: `/freight/orders/nonaccepted_offers/`,
-                headers: {
-                    Authorization: "Bearer " + accessToken,
-                },
-            });
+            if (offerStatus.id === "0") {
+                fetchLoadingOffers({
+                    url: `/freight/orders/nonaccepted_offers/`,
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                    },
+                });
+            } else if (offerStatus.id === "1") {
+                fetchDoingOffers({
+                    url: `/freight/orders/accepted_offers/`,
+                    headers: {
+                        Authorization: "Bearer " + accessToken,
+                    },
+                });
+            }
         }
-    }, []);
-    useEffect(() => {
-        if (hasErrorOffers) {
-            toast.error(hasErrorOffers);
-        }
-    }, [hasErrorOffers]);
+    }, [offerStatus]);
 
+    useEffect(() => {
+        setOffers(null);
+        if (loadingOffersData?.length > 0 && offerStatus.id === "0") {
+            setOffers(loadingOffersData);
+        } else if (doingOffersData?.length > 0 && offerStatus.id === "1") {
+            setOffers(doingOffersData);
+        }
+    }, [loadingOffersData, doingOffersData, offerStatus]);
+
+    const handleBtnText = ({ seen, orderAcception, freightAcception }) => {
+        const orderNotSeen = !seen && !orderAcception;
+        const orderSeen = seen && !orderAcception;
+        const orderAccepted = seen && orderAcception;
+        const freightAccepted = orderAccepted && freightAcception;
+
+        const title = {
+            [orderNotSeen]: "هنوز قیمت پیشنهادی شما دیده نشده",
+            [orderSeen]: "قیمت پیشنهادی شما دیده شد",
+            [orderAccepted]: "قبول نهایی یا رد بار",
+            [freightAccepted]: "در انتظار اقدام طرف مقابل",
+        };
+        return title.true;
+    };
+    let finalOrders;
+
+    if (hasErrorDoingOffers && offerStatus?.id === "1") {
+        finalOrders = <Notification message={hasErrorDoingOffers} />;
+    } else if (hasErrorLoadingOffers && offerStatus?.id === "0") {
+        finalOrders = <Notification message={hasErrorLoadingOffers} />;
+    } else if (doingOffersPending || loadingOffersPending) {
+        finalOrders = <div>درحال بارگیری...</div>;
+    } else {
+        finalOrders = (
+            <div className={classes.orderCards}>
+                {offers?.map(offer => (
+                    <OrderCard
+                        key={offer.id}
+                        orderId={offer.id}
+                        borderPassage={offer.order.border_passage}
+                        destination={offer.order.destination}
+                        loadingLocation={offer.order.loading_location}
+                        btnText={handleBtnText({
+                            seen: offer?.seen,
+                            orderAcception: offer?.orderer_acception,
+                            freightAcception: offer?.freight_acception,
+                        })}
+                        product={offer.order.product}
+                        weight={offer.order.weight}
+                        loadingDate={offer.order.loading_date}
+                        seen={offer.seen}
+                        companyName={offer.order.orderer.company_name}
+                        image={offer.order.orderer.profile_picture_file}
+                    />
+                ))}
+            </div>
+        );
+    }
     return (
         <div className={classes.Offer}>
-            {hasErrorOffers && (
-                <Toaster position="top-center" reverseOrder={false} />
-            )}
-
             <Scroller>
                 <FilterOrders
                     filterOrders={onChangeOfferStatus}
                     ordersStatus={offerStatus}
                 />
-                <div className={classes.orderCards}>
-                    {offersData?.map(offer => (
-                        <OrderCard
-                            key={offer.id}
-                            orderId={offer.id}
-                            borderPassage={offer.order.border_passage}
-                            destination={offer.order.destination}
-                            loadingLocation={offer.order.loading_location}
-                            btnText={
-                                offer?.seen
-                                    ? offer?.orderer_acception
-                                        ? "قبول نهایی یا رد بار"
-                                        : "قیمت پیشنهادی شما دیده شد"
-                                    : "هنوز قیمت پیشنهادی شما دیده نشده"
-                            }
-                            product={offer.order.product}
-                            weight={offer.order.weight}
-                            loadingDate={offer.order.loading_date}
-                            seen={offer.seen}
-                            companyName={offer.order.orderer.company_name}
-                            image={offer.order.orderer.profile_picture_file}
-                        />
-                    ))}
-                </div>
+                {finalOrders}
             </Scroller>
         </div>
     );

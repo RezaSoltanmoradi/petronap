@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import useRequest from "src/hooks/useRequest";
 import { useEffect } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import Notification from "src/components/notification/Notification";
 const Offers = () => {
     const { accessToken } = useSelector(state => state.user);
     const { orderId } = useParams();
@@ -38,11 +38,6 @@ const Offers = () => {
             });
         }
     }, []);
-    useEffect(() => {
-        if (hasErrorOffers || hasErrorOrderItems) {
-            toast.error(hasErrorOffers || hasErrorOrderItems);
-        }
-    }, [hasErrorOffers, hasErrorOrderItems]);
 
     const {
         border_passage,
@@ -55,9 +50,8 @@ const Offers = () => {
     return (
         <Layout isLogin={true}>
             {(hasErrorOffers || hasErrorOrderItems) && (
-                <Toaster position="top-center" reverseOrder={false} />
+                <Notification message={hasErrorOffers || hasErrorOrderItems} />
             )}
-
             <div className={classes.Offers}>
                 <Scroller>
                     {orderItems && (

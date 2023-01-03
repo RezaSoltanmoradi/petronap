@@ -85,7 +85,7 @@ const FileUpload = () => {
     };
     let page = 1;
     useEffect(() => {
-        console.log("progress :" + progress);
+        // console.log("progress :" + progress);
         setResult(false);
         setIsLoading(false);
         setIdFile(fileId);
@@ -102,11 +102,11 @@ const FileUpload = () => {
                     axios
                         .get(`${Api}/uploader/${fileId}/download/`)
                         .then(res => {
-                            console.log("res", res);
+                            // console.log("res", res);
                             const imageSrc= `http://45.139.10.161:8091/uploader/${fileId}/download/`;
                             imgView.src = imageSrc ?? '';
-                            console.log("imageSrc", imageSrc);
-                            console.log("Src", imgView.src);
+                            // console.log("imageSrc", imageSrc);
+                            // console.log("Src", imgView.src);
                         })
                         .catch(err => {
                             console.log(err);
@@ -455,7 +455,7 @@ const FileUpload = () => {
 
                     const submit = document.querySelector("#submit");
                     submit.removeAttribute("disabled");
-                    console.log(res.data.file_id);
+                    // console.log(res.data.file_id);
                     // upload complete
                     if (!!res.file_id)
                         textbox = "file_id = " + res.data.file_id;

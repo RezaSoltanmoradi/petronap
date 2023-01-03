@@ -8,7 +8,6 @@ import ModalCard from "src/components/modal/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import useRequest from "src/hooks/useRequest";
-import { Toaster, toast } from "react-hot-toast";
 import { imageHandler } from "src/helper/baseUrls";
 import Input from "src/components/UI/input/Input";
 import { Form } from "react-bootstrap";
@@ -20,6 +19,7 @@ import persian from "react-date-object/calendars/persian";
 import { persian_fa } from "react-date-object/locales/persian_fa";
 import { gregorian } from "react-date-object/calendars/gregorian";
 import FilterByPrice from "src/components/container/filter-by-precentage/FilterByPrecentage";
+import Notification from "src/components/notification/Notification";
 
 const Detail = () => {
     const [show, setShow] = useState(false);
@@ -29,6 +29,7 @@ const Detail = () => {
     const [required, setRequired] = useState(false);
     const dispatch = useDispatch();
     const [precentage, setPrecentage] = useState(50);
+    const [requiredError, setRequiredError] = useState(null);
 
     const { uploadFiles } = useSelector(state => state.upload);
     const contractFile = uploadFiles?.contractFile ?? "";
@@ -63,14 +64,12 @@ const Detail = () => {
     }, []);
 
     useEffect(() => {
-        if (hasErrorSingleOffer || hasSendNewOfferError) {
-            toast.error(hasErrorSingleOffer || hasSendNewOfferError);
-        }
         if (singleOffer) {
             setDefaultPrice(singleOffer.price);
             setPrecentage(singleOffer.prepayment_percentage);
         }
-    }, [hasErrorSingleOffer, hasSendNewOfferError, singleOffer]);
+    }, [singleOffer]);
+
     const {
         deal_draft,
         seen,
@@ -79,8 +78,8 @@ const Detail = () => {
         prepayment_amount,
         prepayment_percentage,
         price: offerPrice,
+        freight_acception,
     } = singleOffer ?? {};
-
     const {
         orderer,
         loading_date,
@@ -117,15 +116,20 @@ const Detail = () => {
 
         if (!formIsValid) {
             setRequired(true);
-            toast.error("لطفا فیلدهای ضروری را وارد کنید");
+            setRequiredError("لطفا فیلدهای ضروری را وارد کنید");
+
             return;
         }
+        setRequiredError(null);
+
         setShow(true);
     };
     const confirmOfferHandler = () => {
+        setShow(false);
+
         if (price || offerPrice) {
             sendNewOffer({
-                url: `freight/orders/${order?.id}/update_offer/${orderId}/`,
+                url: `freight/orders/${order?.id}/updae_offer/${orderId}/`,
                 method: "POST",
                 headers: {
                     Authorization: "Bearer " + accessToken,
@@ -169,7 +173,17 @@ const Detail = () => {
     return (
         <Layout isLogin={true}>
             <div className={classes.Detail}>
-                <Toaster position="top-center" reverseOrder={false} />
+                {(hasErrorSingleOffer ||
+                    hasSendNewOfferError ||
+                    requiredError) && (
+                    <Notification
+                        message={
+                            hasErrorSingleOffer ||
+                            hasSendNewOfferError ||
+                            requiredError
+                        }
+                    />
+                )}
                 {singleOffer && (
                     <Scroller>
                         <div className={classes.DetailContainer}>
@@ -277,7 +291,6 @@ const Detail = () => {
                                     elementType="select-file"
                                     inputIsValid={deal_draft.bill_file}
                                     inputType="text"
-                                    fileName="contractFile"
                                     view={true}
                                     required={required}
                                     fileId={deal_draft?.bill_file}
@@ -287,7 +300,6 @@ const Detail = () => {
                                             : ""
                                     }
                                     placeholder="پیش نویس قرار داد"
-                                    title="پیش نویس قرار داد"
                                     label={
                                         deal_draft?.bill_file
                                             ? ""
@@ -395,36 +407,38 @@ const Detail = () => {
                                         </div>
                                     </div>
                                 )}
-                                {seen && orderer_acception && (
-                                    <div className={classes.BottomSection}>
-                                        <Button
-                                            disabled={false}
-                                            clicked={formSubmitionHandler}
-                                            btnStyle={{
-                                                padding: "2px 30px",
-                                                height: "40px",
-                                                fontWeight: "400",
-                                                fontSize: "16px",
-                                                width: "118px",
-                                            }}
-                                        >
-                                            قبول بار
-                                        </Button>
-                                        <Button
-                                            disabled={false}
-                                            clicked={rejectedOrderHandler}
-                                            btnStyle={{
-                                                padding: "2px 30px",
-                                                height: "40px",
-                                                fontWeight: "400",
-                                                fontSize: "16px",
-                                                width: "118px",
-                                            }}
-                                        >
-                                            رد بار
-                                        </Button>
-                                    </div>
-                                )}
+                                {seen &&
+                                    orderer_acception &&
+                                    !freight_acception && (
+                                        <div className={classes.BottomSection}>
+                                            <Button
+                                                disabled={false}
+                                                clicked={formSubmitionHandler}
+                                                btnStyle={{
+                                                    padding: "2px 30px",
+                                                    height: "40px",
+                                                    fontWeight: "400",
+                                                    fontSize: "16px",
+                                                    width: "118px",
+                                                }}
+                                            >
+                                                قبول بار
+                                            </Button>
+                                            <Button
+                                                disabled={false}
+                                                clicked={rejectedOrderHandler}
+                                                btnStyle={{
+                                                    padding: "2px 30px",
+                                                    height: "40px",
+                                                    fontWeight: "400",
+                                                    fontSize: "16px",
+                                                    width: "118px",
+                                                }}
+                                            >
+                                                رد بار
+                                            </Button>
+                                        </div>
+                                    )}
                             </Form>
                             {seen && orderer_acception ? (
                                 <ModalCard

@@ -10,13 +10,12 @@ import Layout from "../../layouts/Layout";
 import useRequest from "src/hooks/useRequest";
 import { getOtpData } from "src/store/user-slice";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { useEffect } from "react";
+import Notification from "src/components/notification/Notification";
 
 const Login = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [sentRequest, setSentRequest] = useState(false);
 
     const {
         hasError: phoneHasError,
@@ -37,10 +36,7 @@ const Login = () => {
         event.preventDefault();
         if (!formIsValid) {
             return;
-        }
-        if(sentRequest) return;
-        else if (!sentRequest){
-            setSentRequest(true)
+        } else {
             getPasswordHandler({
                 url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
             }).then(data => {
@@ -56,13 +52,9 @@ const Login = () => {
                     navigate({ pathname: "otp" });
                 }
             });
-
         }
     };
     useEffect(() => {
-        if (getOtpError) {
-            toast.error(getOtpError);
-        }
         dispatch(
             getOtpData({
                 requestId: null,
@@ -70,12 +62,11 @@ const Login = () => {
                 password: null,
             })
         );
-    }, [getOtpError, dispatch]);
+    }, [dispatch]);
     return (
         <Layout isLogin={false}>
-            {getOtpError && (
-                <Toaster position="top-center" reverseOrder={false} />
-            )}
+            {getOtpError && <Notification message={getOtpError} />}
+
             <div className={classes.Container}>
                 <Form
                     className={classes.Form}

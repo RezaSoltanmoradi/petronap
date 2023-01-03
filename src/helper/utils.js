@@ -65,7 +65,7 @@ export const getDay = day => {
 
 export const viewTime = 3000;
 
-export const errorMessageConfig = (error) => {
+export const errorMessageConfig = error => {
     let message;
 
     switch (error) {
@@ -81,7 +81,7 @@ export const errorMessageConfig = (error) => {
                 message = " شما احراز هویت نشدید, لطفا مجدد وارد شوید!";
                 setTimeout(() => {
                     Logout();
-                }, 500);
+                }, 3000);
             }
             break;
         case 403:

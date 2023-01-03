@@ -4,7 +4,7 @@ import Button from "../../../../components/UI/button/Button";
 import Scroller from "../../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
 import { getContractType } from "../../../../store/order-slice";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Input from "../../../../components/UI/input/Input";
 import useInput from "../../../../hooks/useInput";
@@ -17,7 +17,7 @@ import persian from "react-date-object/calendars/persian";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import gregorian from "react-date-object/calendars/gregorian";
 import { DateObject } from "react-multi-date-picker";
-import { Toaster, toast } from "react-hot-toast";
+import Notification from "src/components/notification/Notification";
 
 const NewOrder = () => {
     const [hasOrderType, setHasOrderType] = useState(false);
@@ -27,6 +27,7 @@ const NewOrder = () => {
     const [required, setRequired] = useState(false);
     const { accessToken } = useSelector(state => state.user);
     const navigate = useNavigate();
+    const [requiredError, setRequiredError] = useState(null);
 
     const { uploadFiles } = useSelector(state => state.upload);
     const performFile = uploadFiles?.performFile ?? "";
@@ -111,10 +112,10 @@ const NewOrder = () => {
         event.preventDefault();
         if (!formIsValid) {
             setRequired(true);
-            toast.error("لطفا فیلدهای ضروری را وارد کنید");
-
+            setRequiredError("لطفا فیلدهای ضروری را وارد کنید");
             return;
         }
+        setRequiredError(null);
 
         const loadingDate = new DateObject({
             calendar: persian,
@@ -124,7 +125,7 @@ const NewOrder = () => {
             .format();
 
         sendNewOrder({
-            url: `producer/orders/`,
+            url: `prodcer/orders/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -151,11 +152,6 @@ const NewOrder = () => {
         dispatch(getContractType(null));
         navigate({ pathname: "/producer/orders" });
     };
-    useEffect(() => {
-        if (newOrderError) {
-            toast.error(newOrderError);
-        }
-    }, [newOrderError]);
 
     if (isCompleted) {
         return (
@@ -171,7 +167,10 @@ const NewOrder = () => {
     }
     return (
         <Layout isLogin={true}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {(newOrderError || requiredError) && (
+                <Notification message={newOrderError || requiredError} />
+            )}
+
             <div className={classes.Order}>
                 <Scroller>
                     {!hasOrderType && (

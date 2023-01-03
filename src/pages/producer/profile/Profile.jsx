@@ -10,20 +10,21 @@ import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
 import Input from "../../../components/UI/input/Input";
 import Button from "../../../components/UI/button/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Alert from "../../../components/alert/Alert";
 import Scroller from "../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
 import useRequest from "src/hooks/useRequest";
 import { getOldRole, logout } from "src/store/user-slice";
 import { resetUploader } from "src/store/uploadFile-slice";
-import { Toaster, toast } from "react-hot-toast";
+import Notification from "src/components/notification/Notification";
 
 const Profile = () => {
     const [isCompleted, setIsCompleted] = useState(false);
     const [required, setRequired] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [requiredError, setRequiredError] = useState(null);
 
     const { otp, role, accessToken, userId } = useSelector(state => state.user);
     const { uploadFiles } = useSelector(state => state.upload);
@@ -167,12 +168,14 @@ const Profile = () => {
         event.preventDefault();
         if (!formIsValid) {
             setRequired(true);
-            toast.error("لطفا فیلدهای ضروری را وارد کنید");
+            setRequiredError("لطفا فیلدهای ضروری را وارد کنید");
 
             return;
         }
+        setRequiredError(null);
+
         sendProfileData({
-            url: `producer/profile/${userId}/`,
+            url: `producer/prole/${userId}/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -207,11 +210,7 @@ const Profile = () => {
             }
         });
     };
-    useEffect(() => {
-        if (profileError) {
-            toast.error(profileError);
-        }
-    }, [profileError]);
+
     if (isCompleted) {
         return (
             <Alert
@@ -229,7 +228,9 @@ const Profile = () => {
 
     return (
         <div className={classes.container}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {(profileError || requiredError) && (
+                <Notification message={profileError || requiredError} />
+            )}
             <Scroller>
                 <div className={classes.imageContainer}>
                     <Image />

@@ -7,9 +7,8 @@ import Logout from "../logout/Logout";
 import { useSelector } from "react-redux";
 const Menu = ({ show, setShow }) => {
     const [animation, setAnimation] = useState(false);
-    const { profilePicture, companyName } = useSelector(
-        state => state.user.otp
-    );
+    const { otp, oldRole } = useSelector(state => state.user);
+    const { profilePicture, companyName } = otp;
 
     useEffect(() => {
         if (!show) {
@@ -46,11 +45,21 @@ const Menu = ({ show, setShow }) => {
                             ) : (
                                 <div className="icon icon-lg i-user-circle"></div>
                             )}
-                            <h5 className={classes.title}>{companyName}</h5>
+                            <h5 className={classes.title}>
+                                {!companyName ? "نام شرکت (خالی)" : companyName}
+                            </h5>
                         </div>
                         <ul className={classes.MenuItems}>
-                            <li className={classes.Item}>اطلاعات کاربری</li>
-                            <li className={classes.Item}>ویرایش کلمه عبور</li>
+                            {oldRole.id !== "0" && (
+                                <>
+                                    <li className={classes.Item}>
+                                        اطلاعات کاربری
+                                    </li>
+                                    <li className={classes.Item}>
+                                        ویرایش کلمه عبور
+                                    </li>
+                                </>
+                            )}
                             <li
                                 className={classes.Item}
                                 onClick={() => Logout()}

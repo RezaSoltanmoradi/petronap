@@ -16,13 +16,12 @@ import {
     getRole,
 } from "src/store/user-slice";
 import { ROLES } from "src/helper/types";
-import { Toaster, toast } from "react-hot-toast";
+import Notification from "src/components/notification/Notification";
 
 const Otp = () => {
     const { onClickReset, timer } = useTimer();
-    const [sentRequest, setSentRequest] = useState(false);
     const navigate = useNavigate();
-
+    const [requiredError, setRequiredError] = useState(null);
     const { requestId, receiver, password } = useSelector(
         state => state.user.otp
     );
@@ -47,14 +46,18 @@ const Otp = () => {
     const formSubmitionHandler = ({ event, sendPasswordAgain }) => {
         event.preventDefault();
         if (!receiver) {
-            navigate("/login");
+            console.log("there is no reciver");
+
+            setRequiredError("لطفا ابتدا شماره همراه خود را وارد کنید!");
+            setTimeout(() => {
+                navigate("/login");
+            }, 2000);
             return;
         }
-        if (sentRequest) return;
 
         if (sendPasswordAgain) {
+            console.log("sendpassword");
             onClickReset();
-            setSentRequest(false);
             dispatch(
                 getOtpData({
                     requestId: null,
@@ -73,13 +76,19 @@ const Otp = () => {
                             password: data?.password,
                         })
                     );
+                } else if (!data) {
+                    setRequiredError(
+                        "لطفا ابتدا شماره همراه خود را وارد کنید!"
+                    );
+                    setTimeout(() => {
+                        navigate("/login");
+                    }, 3000);
                 }
             });
         } else {
             if (!formIsValid) {
                 return;
             }
-            setSentRequest(true);
             sendOtpRequestId({
                 url: `users/otp/`,
                 method: "POST",
@@ -124,24 +133,26 @@ const Otp = () => {
                         }
                     }
                 } else {
+                    setRequiredError(
+                        " پسورد وارد شده صحیح نمیباشد لطفا مجدد شماره همراه خود را وارد کنید!"
+                    );
                     setTimeout(() => {
                         navigate("/login");
-                    }, 4000);
+                    }, 3000);
                 }
             });
         }
     };
     useEffect(() => {
-        if (getOtpError || sendOtpError) {
-            toast.error(getOtpError || sendOtpError);
-        }
         onClickReset();
-    }, [getOtpError, sendOtpError]);
+    }, []);
 
     return (
         <div className={classes.Container}>
-            {(getOtpError || sendOtpError) && (
-                <Toaster position="top-center" reverseOrder={false} />
+            {(requiredError || getOtpError || sendOtpError) && (
+                <Notification
+                    message={requiredError || getOtpError || sendOtpError}
+                />
             )}
             <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <Form.Group

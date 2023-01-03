@@ -52,6 +52,7 @@ const SelectRoles = () => {
             })
         );
     };
+    console.log("role", role);
     return (
         <Layout>
             <div className={classes.Container}>
@@ -136,7 +137,7 @@ const SelectRoles = () => {
                 </div>
                 <div className={classes.Button}>
                     <Button
-                        disabled={disable}
+                        disabled={role.id === "0"}
                         btnStyle={{
                             padding: "2px 50px",
                             height: "45px",

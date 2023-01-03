@@ -9,10 +9,10 @@ import ModalCard from "src/components/modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import useRequest from "src/hooks/useRequest";
-import { Toaster, toast } from "react-hot-toast";
 import { imageHandler } from "src/helper/baseUrls";
 import { showUploadModal } from "src/store/uploadFile-slice";
 import { viewTime } from "src/helper/utils";
+import Notification from "src/components/notification/Notification";
 
 const Detail = () => {
     const [show, setShow] = useState(false);
@@ -52,26 +52,14 @@ const Detail = () => {
         }
     }, []);
 
-    useEffect(() => {
-        if (
-            hasErrorSingleOffer ||
-            hasErrorConfirmOffer ||
-            hasErrorSendOrderView
-        ) {
-            toast.error(
-                hasErrorSingleOffer ||
-                    hasErrorConfirmOffer ||
-                    hasErrorSendOrderView
-            );
-        }
-    }, [hasErrorSingleOffer, hasErrorConfirmOffer, hasErrorSendOrderView]);
-
     const { offer_items: offerItems, order_items: orderItems } =
         singleOfferData ?? {};
-    const { freight } = offerItems ?? {};
+
+    const { freight, deal_draft } = offerItems ?? {};
     const confirmOffer = () => {
+        setShow(false);
         sendConfirmOffer({
-            url: `producer/orders/${orderId}/offers/${offerId}/offer_acception/`,
+            url: `producer/orders/${orderId}/offers/${offerId}/offer_accepion/`,
             method: "PUT",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -81,7 +69,6 @@ const Detail = () => {
             },
         }).then(data => {
             if (data.orderer_acception) {
-                setShow(false);
                 navigate(`/producer/orders/${orderId}/offers`);
             }
         });
@@ -118,7 +105,13 @@ const Detail = () => {
             {(hasErrorSingleOffer ||
                 hasErrorConfirmOffer ||
                 hasErrorSendOrderView) && (
-                <Toaster position="top-center" reverseOrder={false} />
+                <Notification
+                    message={
+                        hasErrorSingleOffer ||
+                        hasErrorConfirmOffer ||
+                        hasErrorSendOrderView
+                    }
+                />
             )}
             <div className={classes.Detail}>
                 <Scroller>
@@ -243,12 +236,10 @@ const Detail = () => {
                                             clicked={() => {
                                                 dispatch(
                                                     showUploadModal({
-                                                        fileName:
-                                                            "contractFile",
                                                         title: "  پیش نویس قرارداد ",
                                                         view: true,
                                                         acceptType: "*",
-                                                        fileId: freight?.company_doc_file,
+                                                        fileId: deal_draft?.bill_file,
                                                         fileType: "document",
                                                     })
                                                 );

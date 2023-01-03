@@ -18,8 +18,8 @@ import gregorian_en from "react-date-object/locales/gregorian_en";
 import gregorian from "react-date-object/calendars/gregorian";
 import { DateObject } from "react-multi-date-picker";
 import Selectbar from "src/components/Selectbar/Selectbar";
-import { Toaster, toast } from "react-hot-toast";
 import { resetUploader } from "src/store/uploadFile-slice";
+import Notification from "src/components/notification/Notification";
 // import Switch from "src/components/switch/Switch";
 // import {
 //     RESPONSIBLE_STORE_COST,
@@ -36,6 +36,8 @@ const NewOrder = () => {
     const navigate = useNavigate();
     const [producers, setProducers] = useState(null);
     const [producer, setProducer] = useState(null);
+    const [requiredError, setRequiredError] = useState(null);
+
     // const [responsibleStore, setResponsibleStore] = useState(
     //     RESPONSIBLE_STORE_COST[0]
     // );
@@ -140,10 +142,11 @@ const NewOrder = () => {
         event.preventDefault();
         if (!formIsValid) {
             setRequired(true);
-            toast.error("لطفا فیلدهای ضروری را وارد کنید");
+            setRequiredError("لطفا فیلدهای ضروری را وارد کنید");
 
             return;
         }
+        setRequiredError(null);
 
         const loadingDate = new DateObject({
             calendar: persian,
@@ -201,11 +204,6 @@ const NewOrder = () => {
             }
         });
     }, []);
-    useEffect(() => {
-        if ((newOrderError, producerError)) {
-            toast.error(newOrderError || producerError);
-        }
-    }, [newOrderError, producerError]);
 
     if (isCompleted) {
         return (
@@ -221,7 +219,11 @@ const NewOrder = () => {
     }
     return (
         <Layout isLogin={true}>
-            <Toaster position="top-center" reverseOrder={false} />
+            {(newOrderError || requiredError || producerError) && (
+                <Notification
+                    message={newOrderError || requiredError || producerError}
+                />
+            )}
             <div className={classes.Order}>
                 <Scroller>
                     {!hasOrderType && (
