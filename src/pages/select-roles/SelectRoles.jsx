@@ -25,7 +25,6 @@ const SelectRoles = () => {
         });
         return btnClasses;
     };
-    const disable = !isCompleteType && !isComplete;
     const confirmButtonHandler = () => {
         if (isCompleteType) {
             setIsComplete(true);
@@ -52,7 +51,6 @@ const SelectRoles = () => {
             })
         );
     };
-    console.log("role", role);
     return (
         <Layout>
             <div className={classes.Container}>

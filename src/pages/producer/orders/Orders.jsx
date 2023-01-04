@@ -42,7 +42,7 @@ const Orders = () => {
                 });
             } else if (ordersStatus.id === "1") {
                 fetchDoingOrders({
-                    url: `/producer/orders/approved/`,
+                    url: `/producer/orders/approved_offers/`,
                     headers: {
                         Authorization: "Bearer " + accessToken,
                     },
@@ -64,31 +64,32 @@ const Orders = () => {
             <div className={classes.orderCards}>
                 {loadingOrdersData?.length > 0 &&
                     ordersStatus.id === "0" &&
-                    loadingOrdersData?.map(data => (
+                    loadingOrdersData?.map(offer => (
                         <OrderCard
-                            key={data?.order.id}
-                            orderId={data?.order.id}
-                            borderPassage={data?.order.border_passage}
-                            destination={data.order.destination}
-                            loadingLocation={data?.order.loading_location}
-                            product={data?.order.product}
-                            weight={data?.order.weight}
-                            loadingDate={data?.order.loading_date}
-                            btnText={`${data?.offer_count} پیشنهاد`}
+                            key={offer.order.id}
+                            parentId={offer.order.id}
+                            borderPassage={offer.order.border_passage}
+                            destination={offer.order.destination}
+                            loadingLocation={offer.order.loading_location}
+                            product={offer.order.product}
+                            weight={offer.order.weight}
+                            loadingDate={offer.order.loading_date}
+                            btnText={`${offer.offer_count} پیشنهاد`}
                         />
                     ))}
                 {doingOrdersData?.length > 0 &&
                     ordersStatus.id === "1" &&
-                    doingOrdersData?.map(data => (
+                    doingOrdersData?.map(offer => (
                         <OrderCard
-                            key={data?.id}
-                            orderId={data?.id}
-                            borderPassage={data?.border_passage}
-                            destination={data.destination}
-                            loadingLocation={data?.loading_location}
-                            product={data?.product}
-                            weight={data?.weight}
-                            loadingDate={data?.loading_date}
+                            key={offer.id}
+                            parentId={offer.id}
+                            childId={offer.order.id}
+                            borderPassage={offer.order.border_passage}
+                            destination={offer.order.destination}
+                            loadingLocation={offer.order.loading_location}
+                            product={offer.order.product}
+                            weight={offer.order.weight}
+                            loadingDate={offer.order.loading_date}
                             btnText={`صدور شماره سفارش`}
                         />
                     ))}

@@ -13,7 +13,6 @@ const Offers = () => {
         id: "0",
         title: "در انتظار",
     });
-    const [offers, setOffers] = useState(null);
 
     const {
         sendRequest: fetchLoadingOffers,
@@ -53,15 +52,6 @@ const Offers = () => {
         }
     }, [offerStatus]);
 
-    useEffect(() => {
-        setOffers(null);
-        if (loadingOffersData?.length > 0 && offerStatus.id === "0") {
-            setOffers(loadingOffersData);
-        } else if (doingOffersData?.length > 0 && offerStatus.id === "1") {
-            setOffers(doingOffersData);
-        }
-    }, [loadingOffersData, doingOffersData, offerStatus]);
-
     const handleBtnText = ({ seen, orderAcception, freightAcception }) => {
         const orderNotSeen = !seen && !orderAcception;
         const orderSeen = seen && !orderAcception;
@@ -87,26 +77,50 @@ const Offers = () => {
     } else {
         finalOrders = (
             <div className={classes.orderCards}>
-                {offers?.map(offer => (
-                    <OrderCard
-                        key={offer.id}
-                        orderId={offer.id}
-                        borderPassage={offer.order.border_passage}
-                        destination={offer.order.destination}
-                        loadingLocation={offer.order.loading_location}
-                        btnText={handleBtnText({
-                            seen: offer?.seen,
-                            orderAcception: offer?.orderer_acception,
-                            freightAcception: offer?.freight_acception,
-                        })}
-                        product={offer.order.product}
-                        weight={offer.order.weight}
-                        loadingDate={offer.order.loading_date}
-                        seen={offer.seen}
-                        companyName={offer.order.orderer.company_name}
-                        image={offer.order.orderer.profile_picture_file}
-                    />
-                ))}
+                {loadingOffersData?.length > 0 &&
+                    offerStatus.id === "0" &&
+                    loadingOffersData?.map(offer => (
+                        <OrderCard
+                            key={offer.id}
+                            parentId={offer.id}
+                            borderPassage={offer.order.border_passage}
+                            destination={offer.order.destination}
+                            loadingLocation={offer.order.loading_location}
+                            btnText={handleBtnText({
+                                seen: offer?.seen,
+                                orderAcception: offer?.orderer_acception,
+                                freightAcception: offer?.freight_acception,
+                            })}
+                            product={offer.order.product}
+                            weight={offer.order.weight}
+                            loadingDate={offer.order.loading_date}
+                            seen={offer.seen}
+                            companyName={offer.order.orderer.company_name}
+                            image={offer.order.orderer.profile_picture_file}
+                        />
+                    ))}
+                {doingOffersData?.length > 0 &&
+                    offerStatus.id === "1" &&
+                    doingOffersData?.map(offer => (
+                        <OrderCard
+                            key={offer.id}
+                            childId={offer.id}
+                            borderPassage={offer.order.border_passage}
+                            destination={offer.order.destination}
+                            loadingLocation={offer.order.loading_location}
+                            btnText={handleBtnText({
+                                seen: offer?.seen,
+                                orderAcception: offer?.orderer_acception,
+                                freightAcception: offer?.freight_acception,
+                            })}
+                            product={offer.order.product}
+                            weight={offer.order.weight}
+                            loadingDate={offer.order.loading_date}
+                            seen={offer.seen}
+                            companyName={offer.order.orderer.company_name}
+                            image={offer.order.orderer.profile_picture_file}
+                        />
+                    ))}
             </div>
         );
     }

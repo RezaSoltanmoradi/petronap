@@ -54,6 +54,7 @@ const Detail = () => {
 
     const { offer_items: offerItems, order_items: orderItems } =
         singleOfferData ?? {};
+        
     const { freight, deal_draft } = offerItems ?? {};
 
     const confirmOffer = () => {

@@ -1,10 +1,19 @@
+.closeModal {
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    height: 100%;
+    right: 0;
+    z-index: 201;
+}
 .my-modal {
-    height: 93.6vh !important;
+    height: 85vh !important;
     overflow-y: hidden;
     overflow-x: hidden;
-    position: absolute !important;
+    position: fixed !important;
     top: 50px;
-    z-index: 200;
+    bottom: 50px;
+    z-index: 350;
     width: 360px;
     left: 50%;
     transform: translate(-50%, 0);
@@ -43,7 +52,6 @@ form {
     display: none;
 }
 
-
 #image {
     box-sizing: border-box;
     position: relative;
@@ -51,10 +59,9 @@ form {
     height: 464px;
     margin-top: 20px;
     margin-right: 16px;
-    border: 0.2px solid #5F5F5F;
+    border: 0.2px solid #5f5f5f;
     border-radius: 8px;
 }
-
 
 #submitInput {
     display: relative;
@@ -204,26 +211,28 @@ form {
 
 #uploaded_files {
     position: relative;
-    right: 20px;
+    /* display: flex;
+    justify-content: center; */
+    /* right: 20px; */
     border-radius: 20px;
 }
 
 .progress {
-    position: relative;
+    position: fixed;
     margin-top: 3.01px;
-    width: 320px;
-    height: 8px !important;
+    margin-right: 16px;
+    width: 328px;
+    height: 4px !important;
     background-color: #999999;
     border-radius: 30px;
 }
 
 .progress-bar {
-    height: 8px !important;
+    height: 4px !important;
     background-color: #0504aa;
     border-radius: 30px;
     /* width: 100%; */
 }
-
 
 .imgView {
     box-sizing: border-box;
@@ -232,7 +241,7 @@ form {
     height: 464px;
     margin-top: 12.5px;
     margin-right: 16px;
-    border: 0.2px solid #5F5F5F;
+    border: 0.2px solid #5f5f5f;
     border-radius: 8px;
 }
 
@@ -248,9 +257,9 @@ form {
     height: 40px;
     margin-top: 55.5px;
     margin-right: 121px;
-    background: #5F5F5F;
+    background: #5f5f5f;
     border-radius: 8px;
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -261,8 +270,7 @@ form {
     align-items: center;
     text-align: center;
 
-    color: #FFFFFF;
-
+    color: #ffffff;
 
     /* Inside auto layout */
 
@@ -278,15 +286,14 @@ form {
     width: 328px;
     height: 42px;
     margin-top: 12.5px;
-    background: #F3F3F3;
-    border: 0.2px solid #5F5F5F;
+    background: #f3f3f3;
+    border: 0.2px solid #5f5f5f;
     border-radius: 8px;
     display: flex;
     justify-content: end;
 }
 
 .pViewInfo {
-
     position: relative;
     /* width: 87px;
     height: 18px; */
@@ -294,7 +301,7 @@ form {
     top: 110.25px; */
     margin-top: 14.28px;
     margin-left: 12px;
-    font-family: 'Arial';
+    font-family: "Arial";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -303,7 +310,6 @@ form {
     align-items: center;
     text-align: right;
     color: #000000;
-
 }
 
 .divViewInfoPay {
@@ -312,15 +318,15 @@ form {
     width: 328px;
     height: 42px;
     margin-top: 12.5px;
-    background: #F3F3F3;
-    border: 0.2px solid #5F5F5F;
+    background: #f3f3f3;
+    border: 0.2px solid #5f5f5f;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
 }
 
 .payment {
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -334,7 +340,7 @@ form {
 }
 
 .payMoney {
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -365,7 +371,7 @@ form {
 
     background: rgba(95, 95, 95, 0.6);
     border-radius: 8px;
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -376,8 +382,7 @@ form {
     align-items: center;
     text-align: center;
 
-    color: #FFFFFF;
-
+    color: #ffffff;
 
     /* Inside auto layout */
 
@@ -403,7 +408,7 @@ form {
 
     background: rgba(95, 95, 95, 0.6);
     border-radius: 8px;
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -414,8 +419,7 @@ form {
     align-items: center;
     text-align: center;
 
-    color: #FFFFFF;
-
+    color: #ffffff;
 
     /* Inside auto layout */
 
@@ -460,8 +464,8 @@ form {
     height: 205px;
     margin-top: 247.5px;
     margin-right: 16px;
-    background: #F3F3F3;
-    border: 0.2px solid #5F5F5F;
+    background: #f3f3f3;
+    border: 0.2px solid #5f5f5f;
     border-radius: 8px;
 }
 
@@ -502,7 +506,7 @@ form {
     max-height: 89px;
     color: var(--primary-color);
     background-color: transparent;
-    border: 0.2px solid #5F5F5F;
+    border: 0.2px solid #5f5f5f;
 }
 
 .subRejection {
@@ -518,9 +522,9 @@ form {
 
     margin-top: 130px;
     margin-left: 132.11px;
-    background: #5F5F5F;
+    background: #5f5f5f;
     border-radius: 8px;
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -528,7 +532,7 @@ form {
     display: flex;
     align-items: center;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     flex: none;
     order: 0;
     flex-grow: 0;
@@ -551,7 +555,7 @@ form {
     /* margin-bottom: 15px; */
     background: rgba(95, 95, 95, 0.6);
     border-radius: 8px;
-    font-family: 'B Yekan';
+    font-family: "B Yekan";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -559,7 +563,7 @@ form {
     display: flex;
     align-items: center;
     text-align: center;
-    color: #FFFFFF;
+    color: #ffffff;
     flex: none;
     order: 0;
     flex-grow: 0;
@@ -573,7 +577,7 @@ canvas {
     height: 464px !important;
     margin-top: 20px !important;
     margin-right: 16px !important;
-    border: 0.2px solid #5F5F5F !important;
+    border: 0.2px solid #5f5f5f !important;
     border-radius: 8px !important;
 }
 
@@ -581,26 +585,26 @@ canvas {
     display: none;
 }
 
-.react-pdf__Page__annotations{
-    height: 0px !important; 
+.react-pdf__Page__annotations {
+    height: 0px !important;
 }
-.goToNextPage{
+.goToNextPage {
     position: absolute;
     top: 10px;
     right: 163px;
     z-index: 999;
     border-radius: 12px;
 }
-.goToPrevPage{
+.goToPrevPage {
     position: absolute;
     bottom: 10px;
     right: 163px;
     z-index: 999;
     border-radius: 12px;
 }
-.react-pdf__Document{
+.react-pdf__Document {
     position: relative !important;
 }
-.react-pdf__Page{
+.react-pdf__Page {
     min-width: 360px !important;
 }

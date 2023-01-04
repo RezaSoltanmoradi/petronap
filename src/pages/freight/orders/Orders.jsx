@@ -57,7 +57,7 @@ const Orders = () => {
                 {ordersData?.map(order => (
                     <OrderCard
                         key={order.id}
-                        orderId={order.id}
+                        parentId={order.id}
                         borderPassage={order.border_passage}
                         destination={order.destination}
                         loadingLocation={order.loading_location}

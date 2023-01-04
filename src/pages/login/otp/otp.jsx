@@ -46,8 +46,6 @@ const Otp = () => {
     const formSubmitionHandler = ({ event, sendPasswordAgain }) => {
         event.preventDefault();
         if (!receiver) {
-            console.log("there is no reciver");
-
             setRequiredError("لطفا ابتدا شماره همراه خود را وارد کنید!");
             setTimeout(() => {
                 navigate("/login");
@@ -56,7 +54,6 @@ const Otp = () => {
         }
 
         if (sendPasswordAgain) {
-            console.log("sendpassword");
             onClickReset();
             dispatch(
                 getOtpData({
@@ -98,8 +95,7 @@ const Otp = () => {
                 data: JSON.stringify({
                     request_id: requestId,
                     receiver: receiver,
-                    // password: passwordValue,
-                    password: password,
+                    password: passwordValue,
                 }),
             }).then(data => {
                 if (data) {

@@ -9,11 +9,17 @@ const ProducerController = () => {
     const { producerId } = useParams();
     const navigate = useNavigate();
     const { oldRole } = useSelector(state => state.user);
-    const producerIds = ["profile", "orders"];
+    const producerIds = [
+        "profile",
+        "orders",
+        "view-profile",
+        "change-password",
+    ];
 
     useEffect(() => {
-        const findId = producerIds.indexOf(producerId);
-        if (findId < 0 || +oldRole.id> 0) {
+        const findId = producerIds.find(item => item === producerId);
+
+        if (!findId && +oldRole.id > 0) {
             navigate("/producer/orders");
         }
     }, [producerId]);

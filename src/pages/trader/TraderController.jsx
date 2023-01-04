@@ -10,10 +10,11 @@ const TraderController = () => {
     const navigate = useNavigate();
     const { oldRole } = useSelector(state => state.user);
 
-    const traderIds = ["profile", "orders"];
+    const traderIds = ["profile", "orders", "view-profile", "change-password"];
     useEffect(() => {
-        const findId = traderIds.indexOf(traderId);
-        if (findId < 0 || +oldRole.id > 0) {
+        const findId = traderIds.find(item => item === traderId);
+
+        if (!findId && +oldRole.id > 0) {
             navigate("/trader/orders");
         }
     }, [traderId]);
@@ -21,6 +22,8 @@ const TraderController = () => {
     const traderName = {
         profile: <Profile />,
         orders: <Orders />,
+        "view-profile": <div>hi reza</div>,
+        "change-password": <div>hi reza</div>,
     };
     return <Layout isLogin={true}>{traderName[traderId]}</Layout>;
 };

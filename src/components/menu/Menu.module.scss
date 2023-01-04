@@ -72,6 +72,10 @@
 .closeMenu {
     animation: closeMenuA 0.5s linear;
 }
+.Active {
+    color: white;
+    background-color: var(--dark-color);
+}
 @keyframes openMenuA {
     0% {
         right: -100%;

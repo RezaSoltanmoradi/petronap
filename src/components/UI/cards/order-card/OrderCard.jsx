@@ -8,6 +8,8 @@ import classes from "./OrderCard.module.scss";
 import { DateObject } from "react-multi-date-picker";
 import { imageHandler } from "src/helper/baseUrls";
 import classNames from "classnames";
+import useRequest from "src/hooks/useRequest";
+import Notification from "src/components/notification/Notification";
 
 const OrderCard = ({
     loadingLocation,
@@ -15,14 +17,16 @@ const OrderCard = ({
     borderPassage,
     product,
     weight,
-    orderId,
+    parentId,
+    childId,
     loadingDate,
     btnText,
     companyName,
     image,
 }) => {
     const navigate = useNavigate();
-    const { oldRole } = useSelector(state => state.user);
+    const { oldRole, accessToken } = useSelector(state => state.user);
+
     const convertDate = new DateObject({
         calendar: gregorian,
         date: loadingDate,
@@ -31,15 +35,37 @@ const OrderCard = ({
         .format();
     const { freightId } = useParams();
 
+    const {
+        sendRequest: fetchFlowManage,
+        error: hasErrorFlowManage,
+        data: flowManageData,
+        isLoading: flowManagePending,
+    } = useRequest();
+
     const cardDetailHandler = () => {
+        if (childId) {
+            console.log("new event handler");
+            fetchFlowManage({
+                url: `flow_manager/flow_manage/${childId}/`,
+                headers: {
+                    Authorization: "Bearer " + accessToken,
+                },
+            }).then(data => {
+                const { next_step } = data;
+                if (next_step) {
+                    console.log("next_step", next_step);
+                }
+            });
+            return;
+        }
         if (oldRole.id === "2") {
             if (freightId === "offers") {
-                navigate(`/${oldRole.name}/offers/${orderId}`);
+                navigate(`/${oldRole.name}/offers/${parentId}`);
             } else {
-                navigate(`/${oldRole.name}/orders/${orderId}`);
+                navigate(`/${oldRole.name}/orders/${parentId}`);
             }
         } else {
-            navigate(`/${oldRole.name}/orders/${orderId}/offers`);
+            navigate(`/${oldRole.name}/orders/${parentId}/offers`);
         }
     };
     return (
@@ -51,6 +77,9 @@ const OrderCard = ({
             })}
             onClick={cardDetailHandler}
         >
+            {hasErrorFlowManage && (
+                <Notification message={hasErrorFlowManage} />
+            )}
             {(companyName || image) && (
                 <div className={classes.titleContainer}>
                     {image ? (

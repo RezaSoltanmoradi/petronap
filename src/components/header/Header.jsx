@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import classes from "./Header.module.scss";
 
 import { imageHandler } from "src/helper/baseUrls";
@@ -10,44 +10,40 @@ import { useState } from "react";
 const Header = () => {
     const { traderId, freightId, producerId, orderId, offerId } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
     const dispatch = useDispatch();
     const [showMenu, setShowMenu] = useState(false);
     const { uploadFiles } = useSelector(state => state.upload);
     const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
     const { profilePicture } = useSelector(state => state.user.otp);
 
-    const validOffers = location.pathname.includes("offers");
-    const validOrders =
-        (traderId === "orders" || producerId === "orders") && !validOffers;
+    const allRoles = [traderId, freightId, producerId];
+    const createOrdersRoles = [producerId, traderId];
+
+    const validOrdersPath = !!createOrdersRoles.find(p => p === "orders");
+    const validOffersPath = !!createOrdersRoles.find(p => p === "offers");
+    const validOrders = validOrdersPath && !validOffersPath && !orderId;
 
     const validProfile =
-        (traderId === "profile" ||
-            freightId === "profile" ||
-            producerId === "profile") &&
-        !validOffers;
+        !!allRoles.find(p => p === "profile") && !validOffersPath;
+    const validProfileView = !!allRoles.find(p => p === "view-profile");
+    const validPassword = !!allRoles.find(p => p === "change-password");
 
-    let title;
-    if (validProfile) {
-        title = "پروفایل";
-    } else if (
-        orderId === "new" &&
-        (traderId === "orders" || producerId === "orders")
-    ) {
-        title = "ثبت سفارش";
-    } else if (validOrders || freightId === "offers") {
-        title = "فعالیت های اخیر";
-    } else if (freightId === "orders" && !orderId) {
-        title = "بارهای موجود";
-    } else if (freightId === "orders" && orderId) {
-        title = "جزئیات بار";
-    } else if ((!producerId || !traderId || !freightId) && validProfile) {
-        title = "پترونپ";
-    } else if (validOffers && !offerId) {
-        title = "پیشنهادات";
-    } else if (typeof offerId !== "undefined") {
-        title = "جزئیات پیشنهاد";
-    }
+    const titleHandler = () => {
+        return {
+            [validProfile]: "پروفایل",
+            [orderId === "new" && validOrdersPath]: "ثبت سفارش",
+            [validOrders || (freightId === "offers" && !orderId)]:
+                "فعالیت های اخیر",
+            [freightId === "orders" && !orderId]: "بارهای موجود",
+            [(freightId === "offers" || freightId === "orders") && !!orderId]:
+                "جزئیات بار",
+            [!allRoles && validProfile]: "پترونپ",
+            [validOrdersPath && !!orderId && orderId !== "new"]: "پیشنهادات",
+            [typeof offerId !== "undefined"]: "جزئیات پیشنهاد",
+            [validProfileView]: "ویرایش اطلاعات کاربری",
+            [validPassword]: "ویرایش کلمه عبور",
+        };
+    };
 
     const backRouteHandler = () => {
         navigate(-1);
@@ -77,7 +73,7 @@ const Header = () => {
                         )}
                     />
                 )}
-                <p className={classes.title}>{title}</p>
+                <p className={classes.title}>{titleHandler().true}</p>
                 <span
                     className="icon i-back icon-md"
                     onClick={backRouteHandler}

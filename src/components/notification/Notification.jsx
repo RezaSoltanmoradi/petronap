@@ -7,9 +7,11 @@ const Notification = ({ message }) => {
     useEffect(() => {
         if (message) {
             setError(
-                <div className={classes.Notification}>
-                    <span>!</span>
-                    <p>{message}</p>
+                <div className={classes.NotificationContainer}>
+                    <div className={classes.Notification}>
+                        <span>!</span>
+                        <p>{message}</p>
+                    </div>
                 </div>
             );
             setTimeout(() => {
