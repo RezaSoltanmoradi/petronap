@@ -51,6 +51,7 @@ const ForgetPassword = () => {
                         isTouched={userNameHasError}
                         inputType="text"
                         placeholder="شماره همراه یا ایمیل"
+                        label="شماره همراه یا ایمیل"
                         value={userNameValue}
                         isLogin={false}
                         errorMessage="شماره همراه یا ایمیل نامعتبر هست"
