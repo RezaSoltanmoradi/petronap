@@ -5,6 +5,8 @@ import Layout from "src/layouts/Layout";
 import Orders from "./orders/Orders";
 import Profile from "./profile/Profile";
 import Offers from "./offers/Offers";
+import ViewProfile from "./profile/ViewProfile";
+import ChangePassword from "../login/change-password/ChangePassword";
 
 const FreightController = () => {
     const { freightId } = useParams();
@@ -28,6 +30,8 @@ const FreightController = () => {
         profile: <Profile />,
         orders: <Orders />,
         offers: <Offers />,
+        "view-profile": <ViewProfile />,
+        "change-password": <ChangePassword />,
     };
     return <Layout isLogin={true}>{freightName[freightId]}</Layout>;
 };

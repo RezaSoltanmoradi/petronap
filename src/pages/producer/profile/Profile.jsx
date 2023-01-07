@@ -175,7 +175,7 @@ const Profile = () => {
         setRequiredError(null);
 
         sendProfileData({
-            url: `producer/prole/${userId}/`,
+            url: `producer/profile/${userId}/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,

@@ -39,7 +39,7 @@ const Detail = () => {
         isValid: validPrice,
         value: price,
         valueChangeHandler: onChangePrice,
-        defaultValue: setDefaultPrice,
+        value: setDefaultPrice,
     } = useInput(validTextInput, 50);
 
     const realPrecentageValue = (precentage / 100) * price;

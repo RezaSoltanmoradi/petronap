@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import Button from "../../../components/UI/button/Button";
 import Input from "../../../components/UI/input/Input";
 import useInput from "../../../hooks/useInput";
+import useRequest from "src/hooks/useRequest";
 
 const LoginWithPassword = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const LoginWithPassword = () => {
         hasError: userNameHasError,
         inputBlurHandler: userNameBlurHandler,
         isValid: userNameIsValid,
-        value: userNameValue,
+        value: userName,
         valueChangeHandler: userNameChangeHandler,
     } = useInput(validUserName);
 
@@ -24,9 +25,13 @@ const LoginWithPassword = () => {
         hasError: passwordHasError,
         inputBlurHandler: passwordBlurHandler,
         isValid: passwordIsValid,
-        value: passwordValue,
+        value: password,
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validPassword);
+
+    const { sendRequest: sendLoginHandler, error: sendLoginError } =
+        useRequest();
+
     let formIsValid = false;
     if (userNameIsValid && passwordIsValid) {
         formIsValid = true;
@@ -36,8 +41,20 @@ const LoginWithPassword = () => {
         if (!formIsValid) {
             return;
         }
-        // send request to database
-        navigate({ pathname: "/profile" });
+
+        sendLoginHandler({
+            url: `token/`,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: {
+                mobile: userName,
+                password: password,
+            },
+        }).then(data => {
+            console.log("data", data);
+        });
     };
 
     return (
@@ -60,9 +77,9 @@ const LoginWithPassword = () => {
                         isTouched={userNameHasError}
                         inputType="text"
                         placeholder="شماره همراه یا ایمیل"
-                        value={userNameValue}
+                        label="شماره همراه یا ایمیل"
+                        value={userName}
                         isLogin={false}
-                        errorMessage=" شماره همراه یا ایمیل نامعتبر هست"
                     />
                     <Input
                         elementType="inputGroup"
@@ -72,9 +89,9 @@ const LoginWithPassword = () => {
                         isTouched={passwordHasError}
                         inputType={showPassword ? "text" : "password"}
                         placeholder="کلمه عبور "
-                        value={passwordValue}
+                        label="کلمه عبور "
+                        value={password}
                         isLogin={false}
-                        errorMessage=" پسورد نامعتبر هست"
                     >
                         <span
                             className={classes.passwordIcon}

@@ -4,6 +4,8 @@ import Profile from "./profile/Profile";
 import Orders from "./orders/Orders";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import ViewProfile from "./profile/ViewProfile";
+import ChangePassword from "./../login/change-password/ChangePassword";
 
 const TraderController = () => {
     const { traderId } = useParams();
@@ -22,8 +24,8 @@ const TraderController = () => {
     const traderName = {
         profile: <Profile />,
         orders: <Orders />,
-        "view-profile": <div>hi reza</div>,
-        "change-password": <div>hi reza</div>,
+        "view-profile": <ViewProfile />,
+        "change-password": <ChangePassword />,
     };
     return <Layout isLogin={true}>{traderName[traderId]}</Layout>;
 };

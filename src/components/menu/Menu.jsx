@@ -12,6 +12,7 @@ const Menu = ({ show, setShow }) => {
     const { profilePicture, companyName } = otp;
     const navigate = useNavigate();
     const { traderId, producerId, freightId } = useParams();
+    
     useEffect(() => {
         if (!show) {
             setTimeout(() => {

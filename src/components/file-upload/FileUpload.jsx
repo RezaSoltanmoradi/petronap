@@ -19,7 +19,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 // import rejection from "../rejection reason modal/rejection";
 
-const FileUpload = ({ show, setShow }) => {
+const FileUpload = () => {
     const [idFile, setIdFile] = useState();
     const [uploadFile, setUplodeFile] = useState();
     const [result, setResult] = useState(false);

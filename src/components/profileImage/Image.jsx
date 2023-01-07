@@ -4,12 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { showUploadModal } from "src/store/uploadFile-slice";
 import { imageHandler } from "src/helper/baseUrls";
 
-const Image = () => {
+const Image = ({ view, image }) => {
     const dispatch = useDispatch();
     const { uploadFiles } = useSelector(state => state.upload);
     const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
-
+    
     const imageSubmitHandler = () => {
+        if (view) return;
+
         dispatch(
             showUploadModal({
                 fileName: "profilePictureFile",
@@ -28,11 +30,13 @@ const Image = () => {
             })}
             onClick={imageSubmitHandler}
         >
-            {profilePictureFile && (
+            {(profilePictureFile || image) && (
                 <img
                     className={classes.img}
                     alt=""
-                    src={imageHandler(profilePictureFile)}
+                    src={imageHandler(
+                        !profilePictureFile ? image : profilePictureFile
+                    )}
                 />
             )}
 

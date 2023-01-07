@@ -35,18 +35,20 @@ const ModalCard = ({
                     >
                         {confirmText}
                     </Button>
-                    <Button
-                        clicked={cancel}
-                        btnStyle={{
-                            width: btnWidth,
-                            height: "40px",
-                            fontSize: "16px",
-                            padding: "2px 10px",
-                            margin: "0 10px",
-                        }}
-                    >
-                        {cancelText}
-                    </Button>
+                    {cancelText && (
+                        <Button
+                            clicked={cancel}
+                            btnStyle={{
+                                width: btnWidth,
+                                height: "40px",
+                                fontSize: "16px",
+                                padding: "2px 10px",
+                                margin: "0 10px",
+                            }}
+                        >
+                            {cancelText}
+                        </Button>
+                    )}
                 </Modal.Footer>
             </Modal>
         </div>

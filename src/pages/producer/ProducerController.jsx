@@ -4,6 +4,8 @@ import Profile from "./profile/Profile";
 import Orders from "./orders/Orders";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import ViewProfile from "./profile/ViewProfile";
+import ChangePassword from "../login/change-password/ChangePassword";
 
 const ProducerController = () => {
     const { producerId } = useParams();
@@ -27,6 +29,8 @@ const ProducerController = () => {
     const producerName = {
         profile: <Profile />,
         orders: <Orders />,
+        "view-profile": <ViewProfile />,
+        "change-password": <ChangePassword />,
     };
     return <Layout isLogin={true}>{producerName[producerId]}</Layout>;
 };

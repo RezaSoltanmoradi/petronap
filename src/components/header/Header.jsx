@@ -37,10 +37,10 @@ const Header = () => {
             [freightId === "orders" && !orderId]: "بارهای موجود",
             [(freightId === "offers" || freightId === "orders") && !!orderId]:
                 "جزئیات بار",
-            [!allRoles && validProfile]: "پترونپ",
+            [!traderId && !producerId && !freightId]: "پترونپ",
             [validOrdersPath && !!orderId && orderId !== "new"]: "پیشنهادات",
             [typeof offerId !== "undefined"]: "جزئیات پیشنهاد",
-            [validProfileView]: "ویرایش اطلاعات کاربری",
+            [validProfileView]: " اطلاعات کاربری",
             [validPassword]: "ویرایش کلمه عبور",
         };
     };
@@ -49,6 +49,7 @@ const Header = () => {
         navigate(-1);
         dispatch(showUploadModal());
     };
+
     return (
         <>
             <header className={classes.Header}>

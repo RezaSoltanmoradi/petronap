@@ -97,6 +97,19 @@ const Input = ({
                 />
             );
             break;
+        case "textarea-readonly":
+            inputElement = (
+                <textarea
+                    type={inputType}
+                    readOnly
+                    placeholder={placeholder}
+                    aria-label="input"
+                    aria-describedby="basic"
+                    className={inputClasses}
+                    value={value}
+                />
+            );
+            break;
         case "select":
             inputElement = (
                 <input

@@ -5,7 +5,7 @@ import OfferDetail from "./offers/detail/Detail";
 
 const DetailControllers = () => {
     const { freightId } = useParams();
-
+    
     const freightName = {
         orders: <OrdersDetail />,
         offers: <OfferDetail />,
