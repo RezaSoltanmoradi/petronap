@@ -52,7 +52,6 @@ const Orders = () => {
     }, [ordersStatus]);
 
     let finalOrders;
-
     if (hasErrorDoingOrders && ordersStatus?.id === "1") {
         finalOrders = <Notification message={hasErrorDoingOrders} />;
     } else if (hasErrorLoadingOrders && ordersStatus?.id === "0") {

@@ -5,6 +5,7 @@ import {
     validEmail,
     validConfirmPassword,
     validPhone,
+    validPassword,
 } from "../../../helper/utils";
 import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
@@ -30,9 +31,7 @@ const Profile = () => {
     const [nationality, setNationality] = useState(NATIONALIT_CHOICES[0]);
     const [requiredError, setRequiredError] = useState(null);
 
-    const { otp, type, role, accessToken, userId } = useSelector(
-        state => state.user
-    );
+    const { otp, type, role, accessToken } = useSelector(state => state.user);
     const { uploadFiles } = useSelector(state => state.upload);
     const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
     const companyDocFile = uploadFiles?.companyDocFile ?? "";
@@ -87,12 +86,11 @@ const Profile = () => {
         valueChangeHandler: onChangeUrl,
     } = useInput();
     const {
-        hasError: hasErrorEmailAddress,
         inputBlurHandler: onBlurEmailAddress,
         isValid: validEmailAddress,
         value: emailAddress,
         valueChangeHandler: onChangeEmailAddress,
-    } = useInput();
+    } = useInput(validEmail);
     const {
         hasError: hasErrorCompanyAddress,
         inputBlurHandler: onBlurCompanyAddress,
@@ -138,22 +136,26 @@ const Profile = () => {
     const {
         hasError: hasErrorPassword,
         inputBlurHandler: onBlurPassword,
-        isValid: validPassword,
+        isValid: passwordIsValid,
         value: password,
         valueChangeHandler: onChangePassword,
-    } = useInput();
+    } = useInput(validPassword);
     const {
         inputBlurHandler: onBlurConfirmPassword,
         value: confirmPassword,
         valueChangeHandler: onChangeConfirmPassword,
-    } = useInput();
+    } = useInput(validPassword);
 
     const validConfirmPasswordHandler = validConfirmPassword(
         password,
         confirmPassword
     );
+    const validEmailError =
+        !validEmailAddress && emailAddress.trim().length > 0;
+    const validPasswordError = !passwordIsValid && password.trim().length > 0;
 
     let _validCompanyDocFile, _validCompanyId, _validCeoName, _validLicenseFile;
+
     if (type.id === "2") {
         _validCompanyDocFile = companyDocFile !== "";
         _validLicenseFile = licenseFile !== "";
@@ -180,7 +182,8 @@ const Profile = () => {
         permisionDocFile &&
         validAbout &&
         validConfirmPasswordHandler &&
-        _validCompanyDocFile;
+        _validCompanyDocFile &&
+        !validEmailError;
 
     if (formValidation) {
         formIsValid = true;
@@ -195,7 +198,7 @@ const Profile = () => {
         setRequiredError(null);
 
         sendProfileData({
-            url: `freight/profile/${userId}/`,
+            url: `freight/profile/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -380,11 +383,12 @@ const Profile = () => {
                         blurInput={onBlurEmailAddress}
                         changeInput={onChangeEmailAddress}
                         inputIsValid={validEmailAddress}
-                        isTouched={hasErrorEmailAddress}
+                        isTouched={validEmailError}
                         inputType="text"
                         placeholder={type.id === "1" ? "ایمیل" : "ایمیل شرکت"}
                         value={emailAddress}
                         label={type.id === "1" ? "ایمیل" : "ایمیل شرکت"}
+                        required={validEmailError ? required : false}
                     />
                     <Input
                         elementType="textarea"
@@ -557,8 +561,8 @@ const Profile = () => {
                         elementType="input"
                         blurInput={onBlurPassword}
                         changeInput={onChangePassword}
-                        inputIsValid={validPassword}
-                        isTouched={hasErrorPassword}
+                        inputIsValid={passwordIsValid}
+                        isTouched={validPasswordError}
                         inputType={showPassword ? "text" : "password"}
                         placeholder="کلمه عبور "
                         value={password}

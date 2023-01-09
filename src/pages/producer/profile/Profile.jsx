@@ -5,6 +5,7 @@ import {
     validEmail,
     validConfirmPassword,
     validPhone,
+    validPassword,
 } from "../../../helper/utils";
 import useInput from "../../../hooks/useInput";
 import Form from "react-bootstrap/Form";
@@ -26,7 +27,7 @@ const Profile = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [requiredError, setRequiredError] = useState(null);
 
-    const { otp, role, accessToken, userId } = useSelector(state => state.user);
+    const { otp, role, accessToken } = useSelector(state => state.user);
     const { uploadFiles } = useSelector(state => state.upload);
     const profilePictureFile = uploadFiles?.profilePictureFile ?? "";
     const companyDocFile = uploadFiles?.companyDocFile ?? "";
@@ -72,12 +73,11 @@ const Profile = () => {
         valueChangeHandler: onChangeCompanyFax,
     } = useInput("", 11);
     const {
-        hasError: hasErrorEmailAddress,
         inputBlurHandler: onBlurEmailAddress,
         isValid: validEmailAddress,
         value: emailAddress,
         valueChangeHandler: onChangeEmailAddress,
-    } = useInput();
+    } = useInput(validEmail);
     const {
         hasError: hasErrorUrl,
         inputBlurHandler: onBlurUrl,
@@ -128,22 +128,25 @@ const Profile = () => {
         valueChangeHandler: onChangeAbout,
     } = useInput(validTextInput);
     const {
-        hasError: hasErrorPassword,
         inputBlurHandler: onBlurPassword,
-        isValid: validPassword,
+        isValid: passwordIsValid,
         value: password,
         valueChangeHandler: onChangePassword,
-    } = useInput();
+    } = useInput(validPassword);
     const {
         inputBlurHandler: onBlurConfirmPassword,
         value: confirmPassword,
         valueChangeHandler: onChangeConfirmPassword,
-    } = useInput();
+    } = useInput(validPassword);
 
     const validConfirmPasswordHandler = validConfirmPassword(
         password,
         confirmPassword
     );
+    const validEmailError =
+        !validEmailAddress && emailAddress.trim().length > 0;
+    const validPasswordError = !passwordIsValid && password.trim().length > 0;
+
     let formIsValid = false;
     const formValidation =
         mobile &&
@@ -158,7 +161,8 @@ const Profile = () => {
         companyDocFile &&
         validAbout &&
         validCompanyAddress &&
-        validConfirmPasswordHandler;
+        validConfirmPasswordHandler &&
+        !validEmailError;
 
     if (formValidation) {
         formIsValid = true;
@@ -175,7 +179,7 @@ const Profile = () => {
         setRequiredError(null);
 
         sendProfileData({
-            url: `producer/profile/${userId}/`,
+            url: `producer/profile/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -333,11 +337,12 @@ const Profile = () => {
                         blurInput={onBlurEmailAddress}
                         changeInput={onChangeEmailAddress}
                         inputIsValid={validEmailAddress}
-                        isTouched={hasErrorEmailAddress}
+                        isTouched={validEmailError}
                         inputType="text"
                         placeholder="ایمیل شرکت"
                         value={emailAddress}
                         label="ایمیل شرکت"
+                        required={validEmailError ? required : false}
                     />
                     <Input
                         elementType="textarea"
@@ -452,8 +457,8 @@ const Profile = () => {
                         elementType="input"
                         blurInput={onBlurPassword}
                         changeInput={onChangePassword}
-                        inputIsValid={validPassword}
-                        isTouched={hasErrorPassword}
+                        inputIsValid={passwordIsValid}
+                        isTouched={validPasswordError}
                         inputType={showPassword ? "text" : "password"}
                         placeholder="کلمه عبور "
                         value={password}

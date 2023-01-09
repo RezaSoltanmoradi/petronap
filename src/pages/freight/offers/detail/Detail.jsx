@@ -39,7 +39,7 @@ const Detail = () => {
         isValid: validPrice,
         value: price,
         valueChangeHandler: onChangePrice,
-        value: setDefaultPrice,
+        defaultValue: setDefaultPrice,
     } = useInput(validTextInput, 50);
 
     const realPrecentageValue = (precentage / 100) * price;
@@ -90,7 +90,6 @@ const Detail = () => {
         destination,
         vehicle_type: vehicleType,
     } = order ?? {};
-
     const {
         about,
         company_name: companyName,
@@ -129,7 +128,7 @@ const Detail = () => {
 
         if (price || offerPrice) {
             sendNewOffer({
-                url: `freight/orders/${order?.id}/updae_offer/${orderId}/`,
+                url: `freight/orders/${order?.id}/update_offer/${orderId}/`,
                 method: "POST",
                 headers: {
                     Authorization: "Bearer " + accessToken,

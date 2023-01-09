@@ -15,7 +15,10 @@ const ChangePassword = () => {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [required, setRequired] = useState(false);
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
+
     const { accessToken } = useSelector(state => state.user);
 
     const {
@@ -23,6 +26,7 @@ const ChangePassword = () => {
         inputBlurHandler: passwordBlurHandler,
         isValid: passwordIsValid,
         value: password,
+        defaultValue: setPassword,
         valueChangeHandler: passwordChangeHandler,
     } = useInput(validPassword);
     const {
@@ -30,6 +34,7 @@ const ChangePassword = () => {
         inputBlurHandler: newPasswordBlurHandler,
         isValid: newPasswordIsValid,
         value: newPassword,
+        defaultValue: setNewPassword,
         valueChangeHandler: newPasswordChangeHandler,
     } = useInput(validPassword);
     const {
@@ -37,6 +42,7 @@ const ChangePassword = () => {
         inputBlurHandler: confirmPasswordBlurHandler,
         isValid: confirmPasswordIsValid,
         value: confirmPassword,
+        defaultValue: setConfirmPassword,
         valueChangeHandler: confirmPasswordChangeHandler,
     } = useInput(validPassword);
 
@@ -51,16 +57,16 @@ const ChangePassword = () => {
     const formSubmitionHandler = event => {
         event.preventDefault();
         if (!passwordIsValid) {
-            setShowModal(true);
-            setError("لطفا کلمه عبور فعلی را وارد کنید!");
+            setRequired(true);
             return;
         } else if (!newPassword || !confirmPassword) {
-            setShowModal(true);
-            setError("لطفا کلمه عبور جدید را همراه با تکرار آن وارد کنید!");
+            setRequired(true);
         } else if (!validConfirmPasswordHandler) {
             setShowModal(true);
             setError("کلمه عبور جدید با تکرار آن برابر نیست!");
         } else {
+            setSuccessMessage(null);
+            setError(null);
             sendNewPassword({
                 url: `users/update_password/`,
                 method: "POST",
@@ -68,16 +74,24 @@ const ChangePassword = () => {
                     Authorization: "Bearer " + accessToken,
                 },
                 data: {
-                    password: newPassword,
-                    odl_password: password,
+                    new_password: newPassword,
+                    password: password,
                 },
             }).then(data => {
-                console.log("data", data);
-                //handle some action
+                if (data.message) {
+                    setShowModal(true);
+                    setError("کلمه عبور فعلی اشتباه هست.!");
+                } else if (!data.message) {
+                    setSuccessMessage("پسورد شما با موفقیت ثبت شد");
+                    setError(null);
+                    setPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                    setRequired(false);
+                }
             });
         }
     };
-
     return (
         <div className={classes.Container}>
             <ModalCard
@@ -91,6 +105,10 @@ const ChangePassword = () => {
             {sendNewPasswordError && (
                 <Notification message={sendNewPasswordError} />
             )}
+            {successMessage && (
+                <Notification message={successMessage} isSuccess={true} />
+            )}
+
             <Form onSubmit={e => e.preventDefault()} className={classes.Form}>
                 <p className={classes.title}> ویرایش کلمه عبور</p>
                 <Form.Label className={classes.label}>
@@ -106,6 +124,7 @@ const ChangePassword = () => {
                     placeholder="کلمه عبور "
                     label="کلمه عبور "
                     value={password}
+                    required={required}
                 >
                     <span
                         className={classes.passwordIcon}
@@ -130,6 +149,7 @@ const ChangePassword = () => {
                     placeholder="کلمه عبور جدید "
                     label="کلمه عبور جدید "
                     value={newPassword}
+                    required={required}
                 >
                     <span
                         className={classes.passwordIcon}
@@ -154,6 +174,7 @@ const ChangePassword = () => {
                     placeholder="تکرار کلمه عبور جدید "
                     label="تکرار کلمه عبور جدید "
                     value={confirmPassword}
+                    required={required}
                 >
                     <span
                         className={classes.passwordIcon}

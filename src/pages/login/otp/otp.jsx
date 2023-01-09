@@ -22,9 +22,7 @@ const Otp = () => {
     const { onClickReset, timer } = useTimer();
     const navigate = useNavigate();
     const [requiredError, setRequiredError] = useState(null);
-    const { requestId, receiver, password } = useSelector(
-        state => state.user.otp
-    );
+    const { requestId, receiver } = useSelector(state => state.user.otp);
     const dispatch = useDispatch();
 
     const {
@@ -59,7 +57,6 @@ const Otp = () => {
                 getOtpData({
                     requestId: null,
                     receiver: "",
-                    password: null,
                 })
             );
             getPasswrodAgain({
@@ -70,7 +67,6 @@ const Otp = () => {
                         getOtpData({
                             requestId: data?.request_id,
                             receiver: receiver,
-                            password: data?.password,
                         })
                     );
                 } else if (!data) {
@@ -99,11 +95,11 @@ const Otp = () => {
                 }),
             }).then(data => {
                 if (data) {
+                    console.log("data", data);
                     dispatch(
                         getLoginStaus({
                             accessToken: data.token,
                             refreshToken: data.refresh,
-                            userId: data.user_id,
                         })
                     );
                     dispatch(

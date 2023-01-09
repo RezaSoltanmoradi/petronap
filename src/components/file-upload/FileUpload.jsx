@@ -69,15 +69,15 @@ const FileUpload = () => {
     };
     const rejectHandler = event => {
         event.preventDefault();
-        console.log(idFile);
+        // console.log(idFile);
         axios
             .delete(`${Api}/uploader/${idFile}/`)
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                // console.log(res);
+                // console.log(res.data);
             })
             .catch(err => {
-                console.log(err);
+                // console.log(err);
             });
         dispatch(showUploadModal());
     };
@@ -233,9 +233,9 @@ const FileUpload = () => {
                 document.getElementById("file").files[0].type == "image/jpg" ||
                 document.getElementById("file").files[0].type == "image/jp2"
             ) {
-                console.log("upload");
-                console.log(fileType);
-                console.log(acceptType);
+                // console.log("upload");
+                // console.log(fileType);
+                // console.log(acceptType);
 
                 img.src = URL.createObjectURL(
                     document.getElementById("file").files[0]
@@ -243,7 +243,7 @@ const FileUpload = () => {
                 img.onload = function () {
                     URL.revokeObjectURL(img.src);
                 };
-                console.log(img.src);
+                // console.log(img.src);
             } else {
                 // let page = 1
                 // setNumber(2)
@@ -428,20 +428,20 @@ const FileUpload = () => {
         axios
             .post(`${Api}/uploader/`, formData, config)
             .then(res => {
-                console.log("api");
+                // console.log("api");
                 if (nextChunk < document.getElementById("file").files[0].size) {
                     uploed(nextChunk, res.data.uploadedFilename);
                     setResult(true);
-                    console.log("api");
+                    // console.log("api");
                 } else {
                     // console.log(res.data.file_id)
                     // important lines
                     //  this line redux will store your File data width it's fileName
-                    console.log("api");
+                    // console.log("api");
                     dispatch(setUploadFiles({ [fileName]: res.data.file_id }));
                     dispatch(setUploadFiles({ [value]: inputValue }));
                     setIdFile(res.data.file_id);
-                    console.log(res.data.file_id);
+                    // console.log(res.data.file_id);
                     setResult(true);
                     setIsLoading(false);
 
@@ -450,7 +450,7 @@ const FileUpload = () => {
                     // console.log(res.data.file_id);
                     // upload complete
                     if (!!res.file_id) {
-                        console.log("api");
+                        // console.log("api");
                         textbox = "file_id = " + res.data.file_id;
                     } else if (!!res.error) alert(res.error);
                 }

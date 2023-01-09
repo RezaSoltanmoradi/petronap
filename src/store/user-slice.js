@@ -4,12 +4,10 @@ import { ROLES } from "src/helper/types";
 const initialState = {
     accessToken: null,
     refreshToken: null,
-    userId: null,
     isLogin: false,
     otp: {
         requestId: null,
         receiver: "",
-        password: null,
         companyName: null,
         profilePicture: null,
     },
@@ -51,7 +49,6 @@ const userSlice = createSlice({
         getLoginStaus(state, action) {
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
-            state.userId = action.payload.userId;
 
             if (state.accessToken) {
                 state.isLogin = true;

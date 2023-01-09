@@ -51,7 +51,7 @@ const Offers = () => {
             }
         }
     }, [offerStatus]);
-
+    console.log("doingOffersData", doingOffersData);
     const handleBtnText = ({ seen, orderAcception, freightAcception }) => {
         const orderNotSeen = !seen && !orderAcception;
         const orderSeen = seen && !orderAcception;
@@ -101,24 +101,22 @@ const Offers = () => {
                     ))}
                 {doingOffersData?.length > 0 &&
                     offerStatus.id === "1" &&
-                    doingOffersData?.map(offer => (
+                    doingOffersData?.map(data => (
                         <OrderCard
-                            key={offer.id}
-                            childId={offer.id}
-                            borderPassage={offer.order.border_passage}
-                            destination={offer.order.destination}
-                            loadingLocation={offer.order.loading_location}
-                            btnText={handleBtnText({
-                                seen: offer?.seen,
-                                orderAcception: offer?.orderer_acception,
-                                freightAcception: offer?.freight_acception,
-                            })}
-                            product={offer.order.product}
-                            weight={offer.order.weight}
-                            loadingDate={offer.order.loading_date}
-                            seen={offer.seen}
-                            companyName={offer.order.orderer.company_name}
-                            image={offer.order.orderer.profile_picture_file}
+                            key={data.offer.id}
+                            childId={data.offer.id}
+                            borderPassage={data.offer.order.border_passage}
+                            destination={data.offer.order.destination}
+                            loadingLocation={data.offer.order.loading_location}
+                            btnText="مشاهده شماره سفارش"
+                            product={data.offer.order.product}
+                            weight={data.offer.order.weight}
+                            loadingDate={data.offer.order.loading_date}
+                            seen={data.offer.seen}
+                            companyName={data.offer.order.orderer.company_name}
+                            image={
+                                data.offer.order.orderer.profile_picture_file
+                            }
                         />
                     ))}
             </div>

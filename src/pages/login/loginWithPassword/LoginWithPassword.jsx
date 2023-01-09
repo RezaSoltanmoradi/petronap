@@ -8,11 +8,22 @@ import Button from "../../../components/UI/button/Button";
 import Input from "../../../components/UI/input/Input";
 import useInput from "../../../hooks/useInput";
 import useRequest from "src/hooks/useRequest";
+import {
+    getLoginStaus,
+    getOldRole,
+    getOtpData,
+    getRole,
+} from "src/store/user-slice";
+import { ROLES } from "./../../../helper/types";
+import { useDispatch } from "react-redux";
+import Notification from "src/components/notification/Notification";
 
 const LoginWithPassword = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [requiredError, setRequiredError] = useState(null);
 
+    const dispatch = useDispatch();
     const {
         hasError: userNameHasError,
         inputBlurHandler: userNameBlurHandler,
@@ -43,22 +54,60 @@ const LoginWithPassword = () => {
         }
 
         sendLoginHandler({
-            url: `token/`,
+            url: `users/login/`,
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             data: {
-                mobile: userName,
+                username: userName,
                 password: password,
             },
         }).then(data => {
-            console.log("data", data);
+            if (data) {
+                dispatch(
+                    getLoginStaus({
+                        accessToken: data.token,
+                        refreshToken: data.refresh,
+                    })
+                );
+                dispatch(
+                    getOtpData({
+                        companyName: data.company_name,
+                        profilePicture: data.profile_picture_file,
+                    })
+                );
+                if (data.created || data.user_role === "0") {
+                    navigate(`/roles`);
+                } else if (!data.created && data.user_role !== "0") {
+                    dispatch(getOldRole(data.user_role));
+                    dispatch(getRole(data.user_role));
+
+                    const findRole = ROLES.find(
+                        role => role.id === data.user_role
+                    );
+
+                    if (findRole.name === "freight") {
+                        navigate(`/${findRole.name}/orders`);
+                    } else {
+                        navigate(`/${findRole.name}/orders/new`);
+                    }
+                }
+            } else {
+                setRequiredError("کاربری با این اطلاعات یافت نشد");
+                setTimeout(() => {
+                    navigate("/login");
+                }, 3000);
+            }
         });
     };
 
     return (
         <div className={classes.Container}>
+            {requiredError && sendLoginError && (
+                <Notification message={requiredError || sendLoginError} />
+            )}
+
             <Form className={classes.Form} onSubmit={e => e.preventDefault()}>
                 <p className={classes.title}>ورود با کلمه عبور</p>
                 <Form.Group

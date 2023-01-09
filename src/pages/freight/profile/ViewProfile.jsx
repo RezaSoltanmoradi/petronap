@@ -12,8 +12,7 @@ import classNames from "classnames";
 import Notification from "src/components/notification/Notification";
 
 const ViewProfile = () => {
-    const { otp, accessToken, userId } = useSelector(state => state.user);
-    const { receiver: mobile } = otp;
+    const { accessToken } = useSelector(state => state.user);
 
     const {
         sendRequest: getProfileData,
@@ -40,6 +39,7 @@ const ViewProfile = () => {
         licenseFile: "",
         profilePicture: "",
         type: "1",
+        mobile: "",
         nationality: {
             name: "internal",
             id: "0",
@@ -48,10 +48,9 @@ const ViewProfile = () => {
     });
 
     useEffect(() => {
-        if (userId) {
-            console.log("userId", userId);
+        if (accessToken) {
             getProfileData({
-                url: `freight/profile/${userId}/`,
+                url: `freight/profile/`,
                 headers: {
                     Authorization: "Bearer " + accessToken,
                 },
@@ -61,8 +60,6 @@ const ViewProfile = () => {
 
     useEffect(() => {
         if (profileData) {
-            console.log("profileData", profileData);
-
             const updatedNationality = NATIONALIT_CHOICES.find(
                 n => n.id === profileData.company_origin
             );
@@ -86,7 +83,8 @@ const ViewProfile = () => {
                 profilePicture: profileData.profile_picture_file,
                 type: profileData.type,
                 nationality: updatedNationality,
-                permisionDocFile,
+                mobile: profileData.mobile,
+                permisionDocFile: profileData.permission_file,
             });
         }
     }, [profileData]);
@@ -111,6 +109,7 @@ const ViewProfile = () => {
         profilePicture,
         nationality,
         type,
+        mobile,
     } = formData;
     return (
         <div className={classes.container}>

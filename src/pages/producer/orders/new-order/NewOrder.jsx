@@ -125,7 +125,7 @@ const NewOrder = () => {
             .format();
 
         sendNewOrder({
-            url: `prodcer/orders/`,
+            url: `producer/orders/`,
             method: "POST",
             headers: {
                 Authorization: "Bearer " + accessToken,

@@ -45,18 +45,18 @@ const OrderCard = ({
     const cardDetailHandler = () => {
         if (childId) {
             console.log("new event handler");
-            fetchFlowManage({
-                url: `flow_manager/flow_manage/${childId}/`,
-                headers: {
-                    Authorization: "Bearer " + accessToken,
-                },
-            }).then(data => {
-                const { next_step } = data;
-                if (next_step) {
-                    console.log("next_step", next_step);
-                }
-            });
-            return;
+            // fetchFlowManage({
+            //     url: `flow_manager/flow_manage/${childId}/`,
+            //     headers: {
+            //         Authorization: "Bearer " + accessToken,
+            //     },
+            // }).then(data => {
+            //     const { next_step } = data;
+            //     if (next_step) {
+            //         console.log("next_step", next_step);
+            //     }
+            // });
+            // return;
         }
         if (oldRole.id === "2") {
             if (freightId === "offers") {

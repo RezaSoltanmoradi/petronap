@@ -10,9 +10,7 @@ import useRequest from "src/hooks/useRequest";
 import Notification from "src/components/notification/Notification";
 
 const ViewProfile = () => {
-    const { otp, accessToken, userId } = useSelector(state => state.user);
-    const { receiver: mobile } = otp;
-
+    const { accessToken } = useSelector(state => state.user);
     const {
         sendRequest: getProfileData,
         error: profileError,
@@ -36,12 +34,12 @@ const ViewProfile = () => {
         companyDocFile: "",
         licenseFile: "",
         profilePicture: "",
+        mobile: "",
     });
     useEffect(() => {
-        if (userId) {
-            console.log("userId", userId);
+        if (accessToken) {
             getProfileData({
-                url: `producer/profile/${userId}/`,
+                url: `producer/profile/`,
                 headers: {
                     Authorization: "Bearer " + accessToken,
                 },
@@ -51,7 +49,7 @@ const ViewProfile = () => {
 
     useEffect(() => {
         if (profileData) {
-            console.log("profileData", profileData);
+            console.log("profile", profileData);
             setFormData({
                 companyName: profileData.company_name,
                 companyAddress: profileData.company_address,
@@ -69,6 +67,7 @@ const ViewProfile = () => {
                 emailAddress: profileData.company_address,
                 licenseFile: profileData.license_file,
                 profilePicture: profileData.profile_picture_file,
+                mobile: profileData.mobile,
             });
         }
     }, [profileData]);
@@ -89,6 +88,7 @@ const ViewProfile = () => {
         emailAddress,
         licenseFile,
         profilePicture,
+        mobile,
     } = formData;
     return (
         <div className={classes.container}>

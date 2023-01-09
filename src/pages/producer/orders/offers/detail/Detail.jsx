@@ -55,11 +55,11 @@ const Detail = () => {
     const { offer_items: offerItems, order_items: orderItems } =
         singleOfferData ?? {};
 
-    const { freight, deal_draft } = offerItems ?? {};
+    const { freight, deal_draft, orderer_acception } = offerItems ?? {};
     const confirmOffer = () => {
         setShow(false);
         sendConfirmOffer({
-            url: `producer/orders/${orderId}/offers/${offerId}/offer_accepion/`,
+            url: `producer/orders/${orderId}/offers/${offerId}/offer_acception/`,
             method: "PUT",
             headers: {
                 Authorization: "Bearer " + accessToken,
@@ -276,30 +276,47 @@ const Detail = () => {
                                         <span> {freight?.agent_email}</span>
                                     </div>
                                 </div>
-                                <div className={classes.Buttons}>
-                                    <Button
-                                        clicked={() => setShow(true)}
-                                        btnStyle={{
-                                            width: "148px",
-                                            height: "40px",
-                                            fontSize: "16px",
-                                            padding: "2px 29px",
-                                        }}
-                                    >
-                                        قبول پیشنهاد
-                                    </Button>
-                                    <Button
-                                        clicked={rejectedOffer}
-                                        btnStyle={{
-                                            width: "148px",
-                                            height: "40px",
-                                            fontSize: "16px",
-                                            padding: "2px 29px",
-                                        }}
-                                    >
-                                        رد پیشنهاد
-                                    </Button>
-                                </div>
+                                {!orderer_acception && (
+                                    <div className={classes.Buttons}>
+                                        <Button
+                                            clicked={() => setShow(true)}
+                                            btnStyle={{
+                                                width: "148px",
+                                                height: "40px",
+                                                fontSize: "16px",
+                                                padding: "2px 29px",
+                                            }}
+                                        >
+                                            قبول پیشنهاد
+                                        </Button>
+                                        <Button
+                                            clicked={rejectedOffer}
+                                            btnStyle={{
+                                                width: "148px",
+                                                height: "40px",
+                                                fontSize: "16px",
+                                                padding: "2px 29px",
+                                            }}
+                                        >
+                                            رد پیشنهاد
+                                        </Button>
+                                    </div>
+                                )}
+                                {orderer_acception && (
+                                    <div className={classes.Buttons}>
+                                        <Button
+                                            clicked={rejectedOffer}
+                                            btnStyle={{
+                                                width: "148px",
+                                                height: "40px",
+                                                fontSize: "16px",
+                                                padding: "2px 29px",
+                                            }}
+                                        >
+                                            بازگشت
+                                        </Button>
+                                    </div>
+                                )}
                                 <ModalCard
                                     show={show}
                                     cancel={() => setShow(false)}

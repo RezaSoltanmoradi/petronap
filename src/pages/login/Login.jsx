@@ -40,13 +40,12 @@ const Login = () => {
             getPasswordHandler({
                 url: `users/otp/?receiver=98${phoneValue}&channel=Phone`,
             }).then(data => {
-                console.log({ data });
+                console.log("password: ", data?.password);
                 if (data) {
                     dispatch(
                         getOtpData({
                             requestId: data?.request_id,
                             receiver: `98${phoneValue}`,
-                            password: data?.password,
                         })
                     );
                     navigate({ pathname: "otp" });
@@ -59,7 +58,6 @@ const Login = () => {
             getOtpData({
                 requestId: null,
                 receiver: "",
-                password: null,
             })
         );
     }, [dispatch]);
