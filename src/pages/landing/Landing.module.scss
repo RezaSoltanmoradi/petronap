@@ -16,7 +16,7 @@
         font-weight: 400;
         font-size: 34.5px;
         line-height: 42px;
-        background: linear-gradient(90deg, #0e025e -4.17%, #2f17cd 114.32%);
+        background: var(--color-dark);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -24,10 +24,10 @@
     h6 {
         height: 22px;
         margin-bottom: 140px;
-        color: #1b00ad;
+        color: var(--color-dark);
         opacity: 0.5;
         font-weight: 400;
-        font-size: 19   px;
+        font-size: 19 px;
         line-height: 22px;
     }
 }

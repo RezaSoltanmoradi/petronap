@@ -4,8 +4,8 @@
     width: 280px;
     margin-top: 20px;
     height: 50px !important;
-    border: 0.2px solid var(--dark-color);
-    background-color: var(--white-color) !important;
+    border: 0.2px solid var(--color-dark);
+    background-color: var(--color-light) !important;
     border-radius: 8px !important;
     display: flex;
     justify-content: flex-end;
@@ -19,7 +19,7 @@
     }
 
     :global(.css-13cymwt-control) {
-        background-color: var(--white-color) !important;
+        background-color: var(--color-light) !important;
         border-radius: 8px;
         border: none !important;
         width: 100%;
@@ -45,8 +45,8 @@
     }
     :global(.css-1s2u09g-control) {
         border: none !important;
-        background-color: var(--warning-color) !important;
-        color: var(--white-color) !important;
+        background-color: var(--color-dark) !important;
+        color: var(--color-light) !important;
         border-radius: 25%;
         width: 100%;
         cursor: pointer !important;
@@ -72,50 +72,50 @@
         padding: 3px;
     }
     :global(.css-9gakcf-option) {
-        color: var(--warning-color) !important;
+        color: var(--color-dark) !important;
         font-weight: bold;
-        background-color: var(--white-color) !important;
+        background-color: var(--color-light) !important;
         text-align: start;
         font-family: mikhak2;
         border-radius: 10px;
         padding: 0;
         cursor: pointer !important;
         &:hover {
-            color: var(--white-color) !important;
-            background-color: var(--warning-color) !important;
+            color: var(--color-light) !important;
+            background-color: var(--color-dark) !important;
         }
         &:active {
-            color: var(--white-color) !important;
-            background-color: var(--warning-color) !important;
+            color: var(--color-light) !important;
+            background-color: var(--color-dark) !important;
         }
     }
     :global(.css-1n7v3ny-optionon) {
         cursor: pointer !important;
-        color: var(--dark-color) !important;
+        color: var(--color-dark) !important;
         text-align: start;
         font-family: mikhak2;
         border-radius: 10px;
         padding: 0;
     }
     :global(.css-1n7v3ny-option) {
-        background-color: var(--white-color);
-        color: var(--dark-color);
+        background-color: var(--color-light);
+        color: var(--color-dark);
         text-align: start;
         font-family: mikhak2;
         border-radius: 10px;
         padding: 0;
         cursor: pointer !important;
         &:hover {
-            color: var(--white-color) !important;
-            background-color: var(--warning-color) !important;
+            color: var(--color-light) !important;
+            background-color: var(--color-dark) !important;
         }
         &:active {
-            color: var(--white-color) !important;
-            background-color: var(--warning-color) !important;
+            color: var(--color-light) !important;
+            background-color: var(--color-dark) !important;
         }
     }
     :global(.css-yt9ioa-option) {
-        color: var(--dark-color) !important;
+        color: var(--color-dark) !important;
         cursor: pointer !important;
         text-align: start;
         font-family: mikhak2;
@@ -124,17 +124,17 @@
         &:active,
         &:hover {
             border-radius: 0 0 10px 10px;
-            color: var(--white-color) !important;
+            color: var(--color-light) !important;
         }
     }
     :global(.css-319lph-ValueContainer) {
         margin: 0 !important;
         padding: 0 !important;
-        color: var(--dark-color);
+        color: var(--color-dark);
     }
     :global(.css-qc6sy-singleValue) {
         font-weight: bold;
-        color: var(--white-color) !important;
+        color: var(--color-light) !important;
         text-align: start;
         font-size: 25px;
         cursor: pointer !important;
@@ -152,7 +152,7 @@
     }
     :global(.css-14el2xx-placeholder) {
         text-align: start;
-        color: var(--white-color);
+        color: var(--color-light);
     }
     :global(.css-14el2xx-placeholder) {
         cursor: pointer;
@@ -176,8 +176,8 @@
 }
 
 .inValidSelect {
-    border: 0.2px solid var(--danger-color);
+    border: 0.2px solid var(--color-danger);
 }
 .validSelect {
-    border: 0.2px solid var(--dark-color);
+    border: 0.2px solid var(--color-dark);
 }

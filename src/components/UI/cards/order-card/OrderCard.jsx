@@ -68,12 +68,16 @@ const OrderCard = ({
             navigate(`/${oldRole.name}/orders/${parentId}/offers`);
         }
     };
+    console.log("oldrole", oldRole.id);
     return (
         <section
             className={classNames({
                 [classes.OrderCard]: true,
                 [classes.hasNoTitle]: !companyName || !image,
                 [classes.hasTitle]: image || companyName,
+                "bg-producer": oldRole.name === "producer",
+                "bg-trader": oldRole.name === "trader",
+                "bg-freight": oldRole.name === "freight",
             })}
             onClick={cardDetailHandler}
         >

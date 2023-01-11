@@ -1,6 +1,6 @@
 .Button {
-    background-color: var(--dark-color);
-    color: var(--white-color);
+    background-color: var(--color-primary);
+    color: var(--color-light);
     border-radius: 8px;
     margin: 0 auto;
     gap: 10px;
@@ -14,12 +14,11 @@
     justify-content: center;
 
     &:hover {
-        background-color: var(--dark-color-h);
-        color: var(--white-color);
+        background-color: var(--color-secondary);
     }
 }
 .Button:disabled {
-    color: var(--white-color);
-    background-color: var(--dark-color-h);
+    color: var(--color-light);
+    background-color: var(--color-disable);
     cursor: not-allowed;
 }

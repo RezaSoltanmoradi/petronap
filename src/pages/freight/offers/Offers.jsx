@@ -51,7 +51,7 @@ const Offers = () => {
             }
         }
     }, [offerStatus]);
-    console.log("doingOffersData", doingOffersData);
+
     const handleBtnText = ({ seen, orderAcception, freightAcception }) => {
         const orderNotSeen = !seen && !orderAcception;
         const orderSeen = seen && !orderAcception;
@@ -67,7 +67,7 @@ const Offers = () => {
         return title.true;
     };
     let finalOrders;
-
+    console.log("doingOffersData: ", doingOffersData);
     if (hasErrorDoingOffers && offerStatus?.id === "1") {
         finalOrders = <Notification message={hasErrorDoingOffers} />;
     } else if (hasErrorLoadingOffers && offerStatus?.id === "0") {
@@ -108,7 +108,6 @@ const Offers = () => {
                             borderPassage={data.offer.order.border_passage}
                             destination={data.offer.order.destination}
                             loadingLocation={data.offer.order.loading_location}
-                            btnText="مشاهده شماره سفارش"
                             product={data.offer.order.product}
                             weight={data.offer.order.weight}
                             loadingDate={data.offer.order.loading_date}
@@ -117,6 +116,7 @@ const Offers = () => {
                             image={
                                 data.offer.order.orderer.profile_picture_file
                             }
+                            btnText={data.flow.text}
                         />
                     ))}
             </div>

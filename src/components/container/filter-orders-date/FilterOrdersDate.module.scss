@@ -4,9 +4,9 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 328px;
+    width: 360px;
     height: 45px;
-    background-color: var(--white-color);
+    background-color: var(--color-light);
     z-index: 100 !important;
     .status {
         border-radius: 8px;
@@ -19,12 +19,12 @@
         align-items: center;
     }
     .ActiveStatus {
-        background-color: var(--dark-color) !important;
-        color: var(--white-color);
+        background-color: var(--color-primary) !important;
+        color: var(--color-light);
         transition: all 0.2s linear;
     }
     .notActiveStatus {
-        border: 0.2px solid var(--dark-color);
-        background-color: var(--white-color);
+        border: 0.2px solid var(--color-dark);
+        background-color: var(--color-light);
     }
 }

@@ -4,9 +4,9 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 328px;
+    width:360px;
     height: 40px;
-    background-color: var(--white-color);
+    background-color: var(--color-light);
     z-index: 100 !important;
     .status {
         border-radius: 8px;
@@ -16,12 +16,12 @@
         cursor: pointer;
     }
     .ActiveStatus {
-        background-color: var(--dark-color);
-        color: var(--white-color);
+        background-color: var(--color-primary);
+        color: var(--color-light);
         transition: all 0.2s linear;
     }
     .notActiveStatus {
-        border: 0.2px solid var(--dark-color);
-        background-color: var(--white-color);
+        border: 0.2px solid var(--color-primary);
+        background-color: var(--color-light);
     }
 }

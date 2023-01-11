@@ -57,10 +57,18 @@ const Input = ({
                     />
                     {staticValue && (
                         <div className="input-group-append">
-                            <div className={classes.staticValue}>
+                            <div
+                                className={classNames({
+                                    [classes["staticValue"]]: true,
+                                })}
+                            >
                                 {staticValue}
                             </div>
-                            <div className={classes.vector}></div>
+                            <div
+                                className={classNames({
+                                    [classes["vector"]]: true,
+                                })}
+                            ></div>
                         </div>
                     )}
                 </div>

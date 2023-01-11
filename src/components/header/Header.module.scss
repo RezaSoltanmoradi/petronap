@@ -6,11 +6,12 @@
     align-items: center;
     position: absolute;
     border-bottom: 1px solid #c5c5c5;
-    background-color: var(--white-color);
+    background-color: var(--color-light);
     padding: 0 1rem;
     z-index: 100;
     .title {
         margin: 0;
+        color: var(--color-primary);
     }
     .Image {
         width: 40px;

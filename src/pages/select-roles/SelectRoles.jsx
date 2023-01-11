@@ -21,7 +21,9 @@ const SelectRoles = () => {
         const btnClasses = classNames({
             [classes.LoginAs]: true,
             [classes.isActiveTrans]: isActiveTrans && !isActive,
-            [classes.isActive]: isActive,
+            "bg-producer": role.name === "producer" && isActive,
+            "bg-trader": role.name === "trader" && isActive,
+            "bg-freight": role.name === "freight" && isActive,
         });
         return btnClasses;
     };

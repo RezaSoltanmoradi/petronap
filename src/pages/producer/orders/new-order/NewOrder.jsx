@@ -3,7 +3,6 @@ import Select from "../../../../components/select/Select";
 import Button from "../../../../components/UI/button/Button";
 import Scroller from "../../../../components/scroller/Scroller";
 import { useDispatch, useSelector } from "react-redux";
-import { getContractType } from "../../../../store/order-slice";
 import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Input from "../../../../components/UI/input/Input";
@@ -18,20 +17,23 @@ import gregorian_en from "react-date-object/locales/gregorian_en";
 import gregorian from "react-date-object/calendars/gregorian";
 import { DateObject } from "react-multi-date-picker";
 import Notification from "src/components/notification/Notification";
+import { ORDERS_NATIONALITY } from "src/helper/types";
+import Switch from "src/components/switch/Switch";
+import { resetUploader } from "src/store/uploadFile-slice";
 
 const NewOrder = () => {
     const [hasOrderType, setHasOrderType] = useState(false);
     const [startDate, setStartDate] = useState();
     const [isCompleted, setIsCompleted] = useState(false);
-    const { contractType } = useSelector(state => state.order);
     const [required, setRequired] = useState(false);
     const { accessToken } = useSelector(state => state.user);
     const navigate = useNavigate();
     const [requiredError, setRequiredError] = useState(null);
-
+    const [contractType, setContractType] = useState(null);
+    const [nationality, setNationality] = useState(ORDERS_NATIONALITY[0]);
+    const dispatch = useDispatch();
     const { uploadFiles } = useSelector(state => state.upload);
     const performFile = uploadFiles?.performFile ?? "";
-    const dispatch = useDispatch();
 
     const { sendRequest: sendNewOrder, error: newOrderError } = useRequest();
 
@@ -85,16 +87,6 @@ const NewOrder = () => {
         valueChangeHandler: onChangeDescription,
     } = useInput();
 
-    const onChangeContractType = value => {
-        dispatch(getContractType(value));
-    };
-    const onConfirmStepOne = () => {
-        if (!contractType) {
-            return;
-        } else if (contractType) {
-            setHasOrderType(true);
-        }
-    };
     let formIsValid = false;
     const formValidation =
         validProduct &&
@@ -131,7 +123,7 @@ const NewOrder = () => {
                 Authorization: "Bearer " + accessToken,
             },
             data: {
-                contract_type: contractType?.id,
+                contract_type: contractType ? contractType?.id : "1",
                 product: product,
                 weight: weight,
                 vehicle_type: vehicleType,
@@ -148,11 +140,38 @@ const NewOrder = () => {
             }
         });
     };
+
+    const onChangeContractType = value => {
+        setContractType(value);
+    };
+    const onConfirmStepOne = () => {
+        if (!contractType && nationality.id === "1") {
+            return;
+        } else {
+            setHasOrderType(true);
+        }
+    };
     const confirmOrderHandler = () => {
-        dispatch(getContractType(null));
+        setContractType(null);
+        dispatch(resetUploader());
         navigate({ pathname: "/producer/orders" });
     };
 
+    const onChangeNationality = companyType => {
+        const findNationality = ORDERS_NATIONALITY.find(
+            n => n.title === companyType
+        );
+
+        setContractType({
+            value: "CPT",
+            id: "3",
+        });
+
+        setNationality(findNationality);
+        if (nationality.id === "1") {
+            setContractType(null);
+        }
+    };
     if (isCompleted) {
         return (
             <Layout isLogin={true}>
@@ -178,20 +197,36 @@ const NewOrder = () => {
                             <p className={classes.title}>
                                 لطفا نوع سفارش خود را انتخاب کنید
                             </p>
-                            <Select
-                                options={[
-                                    { value: "FCA", id: "0", disable: true },
-                                    { value: "CPT", id: "1", disable: false },
-                                    { value: "FOB", id: "2", disable: true },
-                                    { value: "CFR", id: "3", disable: true },
-                                ]}
-                                selected={contractType}
-                                setSelected={onChangeContractType}
-                                top="80px"
+                            <Switch
+                                changeTitle={onChangeNationality}
+                                option={nationality.title}
+                                options={ORDERS_NATIONALITY}
+                                switchStyles={{
+                                    top: "80px",
+                                    width: "280px",
+                                }}
                             />
+                            {nationality.id === "1" && (
+                                <Select
+                                    options={[
+                                        {
+                                            value: "CPT",
+                                            id: "3",
+                                            disable: false,
+                                        },
+                                    ]}
+                                    selected={contractType}
+                                    setSelected={onChangeContractType}
+                                    top="160px"
+                                />
+                            )}
                             <div className={classes.Button}>
                                 <Button
-                                    disabled={!contractType}
+                                    disabled={
+                                        nationality.id === "1"
+                                            ? !contractType
+                                            : false
+                                    }
                                     clicked={onConfirmStepOne}
                                     btnStyle={{
                                         fontSize: "20px",
@@ -210,25 +245,29 @@ const NewOrder = () => {
                             className={classes.Form}
                             onSubmit={e => e.preventDefault()}
                         >
-                            <Input
-                                elementType="select"
-                                inputType="select"
-                                placeholder="نوع قرار داد"
-                                isLogin={false}
-                                inputIsValid={contractType}
-                            >
-                                <div className={classes.innerIcon}>
-                                    <Button
-                                        clicked={() => setHasOrderType(false)}
-                                        btnStyle={{
-                                            height: "24px",
-                                            width: "154px",
-                                        }}
-                                    >
-                                        {contractType?.value}
-                                    </Button>
-                                </div>
-                            </Input>
+                            {contractType && (
+                                <Input
+                                    elementType="select"
+                                    inputType="select"
+                                    placeholder="نوع قرار داد"
+                                    isLogin={false}
+                                    inputIsValid={contractType}
+                                >
+                                    <div className={classes.innerIcon}>
+                                        <Button
+                                            clicked={() =>
+                                                setHasOrderType(false)
+                                            }
+                                            btnStyle={{
+                                                height: "24px",
+                                                width: "154px",
+                                            }}
+                                        >
+                                            {contractType?.value}
+                                        </Button>
+                                    </div>
+                                </Input>
+                            )}
                             <Input
                                 inputType="text"
                                 elementType="input"
@@ -303,17 +342,19 @@ const NewOrder = () => {
                                     <div className="icon icon-md i-calender" />
                                 </div>
                             </Input>
-                            <Input
-                                inputType="text"
-                                elementType="input"
-                                placeholder="گذرگاه مرزی "
-                                label="گذرگاه مرزی "
-                                value={borderPassage}
-                                inputIsValid={validBorderPassage}
-                                changeInput={onChangeBorderPassage}
-                                blurInput={onBlurBorderPassage}
-                                isTouched={hasErrorBorderPassage}
-                            />
+                            {contractType && (
+                                <Input
+                                    inputType="text"
+                                    elementType="input"
+                                    placeholder="گذرگاه مرزی "
+                                    label="گذرگاه مرزی "
+                                    value={borderPassage}
+                                    inputIsValid={validBorderPassage}
+                                    changeInput={onChangeBorderPassage}
+                                    blurInput={onBlurBorderPassage}
+                                    isTouched={hasErrorBorderPassage}
+                                />
+                            )}
                             <Input
                                 inputType="text"
                                 elementType="textarea"
@@ -346,7 +387,7 @@ const NewOrder = () => {
 
                             <div className={classes.Button}>
                                 <Button
-                                    disabled={!contractType}
+                                    disabled={false}
                                     clicked={formSubmitionHandler}
                                     btnStyle={{
                                         fontSize: "20px",

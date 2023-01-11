@@ -115,7 +115,7 @@ const LoginWithPassword = () => {
                     controlId="exampleForm.ControlInput1"
                 >
                     <Form.Label className={classes.label}>
-                        لطفاشماره تلفن همراه یا ایمیل و کلمه عبور خود را وارد
+                        لطفا شماره تلفن همراه یا ایمیل و کلمه عبور خود را وارد
                         کنید
                     </Form.Label>
                     <Input
@@ -183,7 +183,6 @@ const LoginWithPassword = () => {
                     </Button>
                     <div className="d-flex justify-content-center flex-column w-100 align-items-center">
                         <NavLink
-                            // replace
                             to="/login/forget-password"
                             className={classes.link}
                         >

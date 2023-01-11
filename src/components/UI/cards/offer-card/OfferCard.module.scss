@@ -2,12 +2,11 @@
     width: 328px;
     height: 155px;
     border-radius: 8px;
-    background-color: var(--info-color);
     display: flex;
     flex-direction: column;
     margin-bottom: 12px;
     position: relative;
-    border: 0.2px solid var(--dark-color);
+    border: 0.2px solid var(--color-dark);
     border-radius: 8px;
     align-items: center;
     .titleContainer {
@@ -16,7 +15,7 @@
         align-items: center;
         margin-top: 11px;
         .ImageContainer {
-            border: 0.2px solid var(--dark-color);
+            border: 0.2px solid var(--color-dark);
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -37,14 +36,14 @@
     }
     .PriceContainer {
         display: flex;
-        border: 0.2px solid var(--dark-color);
+        border: 0.2px solid var(--color-dark);
         border-radius: 8px;
         width: 296px;
         height: 24px;
         justify-content: center;
         margin-top: 4px;
         .label {
-            color: var(--dark-color);
+            color: var(--color-dark);
             display: flex;
             align-items: center;
             font-size: 16px;

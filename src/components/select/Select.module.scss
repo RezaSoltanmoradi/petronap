@@ -17,17 +17,19 @@
         align-items: center;
     }
     .active {
-        background-color: #bdbcbc80;
+        background-color: var(--color-secondary);
+        color: var(--color-light);
+
         cursor: pointer;
     }
     .disable {
-        background-color: #d9d9d93d;
+        background-color: var(--color-disable);
         cursor: not-allowed;
     }
     .selected {
-        background-color: var(--dark-color);
+        background-color: var(--color-primary);
         cursor: pointer;
-        color: var(--white-color);
+        color: var(--color-light);
         transition: all 0.2s linear;
     }
 }

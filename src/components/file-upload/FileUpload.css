@@ -6,6 +6,7 @@
     right: 0;
     z-index: 201;
 }
+
 .my-modal {
     height: 85vh !important;
     overflow-y: hidden;
@@ -59,8 +60,32 @@ form {
     height: 464px;
     margin-top: 20px;
     margin-right: 16px;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-dark);
     border-radius: 8px;
+    background-color: #eaeaea;
+}
+
+.imageText {
+    position: fixed;
+    width: 241px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    text-align: right;
+    margin-top: 207.21px;
+    margin-right: 43.5px;
+    text-align: center;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.iconForUpload {
+    position: fixed;
+    margin-top: 230.79px;
+    margin-right: 141px;
+    border: 0px;
 }
 
 #submitInput {
@@ -75,7 +100,7 @@ form {
     height: 40px;
     margin-top: 33.99px;
     margin-right: 52.5px;
-    background-color: #5f5f5f;
+    background-color: var(--color-primary);
     border-radius: 8px;
     border: none;
 
@@ -99,7 +124,7 @@ form {
     flex-grow: 0;
 }
 
-#submit {
+.submit {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -111,7 +136,7 @@ form {
     margin-right: 52px;
     width: 118px;
     height: 40px;
-    background-color: #5f5f5f;
+    background-color: var(--color-primary);
     border-radius: 8px;
     border: none;
 
@@ -139,7 +164,7 @@ form {
     background: rgba(95, 95, 95, 0.6);
 }
 
-#submit:disabled {
+.submit:disabled {
     background: rgba(95, 95, 95, 0.6);
 }
 
@@ -241,7 +266,7 @@ form {
     height: 464px;
     margin-top: 12.5px;
     margin-right: 16px;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-primary);
     border-radius: 8px;
 }
 
@@ -257,7 +282,7 @@ form {
     height: 40px;
     margin-top: 55.5px;
     margin-right: 121px;
-    background: #5f5f5f;
+    background: var(--color-primary);
     border-radius: 8px;
     font-family: "B Yekan";
     font-style: normal;
@@ -287,7 +312,7 @@ form {
     height: 42px;
     margin-top: 12.5px;
     background: #f3f3f3;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-primary);
     border-radius: 8px;
     display: flex;
     justify-content: end;
@@ -319,7 +344,7 @@ form {
     height: 42px;
     margin-top: 12.5px;
     background: #f3f3f3;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-primary);
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
@@ -465,7 +490,7 @@ form {
     margin-top: 247.5px;
     margin-right: 16px;
     background: #f3f3f3;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-primary);
     border-radius: 8px;
 }
 
@@ -476,7 +501,7 @@ form {
     margin-top: -5px;
     font-style: normal;
     font-weight: 400;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 20px;
     /* identical to box height, or 111% */
 
@@ -506,7 +531,7 @@ form {
     max-height: 89px;
     color: var(--primary-color);
     background-color: transparent;
-    border: 0.2px solid #5f5f5f;
+    border: 0.2px solid var(--color-primary);
 }
 
 .subRejection {
@@ -522,7 +547,7 @@ form {
 
     margin-top: 130px;
     margin-left: 132.11px;
-    background: #5f5f5f;
+    background: var(--color-primary);
     border-radius: 8px;
     font-family: "B Yekan";
     font-style: normal;
@@ -577,7 +602,7 @@ canvas {
     height: 464px !important;
     margin-top: 20px !important;
     margin-right: 16px !important;
-    border: 0.2px solid #5f5f5f !important;
+    border: 0.2px solid var(--color-primary) !important;
     border-radius: 8px !important;
 }
 
@@ -588,23 +613,29 @@ canvas {
 .react-pdf__Page__annotations {
     height: 0px !important;
 }
+
 .goToNextPage {
     position: absolute;
-    top: 10px;
-    right: 163px;
+    top: 225px;
+    right: 24px;
     z-index: 999;
     border-radius: 12px;
+    transform: rotate(180deg);
 }
+
 .goToPrevPage {
     position: absolute;
-    bottom: 10px;
-    right: 163px;
+    transform: rotate(180deg);
+    top: 225px;
+    left: 24px;
     z-index: 999;
     border-radius: 12px;
 }
+
 .react-pdf__Document {
     position: relative !important;
 }
+
 .react-pdf__Page {
     min-width: 360px !important;
 }

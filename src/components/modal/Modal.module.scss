@@ -18,12 +18,13 @@
         background: rgba(189, 189, 189, 0.1);
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(1.9px);
-        border: 0.2px solid var(--dark-color-h);
+        border: 0.2px solid var(--color-dark);
     }
     :global(.modal-body) {
         display: flex;
         justify-content: center;
-        font-size: 16px;
+        color: var(--color-dark);
+        font-size: 16px; 
     }
     :global(.modal-footer) {
         padding-top: 0;

@@ -2,7 +2,7 @@
     position: absolute;
     display: flex;
     justify-content: center;
-    border: 0.2px solid #2916c6;
+    border: 0.2px solid var(--color-dark);
     border-radius: 8px;
     .toggle {
         position: absolute;
@@ -10,7 +10,7 @@
         height: 100%;
         border-radius: 8px;
         z-index: 50;
-        background-color: var(--dark-color);
+        background-color: var(--color-primary);
     }
     .startFromRight {
         left: 50%;
@@ -41,11 +41,11 @@
     }
     .isActive {
         z-index: 100;
-        color: var(--white-color) !important;
+        color: var(--color-light) !important;
     }
     .isNotActive {
         z-index: 100;
-        color: var(--dark-color) !important;
+        color: var(--color-dark) !important;
     }
 }
 @keyframes firstAnimate {

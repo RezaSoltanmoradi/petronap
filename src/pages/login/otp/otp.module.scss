@@ -21,25 +21,18 @@
             font-size: 12px;
             width: 100%;
             text-align: start;
-            margin: 0 ;
-            color: var(--primary-color);
+            margin: 0;
+            color: var(--color-dark);
         }
         .changePhone,
         .sendAgain {
-            color: var(--primary-color);
+            color: var(--color-primary);
             font-style: normal;
             font-weight: 400;
             font-size: 12px;
             padding-top: 5px;
         }
-        .errorMassege {
-            color: #b4102d;
-            text-align: start;
-            font-style: normal;
-            font-weight: 400;
-            font-size: 12px;
-            line-height: 20px;
-        }
+
         .BottomSection {
             height: 250px;
             .rule {
@@ -56,11 +49,11 @@
                     height: 20px;
                     padding-top: 3px;
                     font-weight: 400;
-                    font-size: 9px;
+                    font-size: 12px;
                     line-height: 11px;
-                    color: var(--primary-color);
+                    color: var(--color-dark);
                     .boldContent {
-                        color: #0579ff;
+                        color: var(--color-primary);
                     }
                 }
             }
@@ -71,7 +64,7 @@
                 font-weight: 400;
                 font-size: 16px;
                 line-height: 27px;
-                color: #2916c6ba;
+                color: var(--color-primary);
             }
         }
     }

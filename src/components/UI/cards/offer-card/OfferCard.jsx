@@ -2,6 +2,8 @@ import classes from "./OfferCard.module.scss";
 import Button from "./../../button/Button";
 import { useNavigate } from "react-router";
 import { imageHandler } from "src/helper/baseUrls";
+import classNames from "classnames";
+import { useSelector } from "react-redux";
 const OfferCard = ({
     offerId,
     prepayment,
@@ -11,8 +13,17 @@ const OfferCard = ({
     image,
 }) => {
     const navigate = useNavigate();
+    const { oldRole } = useSelector(state => state.user);
+
     return (
-        <section className={classes.OfferCard}>
+        <section
+            className={classNames({
+                [classes.OfferCard]: true,
+                "bg-producer": oldRole.name === "producer",
+                "bg-trader": oldRole.name === "trader",
+                "bg-freight": oldRole.name === "freight",
+            })}
+        >
             <div className={classes.titleContainer}>
                 {image ? (
                     <div className={classes.ImageContainer}>
